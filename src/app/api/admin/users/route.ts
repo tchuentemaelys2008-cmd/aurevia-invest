@@ -36,9 +36,26 @@ export async function PATCH(req: NextRequest) {
     const auth = await getAuthUser();
     if (!auth || auth.role !== "ADMIN") return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
 
-    const { userId, isActive } = await req.json();
-    await prisma.user.update({ where: { id: userId }, data: { isActive } });
-    return NextResponse.json({ success: true });
+    const body = await req.json();
+
+    if (typeof body.isActive === "boolean" && body.userId) {
+      await prisma.user.update({ where: { id: body.userId }, data: { isActive: body.isActive } });
+      return NextResponse.json({ success: true });
+    }
+
+    if (typeof body.balance === "number" && body.userId) {
+      const prev = await prisma.user.findUnique({ where: { id: body.userId }, select: { balance: true } });
+      const diff = body.balance - (prev?.balance ?? 0);
+      await prisma.user.update({ where: { id: body.userId }, data: { balance: body.balance } });
+      if (diff !== 0) {
+        await prisma.transaction.create({
+          data: { userId: body.userId, type: diff > 0 ? "REFERRAL_BONUS" : "WITHDRAWAL", amount: diff, description: "Ajustement de solde par admin", status: "SUCCESS" },
+        });
+      }
+      return NextResponse.json({ success: true });
+    }
+
+    return NextResponse.json({ error: "Paramètres invalides" }, { status: 400 });
   } catch {
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }

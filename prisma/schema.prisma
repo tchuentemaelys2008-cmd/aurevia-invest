@@ -210,3 +210,10 @@ model Notification {
 
   @@map("notifications")
 }
+
+model Settings {
+  key   String @id
+  value String
+
+  @@map("settings")
+}
