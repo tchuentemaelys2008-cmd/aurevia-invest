@@ -1,0 +1,212 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  phone         String?  @unique
+  password      String
+  role          Role     @default(USER)
+  referralCode  String   @unique
+  referredById  String?
+  referredBy    User?    @relation("Referrals", fields: [referredById], references: [id])
+  referrals     User[]   @relation("Referrals")
+  balance       Float    @default(0)
+  totalEarnings Float    @default(0)
+  totalInvested Float    @default(0)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  passes        UserPass[]
+  transactions  Transaction[]
+  tasks         UserTask[]
+  withdrawals   Withdrawal[]
+  affiliateClicks AffiliateClick[]
+  notifications Notification[]
+
+  @@map("users")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Pass {
+  id          String   @id @default(cuid())
+  name        String
+  price       Float
+  dailyReturn Float
+  duration    Int
+  description String?
+  isActive    Boolean  @default(true)
+  color       String   @default("#3b6fd4")
+  icon        String   @default("star")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userPasses  UserPass[]
+
+  @@map("passes")
+}
+
+model UserPass {
+  id          String     @id @default(cuid())
+  userId      String
+  passId      String
+  user        User       @relation(fields: [userId], references: [id])
+  pass        Pass       @relation(fields: [passId], references: [id])
+  status      PassStatus @default(PENDING)
+  startDate   DateTime?
+  endDate     DateTime?
+  amountPaid  Float
+  totalEarned Float      @default(0)
+  paymentRef  String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@map("user_passes")
+}
+
+enum PassStatus {
+  PENDING
+  ACTIVE
+  EXPIRED
+  CANCELLED
+}
+
+model Transaction {
+  id          String            @id @default(cuid())
+  userId      String
+  user        User              @relation(fields: [userId], references: [id])
+  type        TransactionType
+  amount      Float
+  description String
+  status      TransactionStatus @default(PENDING)
+  reference   String?           @unique
+  metadata    Json?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@map("transactions")
+}
+
+enum TransactionType {
+  PASS_PURCHASE
+  DAILY_EARNING
+  TASK_REWARD
+  AFFILIATE_COMMISSION
+  WITHDRAWAL
+  REFERRAL_BONUS
+}
+
+enum TransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  CANCELLED
+}
+
+model DailyTask {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  reward      Float
+  type        String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  userTasks   UserTask[]
+
+  @@map("daily_tasks")
+}
+
+model UserTask {
+  id          String    @id @default(cuid())
+  userId      String
+  taskId      String
+  user        User      @relation(fields: [userId], references: [id])
+  task        DailyTask @relation(fields: [taskId], references: [id])
+  completedAt DateTime  @default(now())
+  reward      Float
+
+  @@unique([userId, taskId, completedAt])
+  @@map("user_tasks")
+}
+
+model Withdrawal {
+  id          String             @id @default(cuid())
+  userId      String
+  user        User               @relation(fields: [userId], references: [id])
+  amount      Float
+  method      String
+  accountInfo String
+  status      WithdrawalStatus   @default(PENDING)
+  processedAt DateTime?
+  notes       String?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  @@map("withdrawals")
+}
+
+enum WithdrawalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  PROCESSED
+}
+
+model Payment {
+  id          String        @id @default(cuid())
+  userId      String
+  passId      String
+  amount      Float
+  provider    String
+  reference   String        @unique
+  status      PaymentStatus @default(PENDING)
+  metadata    Json?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@map("payments")
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  CANCELLED
+}
+
+model AffiliateClick {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  @@map("affiliate_clicks")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  title     String
+  message   String
+  type      String   @default("info")
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("notifications")
+}
