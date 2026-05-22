@@ -13,6 +13,7 @@ interface WalletData {
   wallet: { balance: number; totalEarnings: number; totalInvested: number };
   transactions: Array<{ id: string; type: string; amount: number; description: string; createdAt: string; status: string }>;
   withdrawals: Array<{ id: string; amount: number; method: string; status: string; createdAt: string }>;
+  hasPass: boolean;
 }
 
 const txLabel: Record<string, string> = {
@@ -94,9 +95,15 @@ export default function WalletPage() {
               <p className="font-bold text-emerald-400">{formatCurrency(data.wallet.totalEarnings)}</p>
             </div>
           </div>
-          <Button variant="primary" className="w-full" onClick={() => setShowWithdraw(true)}>
-            <ArrowUpRight size={16} /> Demander un retrait
-          </Button>
+          {data.hasPass ? (
+            <Button variant="primary" className="w-full" onClick={() => setShowWithdraw(true)}>
+              <ArrowUpRight size={16} /> Demander un retrait
+            </Button>
+          ) : (
+            <div className="w-full py-3 rounded-xl bg-yellow-400/10 border border-yellow-400/20 text-yellow-400 text-sm text-center font-medium">
+              Achetez un pass pour débloquer les retraits
+            </div>
+          )}
         </div>
       </motion.div>
 

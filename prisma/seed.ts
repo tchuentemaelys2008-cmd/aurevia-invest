@@ -7,18 +7,19 @@ const prisma = new PrismaClient();
 async function main() {
   // Seed passes
   const passes = [
-    { name: "Aurevia Starter", price: 4000, dailyReturn: 5, duration: 30, color: "#3b6fd4", icon: "shield", description: "Idéal pour débuter, accès aux revenus journaliers" },
-    { name: "Aurevia Pro", price: 8000, dailyReturn: 8, duration: 30, color: "#6c4de6", icon: "zap", description: "Pour les investisseurs confirmés, meilleurs rendements" },
-    { name: "Aurevia Elite", price: 15000, dailyReturn: 12, duration: 30, color: "#e6874d", icon: "star", description: "Rendements élevés pour les experts, gains maximaux" },
-    { name: "Aurevia VIP", price: 25000, dailyReturn: 18, duration: 30, color: "#e6d44d", icon: "crown", description: "Accès exclusif VIP, rendements premium garantis" },
+    { name: "Aurevia Starter",  price:  4000, dailyReturn:  4, duration: 30, color: "#3b6fd4", icon: "shield", description: "Idéal pour débuter — revenus journaliers dès le premier jour" },
+    { name: "Aurevia Bronze",   price: 10000, dailyReturn:  6, duration: 30, color: "#b87333", icon: "zap",    description: "Premier palier intermédiaire, rendements attractifs" },
+    { name: "Aurevia Silver",   price: 25000, dailyReturn:  9, duration: 30, color: "#6c4de6", icon: "star",   description: "Accès Silver — meilleurs taux, priorité de support" },
+    { name: "Aurevia Gold",     price: 50000, dailyReturn: 13, duration: 30, color: "#e6874d", icon: "trending-up", description: "Niveau Gold — rendements élevés pour les experts" },
+    { name: "Aurevia Platinum", price: 75000, dailyReturn: 16, duration: 30, color: "#e6d44d", icon: "award",  description: "Statut Platinum — accès exclusif et gains premium" },
+    { name: "Aurevia VIP",      price:100000, dailyReturn: 20, duration: 30, color: "#e6404d", icon: "crown",  description: "Niveau ultime — rendements maximum garantis, support dédié" },
   ];
 
+  // Remove old passes and recreate fresh
+  await prisma.pass.deleteMany({});
   for (const pass of passes) {
-    await prisma.pass.upsert({
-      where: { id: pass.name },
-      update: {},
-      create: { ...pass, id: pass.name.toLowerCase().replace(/\s+/g, "-") },
-    });
+    const id = pass.name.toLowerCase().replace(/\s+/g, "-");
+    await prisma.pass.create({ data: { ...pass, id } });
   }
 
   // Seed daily tasks

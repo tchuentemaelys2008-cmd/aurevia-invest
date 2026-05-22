@@ -7,7 +7,7 @@ export async function GET() {
     const auth = await getAuthUser();
     if (!auth) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
 
-    const [user, transactions, withdrawals] = await Promise.all([
+    const [user, transactions, withdrawals, passCount] = await Promise.all([
       prisma.user.findUnique({
         where: { id: auth.userId },
         select: { balance: true, totalEarnings: true, totalInvested: true },
@@ -22,9 +22,10 @@ export async function GET() {
         orderBy: { createdAt: "desc" },
         take: 10,
       }),
+      prisma.userPass.count({ where: { userId: auth.userId, status: { in: ["ACTIVE", "EXPIRED"] } } }),
     ]);
 
-    return NextResponse.json({ wallet: user, transactions, withdrawals });
+    return NextResponse.json({ wallet: user, transactions, withdrawals, hasPass: passCount > 0 });
   } catch {
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }

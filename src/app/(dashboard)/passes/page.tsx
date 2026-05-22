@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Star, Zap, Shield, Crown, Check, X, Smartphone, CreditCard, Waves } from "lucide-react";
+import { Star, Zap, Shield, Crown, Check, X, Smartphone, CreditCard, Waves, TrendingUp, Award } from "lucide-react";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import { formatCurrency } from "@/lib/utils";
@@ -41,13 +41,17 @@ const iconMap: Record<string, React.ReactNode> = {
   zap: <Zap size={22} />,
   star: <Star size={22} />,
   crown: <Crown size={22} />,
+  "trending-up": <TrendingUp size={22} />,
+  award: <Award size={22} />,
 };
 
 const colorMap: Record<string, { bg: string; border: string; glow: string }> = {
-  "#3b6fd4": { bg: "from-[#3b6fd4] to-[#2d5bcc]", border: "border-[#3b6fd4]/30", glow: "shadow-[0_0_30px_rgba(59,111,212,0.2)]" },
-  "#6c4de6": { bg: "from-[#6c4de6] to-[#5538d4]", border: "border-[#6c4de6]/30", glow: "shadow-[0_0_30px_rgba(108,77,230,0.2)]" },
-  "#e6874d": { bg: "from-[#e6874d] to-[#d4703a]", border: "border-[#e6874d]/30", glow: "shadow-[0_0_30px_rgba(230,135,77,0.2)]" },
-  "#e6d44d": { bg: "from-[#e6d44d] to-[#d4c13a]", border: "border-[#e6d44d]/30", glow: "shadow-[0_0_30px_rgba(230,212,77,0.2)]" },
+  "#3b6fd4": { bg: "from-[#3b6fd4] to-[#2d5bcc]",   border: "border-[#3b6fd4]/30", glow: "shadow-[0_0_30px_rgba(59,111,212,0.2)]"  },
+  "#b87333": { bg: "from-[#b87333] to-[#a0621e]",   border: "border-[#b87333]/30", glow: "shadow-[0_0_30px_rgba(184,115,51,0.2)]"  },
+  "#6c4de6": { bg: "from-[#6c4de6] to-[#5538d4]",   border: "border-[#6c4de6]/30", glow: "shadow-[0_0_30px_rgba(108,77,230,0.2)]"  },
+  "#e6874d": { bg: "from-[#e6874d] to-[#d4703a]",   border: "border-[#e6874d]/30", glow: "shadow-[0_0_30px_rgba(230,135,77,0.2)]"  },
+  "#e6d44d": { bg: "from-[#e6d44d] to-[#d4c13a]",   border: "border-[#e6d44d]/30", glow: "shadow-[0_0_30px_rgba(230,212,77,0.2)]"  },
+  "#e6404d": { bg: "from-[#e6404d] to-[#cc2030]",   border: "border-[#e6404d]/30", glow: "shadow-[0_0_30px_rgba(230,64,77,0.25)]"  },
 };
 
 const PAYMENT_OPTIONS: {
@@ -151,25 +155,25 @@ export default function PassesPage() {
       return;
     }
     setBuyingPass(selectedPass.id);
+    setShowModal(false);
     try {
       const res = await fetch("/api/passes/buy", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          passId: selectedPass.id,
-          paymentMethod,
-          phoneNumber: phone || undefined,
-        }),
+        body: JSON.stringify({ passId: selectedPass.id, paymentMethod, phoneNumber: phone || undefined }),
       });
       const data = await res.json();
-      if (!res.ok) { toast.error(data.error); return; }
+      if (!res.ok) { toast.error(data.error || "Erreur lors de la commande"); setBuyingPass(null); return; }
       toast.success("Redirection vers le paiement...");
-      router.push(data.paymentUrl);
+      // Internal path: router.push — external URL: window.location.href
+      if (data.paymentUrl.startsWith("http")) {
+        window.location.href = data.paymentUrl;
+      } else {
+        router.push(data.paymentUrl);
+      }
     } catch {
       toast.error("Erreur lors de la commande");
-    } finally {
       setBuyingPass(null);
-      setShowModal(false);
     }
   };
 
@@ -197,7 +201,7 @@ export default function PassesPage() {
         {passes.map((pass, i) => {
           const colors = colorMap[pass.color] || colorMap["#3b6fd4"];
           const isOwned = ownedPassIds.includes(pass.id);
-          const isPopular = pass.name.includes("Elite");
+          const isPopular = pass.name.includes("Gold");
           return (
             <motion.div
               key={pass.id}

@@ -7,7 +7,9 @@ export async function GET() {
     const auth = await getAuthUser();
     if (!auth) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
 
-    const [user, activePasses, recentTransactions, chartData] = await Promise.all([
+    const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+    const [user, activePasses, recentTransactions, last7DaysTx] = await Promise.all([
       prisma.user.findUnique({
         where: { id: auth.userId },
         select: { id: true, name: true, balance: true, totalEarnings: true, totalInvested: true, referralCode: true },
@@ -22,23 +24,35 @@ export async function GET() {
         orderBy: { createdAt: "desc" },
         take: 10,
       }),
-      // Generate chart data from transactions (last 7 days)
-      prisma.transaction.groupBy({
-        by: ["createdAt"],
-        where: { userId: auth.userId, status: "SUCCESS", createdAt: { gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) } },
-        _sum: { amount: true },
+      prisma.transaction.findMany({
+        where: { userId: auth.userId, status: "SUCCESS", createdAt: { gte: since } },
+        select: { amount: true, createdAt: true },
+        orderBy: { createdAt: "asc" },
       }),
     ]);
 
-    // Build 7-day chart points
-    const points = Array.from({ length: 7 }, (_, i) => {
-      const date = new Date(Date.now() - (6 - i) * 24 * 60 * 60 * 1000);
+    const currentBalance = user?.balance ?? 0;
+
+    // Sum of amounts over the 7-day window (to find balance at window start)
+    const totalInWindow = last7DaysTx.reduce((sum, t) => sum + t.amount, 0);
+    const balanceAtStart = currentBalance - totalInWindow;
+
+    // Build cumulative balance per day
+    const dayMap: Record<string, number> = {};
+    for (const tx of last7DaysTx) {
+      const d = tx.createdAt.toISOString().split("T")[0];
+      dayMap[d] = (dayMap[d] ?? 0) + tx.amount;
+    }
+
+    let running = balanceAtStart;
+    const chartPoints = Array.from({ length: 7 }, (_, i) => {
+      const date = new Date(since.getTime() + i * 24 * 60 * 60 * 1000);
       const dayStr = date.toISOString().split("T")[0];
-      const found = chartData.find((d) => d.createdAt.toISOString().split("T")[0] === dayStr);
-      return { day: i, value: (user?.balance || 0) - (found?._sum?.amount || 0) + (i * 150) };
+      running += dayMap[dayStr] ?? 0;
+      return { day: i, label: date.toLocaleDateString("fr-FR", { weekday: "short" }), value: Math.max(0, running) };
     });
 
-    return NextResponse.json({ user, activePasses, recentTransactions, chartPoints: points });
+    return NextResponse.json({ user, activePasses, recentTransactions, chartPoints });
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });

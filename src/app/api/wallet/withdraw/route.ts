@@ -17,13 +17,18 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const data = schema.parse(body);
 
-    const user = await prisma.user.findUnique({ where: { id: auth.userId }, select: { balance: true } });
+    const [user, hasPass, pending] = await Promise.all([
+      prisma.user.findUnique({ where: { id: auth.userId }, select: { balance: true } }),
+      prisma.userPass.count({ where: { userId: auth.userId, status: { in: ["ACTIVE", "EXPIRED"] } } }),
+      prisma.withdrawal.count({ where: { userId: auth.userId, status: "PENDING" } }),
+    ]);
+
+    if (!hasPass) {
+      return NextResponse.json({ error: "Vous devez acheter un pass avant de pouvoir retirer" }, { status: 403 });
+    }
     if (!user || user.balance < data.amount) {
       return NextResponse.json({ error: "Solde insuffisant" }, { status: 400 });
     }
-
-    // Check pending withdrawals
-    const pending = await prisma.withdrawal.count({ where: { userId: auth.userId, status: "PENDING" } });
     if (pending >= 1) return NextResponse.json({ error: "Vous avez déjà une demande de retrait en attente" }, { status: 400 });
 
     await prisma.$transaction([

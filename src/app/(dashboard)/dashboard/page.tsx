@@ -14,7 +14,7 @@ interface DashboardData {
   user: { name: string; balance: number; totalEarnings: number; totalInvested: number; referralCode: string };
   activePasses: Array<{ id: string; pass: { name: string; dailyReturn: number }; status: string; endDate: string }>;
   recentTransactions: Array<{ id: string; type: string; amount: number; description: string; createdAt: string; status: string }>;
-  chartPoints: Array<{ day: number; value: number }>;
+  chartPoints: Array<{ day: number; label: string; value: number }>;
 }
 
 const txTypeLabel: Record<string, string> = {
@@ -81,7 +81,7 @@ export default function DashboardPage() {
           <h1 className="text-2xl font-display font-bold text-white leading-tight">
             Bienvenue,<br />
             <span className="bg-gradient-to-r from-[#3b6fd4] to-[#a78bfa] bg-clip-text text-transparent">
-              {user.name.split(" ")[0]} 👋
+              {user.name.split(" ")[0]}
             </span>
           </h1>
         </div>
@@ -105,7 +105,7 @@ export default function DashboardPage() {
                   <span className="text-emerald-400 text-sm font-semibold flex items-center gap-1">
                     <TrendingUp size={14} />+{growthPct}%
                   </span>
-                  <span className="text-white/30 text-xs">vs 7 derniers jours</span>
+                  <span className="text-white/30 text-xs">7 derniers jours</span>
                 </div>
               </div>
             </div>
@@ -119,7 +119,7 @@ export default function DashboardPage() {
                       <stop offset="95%" stopColor="#3b6fd4" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <XAxis dataKey="day" hide />
+                  <XAxis dataKey="label" hide />
                   <Tooltip content={<CustomTooltip />} />
                   <Area type="monotone" dataKey="value" stroke="#3b6fd4" strokeWidth={2} fill="url(#blueGrad)" dot={false} />
                 </AreaChart>
