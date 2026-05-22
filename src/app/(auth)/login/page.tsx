@@ -3,7 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, Chrome, Apple } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import toast from "react-hot-toast";
@@ -93,10 +93,10 @@ export default function LoginPage() {
 
         <div className="grid grid-cols-2 gap-3">
           <button className="flex items-center justify-center gap-2 p-3 rounded-xl border border-white/10 bg-white/4 hover:bg-white/8 transition-colors text-sm text-white/70 font-medium">
-            <span>🌐</span> Google
+            <Chrome size={15} /> Google
           </button>
           <button className="flex items-center justify-center gap-2 p-3 rounded-xl border border-white/10 bg-white/4 hover:bg-white/8 transition-colors text-sm text-white/70 font-medium">
-            <span>🍎</span> Apple
+            <Apple size={15} /> Apple
           </button>
         </div>
       </div>

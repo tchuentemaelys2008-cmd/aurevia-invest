@@ -7,10 +7,10 @@ const prisma = new PrismaClient();
 async function main() {
   // Seed passes
   const passes = [
-    { name: "Aurevia Basic", price: 500, dailyReturn: 5, duration: 30, color: "#3b6fd4", icon: "shield", description: "Ideal pour les debutants" },
-    { name: "Aurevia Pro", price: 1000, dailyReturn: 8, duration: 30, color: "#6c4de6", icon: "zap", description: "Pour les investisseurs confirmes" },
-    { name: "Aurevia Elite", price: 2500, dailyReturn: 12, duration: 30, color: "#e6874d", icon: "star", description: "Rendements eleves pour experts" },
-    { name: "Aurevia VIP", price: 5000, dailyReturn: 15, duration: 30, color: "#e6d44d", icon: "crown", description: "Acces exclusif, gains maximaux" },
+    { name: "Aurevia Starter", price: 4000, dailyReturn: 5, duration: 30, color: "#3b6fd4", icon: "shield", description: "Idéal pour débuter, accès aux revenus journaliers" },
+    { name: "Aurevia Pro", price: 8000, dailyReturn: 8, duration: 30, color: "#6c4de6", icon: "zap", description: "Pour les investisseurs confirmés, meilleurs rendements" },
+    { name: "Aurevia Elite", price: 15000, dailyReturn: 12, duration: 30, color: "#e6874d", icon: "star", description: "Rendements élevés pour les experts, gains maximaux" },
+    { name: "Aurevia VIP", price: 25000, dailyReturn: 18, duration: 30, color: "#e6d44d", icon: "crown", description: "Accès exclusif VIP, rendements premium garantis" },
   ];
 
   for (const pass of passes) {

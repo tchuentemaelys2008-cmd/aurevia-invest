@@ -3,7 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { User, Mail, Phone, Lock } from "lucide-react";
+import { User, Mail, Phone, Lock, Gift } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import toast from "react-hot-toast";
@@ -58,7 +58,21 @@ function RegisterForm() {
           <Input label="Numéro de téléphone" type="tel" placeholder="+237 6XX XXX XXX" value={form.phone} onChange={(e) => set("phone", e.target.value)} icon={<Phone size={15} />} />
           <Input label="Mot de passe" type="password" placeholder="Min. 8 caractères" value={form.password} onChange={(e) => set("password", e.target.value)} icon={<Lock size={15} />} required />
           <Input label="Confirmer le mot de passe" type="password" placeholder="••••••••" value={form.confirmPassword} onChange={(e) => set("confirmPassword", e.target.value)} icon={<Lock size={15} />} required />
-          {refCode && <p className="text-xs text-emerald-400 bg-emerald-400/10 px-3 py-2 rounded-xl">✓ Code de parrainage: {refCode}</p>}
+          <div>
+            <Input
+              label="Code de parrainage (optionnel)"
+              type="text"
+              placeholder="Ex: AB12CD34"
+              value={form.referralCode}
+              onChange={(e) => set("referralCode", e.target.value.toUpperCase())}
+              icon={<Gift size={15} />}
+            />
+            {form.referralCode && (
+              <p className="text-xs text-emerald-400 mt-1 flex items-center gap-1">
+                <Gift size={11} /> Code parrainage appliqué
+              </p>
+            )}
+          </div>
 
           <label className="flex items-start gap-3 cursor-pointer">
             <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)}

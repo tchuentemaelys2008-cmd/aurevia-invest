@@ -43,7 +43,7 @@ export default function WalletPage() {
 
   const handleWithdraw = async () => {
     const amt = parseFloat(amount);
-    if (!amt || amt < 500) { toast.error("Montant minimum: 500 FCFA"); return; }
+    if (!amt || amt < 2000) { toast.error("Montant minimum: 2000 FCFA"); return; }
     if (!accountInfo) { toast.error("Informations de compte requises"); return; }
     setWithdrawing(true);
     try {
@@ -141,7 +141,7 @@ export default function WalletPage() {
               </button>
             </div>
             <div className="space-y-4 mb-5">
-              <Input label="Montant (min. 500 FCFA)" type="number" placeholder="500" value={amount} onChange={(e) => setAmount(e.target.value)} />
+              <Input label="Montant (min. 2000 FCFA)" type="number" placeholder="2000" value={amount} onChange={(e) => setAmount(e.target.value)} />
               <div>
                 <label className="text-sm font-medium text-white/70 mb-1.5 block">Méthode</label>
                 <select value={method} onChange={(e) => setMethod(e.target.value)}

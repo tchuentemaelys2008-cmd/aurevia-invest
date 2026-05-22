@@ -40,12 +40,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    if (referredById) {
-      await prisma.user.update({ where: { id: referredById }, data: { balance: { increment: 50 } } });
-      await prisma.transaction.create({
-        data: { userId: referredById, type: "REFERRAL_BONUS", amount: 50, description: `Bonus parrainage: ${user.name}`, status: "SUCCESS" },
-      });
-    }
+    // La commission parrainage (10%) sera versée au moment de l'achat du pass
 
     const token = signToken({ userId: user.id, email: user.email, role: user.role });
     const response = NextResponse.json({ success: true, user: { id: user.id, name: user.name, email: user.email, role: user.role } });

@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Home, ShoppingBag, CheckSquare, Users, Briefcase, Wallet, LogOut } from "lucide-react";
+import { Home, ShoppingBag, CheckSquare, Users, Briefcase, Wallet, LogOut, Bell } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -13,6 +13,7 @@ const navItems = [
   { href: "/affiliate", label: "Affiliation", icon: Users },
   { href: "/portfolio", label: "Portfolio", icon: Briefcase },
   { href: "/wallet", label: "Wallet", icon: Wallet },
+  { href: "/notifications", label: "Alertes", icon: Bell },
 ];
 
 export default function BottomNav() {

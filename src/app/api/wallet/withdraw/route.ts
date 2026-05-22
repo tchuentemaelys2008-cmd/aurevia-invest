@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
 const schema = z.object({
-  amount: z.number().min(500, "Montant minimum: 500 FCFA"),
+  amount: z.number().min(2000, "Montant minimum: 2000 FCFA"),
   method: z.string().min(1),
   accountInfo: z.string().min(5),
 });

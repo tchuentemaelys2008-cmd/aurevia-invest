@@ -47,14 +47,12 @@ export async function POST(req: NextRequest) {
           data: { userId: payment.userId, title: "Paiement confirmé !", message: `Votre pass a été activé via FAPSHI.`, type: "success" },
         });
 
-        // Handle referral commission
         const user = await prisma.user.findUnique({ where: { id: payment.userId }, select: { referredById: true } });
         if (user?.referredById) {
-          const commission = payment.amount * 0.05;
+          const commission = parseFloat((payment.amount * 0.10).toFixed(2));
           await prisma.user.update({ where: { id: user.referredById }, data: { balance: { increment: commission }, totalEarnings: { increment: commission } } });
-          await prisma.transaction.create({
-            data: { userId: user.referredById, type: "AFFILIATE_COMMISSION", amount: commission, description: "Commission affiliation 5%", status: "SUCCESS" },
-          });
+          await prisma.transaction.create({ data: { userId: user.referredById, type: "REFERRAL_BONUS", amount: commission, description: "Commission parrainage 10% — FAPSHI", status: "SUCCESS" } });
+          await prisma.notification.create({ data: { userId: user.referredById, title: "Commission de parrainage !", message: `Vous avez reçu ${commission} FCFA (10%) grâce à votre filleul.`, type: "success" } });
         }
       }
     } else if (status === "FAILED" || status === "CANCELLED") {

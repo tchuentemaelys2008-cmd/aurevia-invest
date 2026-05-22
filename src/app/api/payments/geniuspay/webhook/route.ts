@@ -87,29 +87,12 @@ export async function POST(req: NextRequest) {
           },
         });
 
-        // Referral commission (5%)
-        const user = await prisma.user.findUnique({
-          where: { id: payment.userId },
-          select: { referredById: true },
-        });
+        const user = await prisma.user.findUnique({ where: { id: payment.userId }, select: { referredById: true } });
         if (user?.referredById) {
-          const commission = payment.amount * 0.05;
-          await prisma.user.update({
-            where: { id: user.referredById },
-            data: {
-              balance: { increment: commission },
-              totalEarnings: { increment: commission },
-            },
-          });
-          await prisma.transaction.create({
-            data: {
-              userId: user.referredById,
-              type: "AFFILIATE_COMMISSION",
-              amount: commission,
-              description: "Commission affiliation 5% — GeniusPay",
-              status: "SUCCESS",
-            },
-          });
+          const commission = parseFloat((payment.amount * 0.10).toFixed(2));
+          await prisma.user.update({ where: { id: user.referredById }, data: { balance: { increment: commission }, totalEarnings: { increment: commission } } });
+          await prisma.transaction.create({ data: { userId: user.referredById, type: "REFERRAL_BONUS", amount: commission, description: "Commission parrainage 10% — GeniusPay", status: "SUCCESS" } });
+          await prisma.notification.create({ data: { userId: user.referredById, title: "Commission de parrainage !", message: `Vous avez reçu ${commission} FCFA (10%) grâce à votre filleul.`, type: "success" } });
         }
       }
     } else if (
