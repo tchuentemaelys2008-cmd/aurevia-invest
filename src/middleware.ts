@@ -1,37 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyToken } from "@/lib/auth";
+import { jwtVerify } from "jose";
 
 const PUBLIC_PATHS = ["/login", "/register", "/forgot-password"];
 const ADMIN_PATHS = ["/admin"];
 
-export function middleware(req: NextRequest) {
+const JWT_SECRET = new TextEncoder().encode(
+  process.env.JWT_SECRET || "aurevia-super-secret-jwt-key-2024"
+);
+
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get("auth-token")?.value;
 
-  // Allow public paths and API routes
   if (PUBLIC_PATHS.some((p) => pathname.startsWith(p))) return NextResponse.next();
   if (pathname.startsWith("/api/auth")) return NextResponse.next();
   if (pathname.startsWith("/payment")) return NextResponse.next();
 
-  // Require auth for all other routes
   if (!token) {
     const loginUrl = new URL("/login", req.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  const payload = verifyToken(token);
-  if (!payload) {
+  try {
+    const { payload } = await jwtVerify(token, JWT_SECRET);
+
+    if (ADMIN_PATHS.some((p) => pathname.startsWith(p)) && payload.role !== "ADMIN") {
+      return NextResponse.redirect(new URL("/dashboard", req.url));
+    }
+
+    return NextResponse.next();
+  } catch {
     const loginUrl = new URL("/login", req.url);
     return NextResponse.redirect(loginUrl);
   }
-
-  // Admin routes require ADMIN role
-  if (ADMIN_PATHS.some((p) => pathname.startsWith(p)) && payload.role !== "ADMIN") {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
-  }
-
-  return NextResponse.next();
 }
 
 export const config = {
