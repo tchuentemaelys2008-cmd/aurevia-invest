@@ -7,7 +7,9 @@ import { TrendingUp, ShoppingBag, CheckSquare, ArrowUpRight, ArrowDownRight, Bel
 import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer } from "recharts";
 import Card, { StatCard } from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
+import LangToggle from "@/components/ui/LangToggle";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { useLanguage } from "@/lib/i18n";
 import toast from "react-hot-toast";
 
 interface DashboardData {
@@ -17,14 +19,7 @@ interface DashboardData {
   chartPoints: Array<{ day: number; label: string; value: number }>;
 }
 
-const txTypeLabel: Record<string, string> = {
-  PASS_PURCHASE: "Achat de Pass",
-  DAILY_EARNING: "Revenu journalier",
-  TASK_REWARD: "Récompense tâche",
-  AFFILIATE_COMMISSION: "Commission affiliation",
-  WITHDRAWAL: "Retrait",
-  REFERRAL_BONUS: "Bonus parrainage",
-};
+// txTypeLabel is now built inside component using t()
 
 const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ value: number }> }) => {
   if (active && payload?.length) {
@@ -68,6 +63,12 @@ export default function DashboardPage() {
 
   if (!data) return null;
 
+  const { t } = useLanguage();
+  const txTypeLabel: Record<string, string> = {
+    PASS_PURCHASE: t("tx_PASS_PURCHASE"), DAILY_EARNING: t("tx_DAILY_EARNING"),
+    TASK_REWARD: t("tx_TASK_REWARD"), AFFILIATE_COMMISSION: t("tx_AFFILIATE_COMMISSION"),
+    WITHDRAWAL: t("tx_WITHDRAWAL"), REFERRAL_BONUS: t("tx_REFERRAL_BONUS"),
+  };
   const { user, activePasses, recentTransactions, chartPoints } = data;
   const growthPct = user.totalInvested > 0 ? ((user.totalEarnings / user.totalInvested) * 100).toFixed(1) : "0";
 
@@ -77,18 +78,21 @@ export default function DashboardPage() {
       <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4 }}
         className="flex items-start justify-between">
         <div>
-          <p className="text-white/40 text-sm mb-1">Tableau de bord</p>
+          <p className="text-white/40 text-sm mb-1">Dashboard</p>
           <h1 className="text-2xl font-display font-bold text-white leading-tight">
-            Bienvenue,<br />
+            {t("dash_greeting")}<br />
             <span className="bg-gradient-to-r from-[#3b6fd4] to-[#a78bfa] bg-clip-text text-transparent">
               {user.name.split(" ")[0]}
             </span>
           </h1>
         </div>
-        <Link href="/notifications" className="w-10 h-10 glass-card rounded-xl flex items-center justify-center relative">
-          <Bell size={18} className="text-white/60" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-blue-500 rounded-full" />
-        </Link>
+        <div className="flex items-center gap-2">
+          <div className="lg:hidden"><LangToggle /></div>
+          <Link href="/notifications" className="w-10 h-10 glass-card rounded-xl flex items-center justify-center relative">
+            <Bell size={18} className="text-white/60" />
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-blue-500 rounded-full" />
+          </Link>
+        </div>
       </motion.div>
 
       {/* Balance Hero Card */}
@@ -99,13 +103,13 @@ export default function DashboardPage() {
           <div className="relative p-6">
             <div className="flex items-start justify-between mb-6">
               <div>
-                <p className="text-white/50 text-sm mb-2">Solde total</p>
+                <p className="text-white/50 text-sm mb-2">{t("dash_balance")}</p>
                 <p className="text-4xl font-display font-bold text-white">{formatCurrency(user.balance)}</p>
                 <div className="flex items-center gap-2 mt-2">
                   <span className="text-emerald-400 text-sm font-semibold flex items-center gap-1">
                     <TrendingUp size={14} />+{growthPct}%
                   </span>
-                  <span className="text-white/30 text-xs">7 derniers jours</span>
+                  <span className="text-white/30 text-xs">{t("dash_7days")}</span>
                 </div>
               </div>
             </div>
@@ -135,13 +139,13 @@ export default function DashboardPage() {
         <Link href="/passes">
           <Button variant="primary" size="lg" className="w-full rounded-2xl py-4">
             <ShoppingBag size={18} />
-            <span>Acheter un Pass</span>
+            <span>{t("dash_buy_pass")}</span>
           </Button>
         </Link>
         <Link href="/tasks">
           <Button variant="secondary" size="lg" className="w-full rounded-2xl py-4">
             <CheckSquare size={18} />
-            <span>Tâche du jour</span>
+            <span>{t("dash_daily_task")}</span>
           </Button>
         </Link>
       </motion.div>
@@ -149,24 +153,24 @@ export default function DashboardPage() {
       {/* Stats row */}
       <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4, delay: 0.2 }}
         className="grid grid-cols-2 gap-3">
-        <StatCard title="Total investi" value={formatCurrency(user.totalInvested)} trend={parseFloat(growthPct)} />
-        <StatCard title="Total gagné" value={formatCurrency(user.totalEarnings)} sub="depuis le début" icon={<TrendingUp size={16} />} />
+        <StatCard title={t("dash_invested")} value={formatCurrency(user.totalInvested)} trend={parseFloat(growthPct)} />
+        <StatCard title={t("dash_earned")} value={formatCurrency(user.totalEarnings)} sub={t("dash_since_start")} icon={<TrendingUp size={16} />} />
       </motion.div>
 
       {/* Active Passes */}
       <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4, delay: 0.25 }}>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-display font-bold text-white">Mes Passes</h2>
-          <Link href="/passes" className="text-xs text-[#3b6fd4] hover:text-blue-300 transition-colors">Voir tout</Link>
+          <h2 className="font-display font-bold text-white">{t("dash_my_passes")}</h2>
+          <Link href="/passes" className="text-xs text-[#3b6fd4] hover:text-blue-300 transition-colors">{t("dash_see_all")}</Link>
         </div>
         {activePasses.length === 0 ? (
           <Card className="text-center py-8">
             <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-white/5 flex items-center justify-center">
               <ShoppingBag size={22} className="text-white/20" />
             </div>
-            <p className="text-white/40 text-sm mb-3">Aucun Pass actif</p>
+            <p className="text-white/40 text-sm mb-3">{t("dash_no_pass")}</p>
             <Link href="/passes">
-              <Button variant="primary" size="sm">Découvrir les Passes</Button>
+              <Button variant="primary" size="sm">{t("dash_discover")}</Button>
             </Link>
           </Card>
         ) : (
@@ -178,7 +182,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-white text-sm">{up.pass.name}</p>
-                  <p className="text-xs text-white/40">Expire: {formatDate(up.endDate)}</p>
+                  <p className="text-xs text-white/40">{t("dash_expires")} {formatDate(up.endDate)}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-emerald-400 font-bold text-sm">+{up.pass.dailyReturn}%</p>
@@ -193,12 +197,12 @@ export default function DashboardPage() {
       {/* Recent activity */}
       <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4, delay: 0.3 }}>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-display font-bold text-white">Activité récente</h2>
-          <Link href="/wallet" className="text-xs text-[#3b6fd4] hover:text-blue-300 transition-colors">Voir tout</Link>
+          <h2 className="font-display font-bold text-white">{t("dash_activity")}</h2>
+          <Link href="/wallet" className="text-xs text-[#3b6fd4] hover:text-blue-300 transition-colors">{t("dash_see_all")}</Link>
         </div>
         <Card className="divide-y divide-white/5">
           {recentTransactions.length === 0 ? (
-            <p className="text-white/40 text-sm text-center py-6">Aucune activité</p>
+            <p className="text-white/40 text-sm text-center py-6">{t("dash_no_activity")}</p>
           ) : (
             recentTransactions.slice(0, 5).map((tx) => (
               <div key={tx.id} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">

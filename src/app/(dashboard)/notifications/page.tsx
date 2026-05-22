@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Bell, CheckCheck, Info, AlertTriangle, CheckCircle, XCircle } from "lucide-react";
 import Card from "@/components/ui/Card";
 import { formatDate } from "@/lib/utils";
+import { useLanguage } from "@/lib/i18n";
 
 interface Notification {
   id: string;
@@ -31,6 +32,7 @@ const typeBg: Record<string, string> = {
 
 export default function NotificationsPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -54,9 +56,9 @@ export default function NotificationsPage() {
   return (
     <div className="max-w-xl mx-auto px-4 pt-8 pb-6">
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-        <p className="text-white/40 text-sm mb-1">Compte</p>
+        <p className="text-white/40 text-sm mb-1">Account</p>
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-display font-bold text-white">Notifications</h1>
+          <h1 className="text-2xl font-display font-bold text-white">{t("notif_title")}</h1>
           {notifications.length > 0 && (
             <span className="text-xs text-white/30 flex items-center gap-1">
               <CheckCheck size={13} /> {notifications.length} au total
@@ -70,8 +72,8 @@ export default function NotificationsPage() {
           <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <Bell size={28} className="text-white/20" />
           </div>
-          <p className="text-white/40 font-medium">Aucune notification</p>
-          <p className="text-white/20 text-sm mt-1">Vos notifications apparaîtront ici</p>
+          <p className="text-white/40 font-medium">{t("notif_empty")}</p>
+          <p className="text-white/20 text-sm mt-1">{t("notif_empty_sub")}</p>
         </motion.div>
       ) : (
         <Card className="divide-y divide-white/5">

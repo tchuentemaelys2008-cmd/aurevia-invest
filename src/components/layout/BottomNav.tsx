@@ -5,22 +5,27 @@ import { cn } from "@/lib/utils";
 import { Home, ShoppingBag, CheckSquare, Users, Briefcase, Wallet, LogOut, Bell, LayoutDashboard } from "lucide-react";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import LangToggle from "@/components/ui/LangToggle";
+import { useLanguage } from "@/lib/i18n";
 
-const navItems = [
-  { href: "/dashboard",      label: "Accueil",    icon: Home },
-  { href: "/passes",         label: "Passes",     icon: ShoppingBag },
-  { href: "/tasks",          label: "Tâches",     icon: CheckSquare },
-  { href: "/affiliate",      label: "Affiliation",icon: Users },
-  { href: "/portfolio",      label: "Portfolio",  icon: Briefcase },
-  { href: "/wallet",         label: "Wallet",     icon: Wallet },
-  { href: "/notifications",  label: "Alertes",    icon: Bell },
-];
+// navItems built inside component using t()
 
 export default function BottomNav() {
   const pathname = usePathname();
   const router = useRouter();
+  const { t } = useLanguage();
   const [logging, setLogging] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+
+  const navItems = [
+    { href: "/dashboard",     label: t("nav_home"),          icon: Home },
+    { href: "/passes",        label: t("nav_passes"),        icon: ShoppingBag },
+    { href: "/tasks",         label: t("nav_tasks"),         icon: CheckSquare },
+    { href: "/affiliate",     label: t("nav_affiliate"),     icon: Users },
+    { href: "/portfolio",     label: t("nav_portfolio"),     icon: Briefcase },
+    { href: "/wallet",        label: t("nav_wallet"),        icon: Wallet },
+    { href: "/notifications", label: t("nav_notifications"), icon: Bell },
+  ];
 
   useEffect(() => {
     fetch("/api/auth/me")
@@ -42,12 +47,15 @@ export default function BottomNav() {
       {/* Desktop sidebar */}
       <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-64 flex-col bg-[#070d1a] border-r border-white/5 z-50">
         <div className="p-6 border-b border-white/5">
-          <Link href="/dashboard" className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-gradient-to-br from-[#3b6fd4] to-[#6c4de6] rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold font-display text-sm">A</span>
-            </div>
-            <span className="font-display font-bold text-white text-lg">Aurevia</span>
-          </Link>
+          <div className="flex items-center justify-between">
+            <Link href="/dashboard" className="flex items-center gap-3">
+              <div className="w-9 h-9 bg-gradient-to-br from-[#3b6fd4] to-[#6c4de6] rounded-xl flex items-center justify-center">
+                <span className="text-white font-bold font-display text-sm">A</span>
+              </div>
+              <span className="font-display font-bold text-white text-lg">Aurevia</span>
+            </Link>
+            <LangToggle />
+          </div>
         </div>
 
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
@@ -73,7 +81,7 @@ export default function BottomNav() {
               className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-purple-400 bg-purple-400/10 hover:bg-purple-400/15 border border-purple-400/20 transition-all w-full"
             >
               <LayoutDashboard size={18} />
-              Panneau Admin
+              {t("nav_admin")}
             </Link>
           )}
           <button
@@ -82,7 +90,7 @@ export default function BottomNav() {
             className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-white/40 hover:text-red-400 hover:bg-red-400/10 transition-all w-full"
           >
             <LogOut size={18} />
-            {logging ? "Déconnexion..." : "Déconnexion"}
+            {logging ? "..." : t("nav_logout")}
           </button>
         </div>
       </aside>
@@ -106,7 +114,7 @@ export default function BottomNav() {
           {isAdmin && (
             <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 px-2 py-2 rounded-xl text-purple-400 min-w-0">
               <LayoutDashboard size={20} />
-              <span className="text-[10px] font-medium">Admin</span>
+              <span className="text-[10px] font-medium">{t("nav_admin").split(" ")[0]}</span>
             </Link>
           )}
 
@@ -116,7 +124,7 @@ export default function BottomNav() {
             className="flex flex-col items-center gap-1 px-2 py-2 rounded-xl text-white/40 hover:text-red-400 transition-all min-w-0"
           >
             <LogOut size={20} />
-            <span className="text-[10px] font-medium">Sortir</span>
+            <span className="text-[10px] font-medium">{t("nav_exit")}</span>
           </button>
         </div>
       </nav>
