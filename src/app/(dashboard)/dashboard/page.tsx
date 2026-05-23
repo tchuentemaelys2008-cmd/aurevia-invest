@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { TrendingUp, ShoppingBag, CheckSquare, ArrowUpRight, ArrowDownRight, Bell } from "lucide-react";
+import { TrendingUp, ShoppingBag, CheckSquare, ArrowUpRight, ArrowDownRight, Bell, Wallet } from "lucide-react";
 import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer } from "recharts";
 import Card, { StatCard } from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
@@ -34,6 +34,7 @@ const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<
 
 export default function DashboardPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -63,7 +64,6 @@ export default function DashboardPage() {
 
   if (!data) return null;
 
-  const { t } = useLanguage();
   const txTypeLabel: Record<string, string> = {
     PASS_PURCHASE: t("tx_PASS_PURCHASE"), DAILY_EARNING: t("tx_DAILY_EARNING"),
     TASK_REWARD: t("tx_TASK_REWARD"), AFFILIATE_COMMISSION: t("tx_AFFILIATE_COMMISSION"),
@@ -78,7 +78,7 @@ export default function DashboardPage() {
       <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4 }}
         className="flex items-start justify-between">
         <div>
-          <p className="text-white/40 text-sm mb-1">Dashboard</p>
+          <p className="text-white/40 text-sm mb-1">{t("dash_label")}</p>
           <h1 className="text-2xl font-display font-bold text-white leading-tight">
             {t("dash_greeting")}<br />
             <span className="bg-gradient-to-r from-[#3b6fd4] to-[#a78bfa] bg-clip-text text-transparent">
@@ -136,10 +136,22 @@ export default function DashboardPage() {
       {/* CTA Buttons */}
       <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4, delay: 0.15 }}
         className="grid grid-cols-2 gap-3">
-        <Link href="/passes">
-          <Button variant="primary" size="lg" className="w-full rounded-2xl py-4">
-            <ShoppingBag size={18} />
-            <span>{t("dash_buy_pass")}</span>
+            <Link href="/passes">
+              <Button variant="secondary" size="md" className="w-full rounded-xl">
+                <ArrowDownRight size={16} />
+                <span>{t("dash_deposit")}</span>
+              </Button>
+            </Link>
+            <Link href="/wallet">
+              <Button variant="secondary" size="md" className="w-full rounded-xl">
+                <Wallet size={16} />
+                <span>{t("dash_withdraw")}</span>
+              </Button>
+            </Link>
+            <Link href="/passes">
+              <Button variant="primary" size="lg" className="w-full rounded-2xl py-4">
+                <ShoppingBag size={18} />
+                <span>{t("dash_buy_pass")}</span>
           </Button>
         </Link>
         <Link href="/tasks">
@@ -186,7 +198,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="text-right">
                   <p className="text-emerald-400 font-bold text-sm">+{up.pass.dailyReturn}%</p>
-                  <p className="text-xs text-white/30">/ jour</p>
+                  <p className="text-xs text-white/30">{t("passes_return")}</p>
                 </div>
               </Card>
             ))}

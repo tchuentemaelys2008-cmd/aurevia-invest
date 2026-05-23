@@ -47,8 +47,8 @@ export default function WalletPage() {
 
   const handleWithdraw = async () => {
     const amt = parseFloat(amount);
-    if (!amt || amt < 2000) { toast.error("Montant minimum: 2000 FCFA"); return; }
-    if (!accountInfo) { toast.error("Informations de compte requises"); return; }
+    if (!amt || amt < 2000) { toast.error(t("wallet_min_error")); return; }
+    if (!accountInfo) { toast.error(t("wallet_account_error")); return; }
     setWithdrawing(true);
     try {
       const res = await fetch("/api/wallet/withdraw", {
@@ -58,7 +58,7 @@ export default function WalletPage() {
       });
       const json = await res.json();
       if (!res.ok) { toast.error(json.error); return; }
-      toast.success("Demande de retrait soumise !");
+      toast.success(t("wallet_success"));
       setShowWithdraw(false);
       setAmount("");
       setAccountInfo("");

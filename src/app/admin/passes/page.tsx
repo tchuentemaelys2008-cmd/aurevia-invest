@@ -12,7 +12,7 @@ interface Pass {
   duration: number; description: string; color: string; isActive: boolean;
 }
 
-const defaultForm = { name: "", price: 0, dailyReturn: 0, duration: 30, description: "", color: "#3b6fd4" };
+const defaultForm = { name: "", price: 0, dailyReturn: 0, duration: 120, description: "", color: "#3b6fd4" };
 
 export default function AdminPassesPage() {
   const [passes, setPasses] = useState<Pass[]>([]);
@@ -100,7 +100,7 @@ export default function AdminPassesPage() {
                 </div>
                 <div className="p-2 rounded-xl bg-white/4">
                   <p className="text-lg font-bold text-emerald-400">{p.dailyReturn}%</p>
-                  <p className="text-[10px] text-white/30">/ jour</p>
+                  <p className="text-[10px] text-white/30">Revenu</p>
                 </div>
                 <div className="p-2 rounded-xl bg-white/4">
                   <p className="text-lg font-bold text-white">{p.duration}j</p>
@@ -134,7 +134,7 @@ export default function AdminPassesPage() {
               <Input label="Nom du pass" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Ex: Aurevia Pro" />
               <div className="grid grid-cols-2 gap-3">
                 <Input label="Prix (FCFA)" type="number" value={form.price || ""} onChange={(e) => setForm({ ...form, price: parseFloat(e.target.value) })} />
-                <Input label="Retour journalier (%)" type="number" value={form.dailyReturn || ""} onChange={(e) => setForm({ ...form, dailyReturn: parseFloat(e.target.value) })} />
+                <Input label="Revenu (%)" type="number" value={form.dailyReturn || ""} onChange={(e) => setForm({ ...form, dailyReturn: parseFloat(e.target.value) })} />
               </div>
               <Input label="Durée (jours)" type="number" value={form.duration || ""} onChange={(e) => setForm({ ...form, duration: parseInt(e.target.value) })} />
               <Input label="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Description du pass" />
