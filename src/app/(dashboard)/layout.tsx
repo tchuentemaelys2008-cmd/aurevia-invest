@@ -1,10 +1,12 @@
-import BottomNav from "@/components/layout/BottomNav";
+import Sidebar from "@/components/layout/Sidebar";
+import EventBanner from "@/components/ui/EventBanner";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen lg:pl-64">
-      <BottomNav />
-      <main className="pb-24 lg:pb-6 min-h-screen">
+      <Sidebar />
+      <main className="pt-14 lg:pt-0 min-h-screen">
+        <EventBanner />
         {children}
       </main>
     </div>

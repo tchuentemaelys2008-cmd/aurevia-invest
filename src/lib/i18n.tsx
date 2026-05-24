@@ -114,6 +114,34 @@ const translations = {
     tx_PASS_PURCHASE: "Achat de Pass", tx_DAILY_EARNING: "Revenu journalier",
     tx_TASK_REWARD: "Recompense tache", tx_AFFILIATE_COMMISSION: "Commission affiliation",
     tx_WITHDRAWAL: "Retrait", tx_REFERRAL_BONUS: "Bonus parrainage",
+
+    nav_missions: "Missions", nav_leaderboard: "Classement", nav_team: "Equipe",
+    nav_simulator: "Simulateur", nav_settings: "Parametres",
+
+    missions_kicker: "Defis", missions_title: "Missions", missions_sub: "Accomplissez des defis et gagnez des recompenses.",
+    missions_reward: "Recompense", missions_done: "Accomplie", missions_claim: "Reclamer", missions_locked: "Bloque",
+    missions_empty: "Aucune mission disponible pour le moment.",
+    mission_type_invest: "Investissement", mission_type_invite: "Parrainage", mission_type_task: "Tache",
+    mission_type_daily: "Quotidien", mission_type_weekly: "Hebdomadaire",
+
+    lb_kicker: "Competition", lb_title: "Classement", lb_sub: "Les meilleurs investisseurs de la plateforme.",
+    lb_my_rank: "Mon classement", lb_invested: "investis",
+
+    team_kicker: "Communaute", team_title: "Equipes", team_sub: "Rejoignez ou creez une equipe pour investir ensemble.",
+    team_create_btn: "Creer", team_create_title: "Nouvelle equipe", team_name_placeholder: "Nom de l'equipe",
+    team_confirm: "Creer", team_created: "Equipe creee !", team_joined: "Equipe rejointe !",
+    team_join: "Rejoindre", team_empty: "Aucune equipe pour le moment.",
+
+    spin_kicker: "Chance quotidienne", spin_title: "Roue de la chance", spin_sub: "Tournez chaque jour pour gagner des recompenses.",
+    spin_btn: "Tourner la roue", spin_spinning: "En cours...", spin_next: "Prochain spin dans",
+
+    sim_kicker: "Outil de calcul", sim_title: "Simulateur de gains", sim_sub: "Estimez vos revenus selon votre investissement.",
+    sim_amount: "Montant investi", sim_daily_rate: "Taux journalier", sim_duration: "Duree",
+    sim_daily: "Revenu / jour", sim_monthly: "Revenu / 30j", sim_total: "Total", sim_chart: "Projection des gains",
+    sim_preset: "Presets passes",
+
+    settings_title: "Parametres", settings_language: "Langue", settings_lang_desc: "Choisissez votre langue d'interface.",
+    settings_about: "A propos",
   },
   en: {
     nav_home: "Home", nav_passes: "Passes", nav_tasks: "Tasks",
@@ -225,6 +253,34 @@ const translations = {
     tx_PASS_PURCHASE: "Pass Purchase", tx_DAILY_EARNING: "Daily Revenue",
     tx_TASK_REWARD: "Task Reward", tx_AFFILIATE_COMMISSION: "Affiliate Commission",
     tx_WITHDRAWAL: "Withdrawal", tx_REFERRAL_BONUS: "Referral Bonus",
+
+    nav_missions: "Missions", nav_leaderboard: "Leaderboard", nav_team: "Team",
+    nav_simulator: "Simulator", nav_settings: "Settings",
+
+    missions_kicker: "Challenges", missions_title: "Missions", missions_sub: "Complete challenges and earn rewards.",
+    missions_reward: "Reward", missions_done: "Completed", missions_claim: "Claim", missions_locked: "Locked",
+    missions_empty: "No missions available yet.",
+    mission_type_invest: "Investment", mission_type_invite: "Referral", mission_type_task: "Task",
+    mission_type_daily: "Daily", mission_type_weekly: "Weekly",
+
+    lb_kicker: "Competition", lb_title: "Leaderboard", lb_sub: "Top investors on the platform.",
+    lb_my_rank: "My ranking", lb_invested: "invested",
+
+    team_kicker: "Community", team_title: "Teams", team_sub: "Join or create a team to invest together.",
+    team_create_btn: "Create", team_create_title: "New team", team_name_placeholder: "Team name",
+    team_confirm: "Create", team_created: "Team created!", team_joined: "Team joined!",
+    team_join: "Join", team_empty: "No teams yet.",
+
+    spin_kicker: "Daily chance", spin_title: "Spin Wheel", spin_sub: "Spin every day to win rewards.",
+    spin_btn: "Spin the wheel", spin_spinning: "Spinning...", spin_next: "Next spin in",
+
+    sim_kicker: "Calculation tool", sim_title: "Earnings Simulator", sim_sub: "Estimate your returns based on your investment.",
+    sim_amount: "Investment amount", sim_daily_rate: "Daily rate", sim_duration: "Duration",
+    sim_daily: "Revenue / day", sim_monthly: "Revenue / 30d", sim_total: "Total", sim_chart: "Earnings projection",
+    sim_preset: "Pass presets",
+
+    settings_title: "Settings", settings_language: "Language", settings_lang_desc: "Choose your interface language.",
+    settings_about: "About",
   },
 } as const;
 

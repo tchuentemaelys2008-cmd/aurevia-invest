@@ -15,6 +15,8 @@ export async function middleware(req: NextRequest) {
   if (PUBLIC_PATHS.some((p) => pathname.startsWith(p))) return NextResponse.next();
   if (pathname.startsWith("/api/auth")) return NextResponse.next();
   if (pathname.startsWith("/payment")) return NextResponse.next();
+  if (pathname.startsWith("/api/events")) return NextResponse.next();
+  if (pathname.startsWith("/api/leaderboard")) return NextResponse.next();
 
   if (!token) {
     const loginUrl = new URL("/login", req.url);

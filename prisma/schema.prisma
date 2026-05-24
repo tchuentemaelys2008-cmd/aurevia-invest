@@ -25,6 +25,12 @@ model User {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
+  level        Int      @default(1)
+  xp           Float    @default(0)
+  isVerified   Boolean  @default(false)
+  spinLastUsed DateTime?
+  lastActive   DateTime?
+
   passes        UserPass[]
   transactions  Transaction[]
   tasks         UserTask[]
@@ -32,6 +38,11 @@ model User {
   affiliateClicks AffiliateClick[]
   notifications Notification[]
   resetTokens   PasswordResetToken[]
+  userMissions  UserMission[]
+  teamMember    TeamMember?
+  ledTeams      Team[]           @relation("TeamLeader")
+  spinResults   SpinResult[]
+  leaderboardEntry LeaderboardEntry?
 
   @@map("users")
 }
@@ -210,6 +221,120 @@ model Notification {
   createdAt DateTime @default(now())
 
   @@map("notifications")
+}
+
+model Mission {
+  id            String   @id @default(cuid())
+  title         String
+  titleEn       String?
+  description   String?
+  descriptionEn String?
+  type          String   // invest, invite, task, daily, weekly
+  target        Float
+  reward        Float
+  rewardType    String   @default("money")
+  isActive      Boolean  @default(true)
+  period        String   @default("all_time")
+  expiresAt     DateTime?
+  createdAt     DateTime @default(now())
+  userMissions  UserMission[]
+  @@map("missions")
+}
+
+model UserMission {
+  id          String   @id @default(cuid())
+  userId      String
+  missionId   String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mission     Mission  @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  progress    Float    @default(0)
+  completed   Boolean  @default(false)
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+  @@unique([userId, missionId])
+  @@map("user_missions")
+}
+
+model Team {
+  id            String       @id @default(cuid())
+  name          String       @unique
+  leaderId      String
+  leader        User         @relation("TeamLeader", fields: [leaderId], references: [id])
+  members       TeamMember[]
+  totalInvested Float        @default(0)
+  isActive      Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+  @@map("teams")
+}
+
+model TeamMember {
+  id       String   @id @default(cuid())
+  teamId   String
+  userId   String   @unique
+  team     Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  joinedAt DateTime @default(now())
+  @@map("team_members")
+}
+
+model SpinConfig {
+  id          String  @id @default(cuid())
+  label       String
+  value       Float   @default(0)
+  type        String  @default("money")
+  probability Float   @default(0.1)
+  color       String  @default("#3b6fd4")
+  isActive    Boolean @default(true)
+  @@map("spin_configs")
+}
+
+model SpinResult {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label     String
+  value     Float
+  type      String
+  createdAt DateTime @default(now())
+  @@map("spin_results")
+}
+
+model Event {
+  id            String    @id @default(cuid())
+  title         String
+  titleEn       String?
+  description   String?
+  descriptionEn String?
+  type          String    @default("bonus")
+  value         Float     @default(0)
+  isActive      Boolean   @default(true)
+  showBanner    Boolean   @default(true)
+  startsAt      DateTime?
+  endsAt        DateTime?
+  createdAt     DateTime  @default(now())
+  @@map("events")
+}
+
+model LeaderboardEntry {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  score     Float    @default(0)
+  rank      Int?
+  period    String   @default("all_time")
+  updatedAt DateTime @updatedAt
+  @@map("leaderboard_entries")
+}
+
+model AdminLog {
+  id         String   @id @default(cuid())
+  adminId    String
+  adminEmail String
+  action     String
+  target     String?
+  details    Json?
+  createdAt  DateTime @default(now())
+  @@map("admin_logs")
 }
 
 model PasswordResetToken {

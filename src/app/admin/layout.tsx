@@ -2,17 +2,23 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { BarChart3, Users, ShoppingBag, ArrowDownCircle, LogOut, Home, Settings, Menu, X, CreditCard } from "lucide-react";
+import { BarChart3, Users, ShoppingBag, ArrowDownCircle, LogOut, Home, Settings, Menu, X, CreditCard, Target, Zap, Sparkles, Trophy, Bell, Shield } from "lucide-react";
 import toast from "react-hot-toast";
 import { useState } from "react";
 
 const adminNav = [
-  { href: "/admin/dashboard",  label: "Tableau de bord", icon: BarChart3 },
-  { href: "/admin/users",      label: "Utilisateurs",    icon: Users },
-  { href: "/admin/passes",     label: "Passes",          icon: ShoppingBag },
-  { href: "/admin/payments",   label: "Paiements",       icon: CreditCard },
-  { href: "/admin/withdrawals",label: "Retraits",        icon: ArrowDownCircle },
-  { href: "/admin/settings",   label: "Paramètres",      icon: Settings },
+  { href: "/admin/dashboard",            label: "Tableau de bord",  icon: BarChart3 },
+  { href: "/admin/users",                label: "Utilisateurs",     icon: Users },
+  { href: "/admin/passes",               label: "Passes",           icon: ShoppingBag },
+  { href: "/admin/payments",             label: "Paiements",        icon: CreditCard },
+  { href: "/admin/withdrawals",          label: "Retraits",         icon: ArrowDownCircle },
+  { href: "/admin/missions",             label: "Missions",         icon: Target },
+  { href: "/admin/events",               label: "Événements",       icon: Zap },
+  { href: "/admin/spin",                 label: "Spin Wheel",       icon: Sparkles },
+  { href: "/admin/leaderboard-manage",   label: "Classement",       icon: Trophy },
+  { href: "/admin/notifications-send",   label: "Notifications",    icon: Bell },
+  { href: "/admin/logs",                 label: "Logs",             icon: Shield },
+  { href: "/admin/settings",             label: "Paramètres",       icon: Settings },
 ];
 
 function Sidebar({ onClose }: { onClose?: () => void }) {
