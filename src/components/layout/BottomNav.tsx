@@ -36,9 +36,11 @@ export default function BottomNav() {
         <div className="p-6 border-b border-white/5">
           <div className="flex items-center justify-between">
             <Link href="/dashboard" className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-gradient-to-br from-[#3b6fd4] to-[#6c4de6] rounded-xl flex items-center justify-center">
-                <span className="text-white font-bold font-display text-sm">A</span>
-              </div>
+              <img
+                src="/api/brand-logo"
+                alt="Aurevia Invest"
+                className="w-9 h-9 rounded-xl object-cover bg-white/5 border border-white/10"
+              />
               <span className="font-display font-bold text-white text-lg">Aurevia</span>
             </Link>
             <LangToggle />
