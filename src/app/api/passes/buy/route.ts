@@ -38,6 +38,11 @@ export async function POST(req: NextRequest) {
     const pass = await prisma.pass.findUnique({ where: { id: data.passId } });
     if (!pass) return NextResponse.json({ error: "Pass introuvable" }, { status: 404 });
 
+    // Orange Money et MTN passent toujours par Fapshi
+    if (data.paymentMethod === "GENIUSPAY_ORANGE" || data.paymentMethod === "GENIUSPAY_MTN") {
+      data.paymentMethod = "FAPSHI";
+    }
+
     const reference = `AUR-${nanoid(12).toUpperCase()}`;
     const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000";
 
