@@ -40,9 +40,11 @@ export default function LoginPage() {
   return (
     <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
       <div className="text-center mb-8">
-        <div className="w-14 h-14 bg-gradient-to-br from-[#3b6fd4] to-[#6c4de6] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_40px_rgba(59,111,212,0.4)]">
-          <span className="text-white font-display font-bold text-2xl">A</span>
-        </div>
+        <img
+          src="/aurevia-logo.jpg"
+          alt="Aurevia Invest"
+          className="w-44 h-24 rounded-2xl object-cover mx-auto mb-4 shadow-[0_0_40px_rgba(59,111,212,0.4)]"
+        />
         <h1 className="text-2xl font-display font-bold text-white">Aurevia Invest</h1>
         <p className="text-white/40 text-sm mt-1">Investissez intelligemment</p>
       </div>

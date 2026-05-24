@@ -37,7 +37,7 @@ export default function BottomNav() {
           <div className="flex items-center justify-between">
             <Link href="/dashboard" className="flex items-center gap-3">
               <img
-                src="/api/brand-logo"
+                src="/aurevia-logo.jpg"
                 alt="Aurevia Invest"
                 className="w-9 h-9 rounded-xl object-cover bg-white/5 border border-white/10"
               />

@@ -29,9 +29,7 @@ function Sidebar({ onClose }: { onClose?: () => void }) {
     <div className="flex flex-col h-full">
       <div className="p-4 border-b border-white/5 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 bg-gradient-to-br from-[#3b6fd4] to-[#6c4de6] rounded-lg flex items-center justify-center flex-shrink-0">
-            <span className="text-white font-bold font-display text-sm">A</span>
-          </div>
+          <img src="/aurevia-logo.jpg" alt="Aurevia" className="w-8 h-8 rounded-lg object-cover flex-shrink-0" />
           <div>
             <p className="font-display font-bold text-white text-sm">Aurevia Admin</p>
             <p className="text-[10px] text-white/30">Panneau de gestion</p>
@@ -98,9 +96,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Menu size={20} />
         </button>
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 bg-gradient-to-br from-[#3b6fd4] to-[#6c4de6] rounded-md flex items-center justify-center">
-            <span className="text-white font-bold text-xs">A</span>
-          </div>
+          <img src="/aurevia-logo.jpg" alt="Aurevia" className="w-6 h-6 rounded-md object-cover" />
           <span className="font-display font-bold text-white text-sm">Admin</span>
         </div>
       </div>
