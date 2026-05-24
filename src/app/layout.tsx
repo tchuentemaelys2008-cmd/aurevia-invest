@@ -16,65 +16,77 @@ const spaceGrotesk = Space_Grotesk({
 
 const siteUrl = process.env.NEXT_PUBLIC_URL || "https://aurevia-invest.vercel.app";
 const siteName = "Aurevia Invest";
-const description = "Aurevia Invest est une plateforme d'investissement avec passes, revenus quotidiens, depots, retraits et programme d'affiliation.";
+const siteTagline = "Investissez en Afrique, récoltez chaque jour";
+const description =
+  "Aurevia Invest — la plateforme d'investissement africaine. Achetez un pass, générez des revenus quotidiens en FCFA, retirez via Mobile Money (Orange, MTN, Wave) et boostez vos gains grâce au parrainage.";
+const logoUrl = "/aurevia-logo.jpg";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   applicationName: siteName,
   title: {
-    default: `${siteName} - Passes, revenus et affiliation`,
+    default: `${siteName} — ${siteTagline}`,
     template: `%s | ${siteName}`,
   },
   description,
   keywords: [
     "Aurevia Invest",
-    "investissement",
-    "passes",
-    "revenus quotidiens",
-    "depot",
-    "retrait",
-    "affiliation",
-    "mobile money",
-    "FCFA",
+    "investissement Afrique",
+    "revenus quotidiens FCFA",
+    "passes investissement",
+    "Mobile Money",
+    "Orange Money",
+    "MTN Mobile Money",
+    "Wave",
+    "Fapshi",
+    "parrainage affiliation",
+    "depot retrait Cameroun",
+    "Côte d'Ivoire",
+    "Sénégal",
+    "investir en ligne Afrique",
+    "revenus passifs",
   ],
-  authors: [{ name: siteName }],
+  authors: [{ name: siteName, url: siteUrl }],
   creator: siteName,
   publisher: siteName,
   category: "finance",
   alternates: {
     canonical: "/",
     languages: {
-      fr: "/",
-      en: "/",
+      "fr-FR": "/",
+      "en-US": "/",
     },
   },
   icons: {
-    icon: "/api/brand-logo",
-    shortcut: "/api/brand-logo",
-    apple: "/api/brand-logo",
+    icon: [
+      { url: logoUrl, type: "image/jpeg" },
+    ],
+    shortcut: logoUrl,
+    apple: { url: logoUrl, sizes: "180x180" },
   },
   openGraph: {
     type: "website",
     locale: "fr_FR",
     alternateLocale: ["en_US"],
-    url: "/",
+    url: siteUrl,
     siteName,
-    title: `${siteName} - Investissez avec des passes simples`,
+    title: `${siteName} — ${siteTagline}`,
     description,
     images: [
       {
-        url: "/api/brand-logo",
-        width: 1200,
-        height: 630,
-        alt: `${siteName} logo`,
+        url: logoUrl,
+        width: 800,
+        height: 420,
+        alt: "Aurevia Invest — Plateforme d'investissement africaine",
+        type: "image/jpeg",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteName} - Passes, revenus et affiliation`,
+    title: `${siteName} — ${siteTagline}`,
     description,
-    images: ["/api/brand-logo"],
+    images: [{ url: logoUrl, alt: "Aurevia Invest" }],
   },
   robots: {
     index: true,
@@ -91,6 +103,9 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#070d1a",
+  colorScheme: "dark",
+  width: "device-width",
+  initialScale: 1,
 };
 
 const organizationJsonLd = {
@@ -98,9 +113,28 @@ const organizationJsonLd = {
   "@type": "Organization",
   name: siteName,
   url: siteUrl,
-  logo: `${siteUrl}/api/brand-logo`,
-  sameAs: [],
+  logo: `${siteUrl}${logoUrl}`,
+  image: `${siteUrl}${logoUrl}`,
   description,
+  foundingLocation: {
+    "@type": "Place",
+    name: "Afrique",
+  },
+  sameAs: [],
+};
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: siteName,
+  url: siteUrl,
+  description,
+  inLanguage: ["fr-FR", "en-US"],
+  potentialAction: {
+    "@type": "SearchAction",
+    target: `${siteUrl}/passes`,
+    "query-input": "required name=search_term_string",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -110,6 +144,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
         <LanguageProvider>{children}</LanguageProvider>
         <Toaster
