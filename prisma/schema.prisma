@@ -31,6 +31,7 @@ model User {
   withdrawals   Withdrawal[]
   affiliateClicks AffiliateClick[]
   notifications Notification[]
+  resetTokens   PasswordResetToken[]
 
   @@map("users")
 }
@@ -209,6 +210,17 @@ model Notification {
   createdAt DateTime @default(now())
 
   @@map("notifications")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@map("password_reset_tokens")
 }
 
 model Settings {

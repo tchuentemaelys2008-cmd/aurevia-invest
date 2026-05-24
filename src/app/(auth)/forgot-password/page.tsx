@@ -18,10 +18,22 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
     if (!email) return;
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 1000));
-    setSent(true);
-    setLoading(false);
-    toast.success("Email envoyé !");
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        toast.error(data.error || "Erreur serveur");
+        return;
+      }
+      setSent(true);
+      toast.success("Email envoyé !");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

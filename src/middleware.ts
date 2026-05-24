@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-const PUBLIC_PATHS = ["/login", "/register", "/forgot-password"];
+const PUBLIC_PATHS = ["/login", "/register", "/forgot-password", "/reset-password"];
 const ADMIN_PATHS = ["/admin"];
 
 const JWT_SECRET = new TextEncoder().encode(
