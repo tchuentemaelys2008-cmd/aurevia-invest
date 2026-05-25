@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Plus, Edit2, Trash2, X, Check } from "lucide-react";
+import { Plus, Edit2, Trash2, X, Check, RefreshCw } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { formatCurrency } from "@/lib/utils";
@@ -21,6 +21,16 @@ export default function AdminPassesPage() {
   const [editPass, setEditPass] = useState<Pass | null>(null);
   const [form, setForm] = useState(defaultForm);
   const [saving, setSaving] = useState(false);
+  const [syncing, setSyncing] = useState(false);
+
+  const syncPasses = async () => {
+    setSyncing(true);
+    const res = await fetch("/api/admin/passes/sync", { method: "POST" });
+    const data = await res.json();
+    if (res.ok) { toast.success(data.message || "Passes synchronisés"); load(); }
+    else toast.error(data.error || "Erreur");
+    setSyncing(false);
+  };
 
   const load = async () => {
     const res = await fetch("/api/passes");
@@ -69,9 +79,14 @@ export default function AdminPassesPage() {
           <h1 className="text-2xl font-display font-bold text-white">Gestion des Passes</h1>
           <p className="text-white/40 text-sm">{passes.length} passes configurés</p>
         </div>
-        <Button variant="primary" onClick={openCreate}>
-          <Plus size={16} /> Nouveau Pass
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="secondary" onClick={syncPasses} loading={syncing}>
+            <RefreshCw size={15} /> Sync 90j
+          </Button>
+          <Button variant="primary" onClick={openCreate}>
+            <Plus size={16} /> Nouveau Pass
+          </Button>
+        </div>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

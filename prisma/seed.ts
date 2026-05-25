@@ -18,10 +18,13 @@ async function main() {
     { name: "Aurevia VIP", price: 100000, dailyReturn: 20, duration: 90, color: "#e6404d", icon: "crown", description: "Niveau ultime avec revenus maximum et support dedie." },
   ];
 
-  await prisma.pass.deleteMany({});
   for (const pass of passes) {
     const id = pass.name.toLowerCase().replace(/\s+/g, "-");
-    await prisma.pass.create({ data: { ...pass, id } });
+    await prisma.pass.upsert({
+      where: { id },
+      update: { price: pass.price, dailyReturn: pass.dailyReturn, duration: pass.duration, color: pass.color, icon: pass.icon, description: pass.description },
+      create: { ...pass, id },
+    });
   }
 
   const tasks = [
