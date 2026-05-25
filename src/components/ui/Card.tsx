@@ -12,9 +12,9 @@ export default function Card({ children, className, glow, onClick }: CardProps) 
     <div
       onClick={onClick}
       className={cn(
-        "glass-card rounded-2xl p-5 relative overflow-hidden",
+        "glass-card rounded-2xl p-5 relative overflow-hidden transition-all duration-200",
         glow && "glow-blue",
-        onClick && "cursor-pointer hover:border-[#3b6fd4]/30 transition-all duration-200 hover:-translate-y-0.5",
+        onClick && "cursor-pointer card-lift select-none touch-manipulation",
         className
       )}
     >

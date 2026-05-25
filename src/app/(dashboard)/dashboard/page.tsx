@@ -102,7 +102,7 @@ export default function DashboardPage() {
             <div className="flex items-start justify-between mb-6">
               <div>
                 <p className="text-white/50 text-sm mb-2">{t("dash_balance")}</p>
-                <p className="text-4xl font-display font-bold text-white">{formatCurrency(user.balance)}</p>
+                <p className="text-4xl font-display font-bold text-white number-pop">{formatCurrency(user.balance)}</p>
                 <div className="flex items-center gap-2 mt-2">
                   <span className="text-emerald-400 text-sm font-semibold flex items-center gap-1">
                     <TrendingUp size={14} />+{growthPct}%

@@ -177,8 +177,8 @@ export default function PassesPage() {
           const isOwned = ownedIds.includes(pass.id);
           const isPopular = pass.name.includes("Gold");
           return (
-            <motion.div key={pass.id} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}>
-              <div className={`relative rounded-2xl border ${colors.border} ${colors.glow} bg-[#0c1428] h-full`}>
+            <motion.div key={pass.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}>
+              <div className={`relative rounded-2xl border ${colors.border} ${colors.glow} bg-[#0c1428] h-full card-lift cursor-pointer`}>
                 {isPopular && (
                   <div className="absolute top-2 right-2 bg-gradient-to-r from-[#3b6fd4] to-[#6c4de6] text-white text-[9px] font-bold px-2 py-0.5 rounded-full z-10">
                     {t("passes_popular")}

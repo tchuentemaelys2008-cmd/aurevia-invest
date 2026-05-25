@@ -9,7 +9,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <div className="min-h-screen lg:pl-64 flex flex-col">
       <Sidebar />
-      <main className="pt-14 lg:pt-0 flex-1">
+      <main className="pt-14 lg:pt-0 flex-1 page-enter">
         <EventBanner />
         <PurchaseTicker />
         {children}
