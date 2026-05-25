@@ -17,9 +17,10 @@ export async function GET() {
         select: { id: true, name: true, balance: true, totalEarnings: true, totalInvested: true, referralCode: true, level: true, xp: true, isVerified: true },
       }),
       prisma.userPass.findMany({
-        where: { userId: auth.userId, status: "ACTIVE" },
+        where: { userId: auth.userId, status: { in: ["ACTIVE", "PENDING"] } },
         include: { pass: true },
-        take: 5,
+        orderBy: { createdAt: "desc" },
+        take: 6,
       }),
       prisma.transaction.findMany({
         where: { userId: auth.userId },

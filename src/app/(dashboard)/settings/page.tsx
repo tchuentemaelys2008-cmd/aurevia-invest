@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Globe, User, Phone, Save, Hash } from "lucide-react";
+import { Globe, User, Phone, Save, Hash, Users, Crown } from "lucide-react";
 import toast from "react-hot-toast";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
@@ -19,18 +19,20 @@ export default function SettingsPage() {
   const [form, setForm] = useState({ name: "", phone: "" });
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [myTeamName, setMyTeamName] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/auth/me")
-      .then(r => r.json())
-      .then(d => {
-        if (d.user) {
-          setProfile(d.user);
-          setForm({ name: d.user.name || "", phone: d.user.phone || "" });
-        }
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
+    Promise.all([
+      fetch("/api/auth/me").then(r => r.json()),
+      fetch("/api/teams").then(r => r.json()).catch(() => ({})),
+    ]).then(([d, teamsData]) => {
+      if (d.user) {
+        setProfile(d.user);
+        setForm({ name: d.user.name || "", phone: d.user.phone || "" });
+      }
+      if (teamsData.myTeamName) setMyTeamName(teamsData.myTeamName);
+      setLoading(false);
+    }).catch(() => setLoading(false));
   }, []);
 
   const save = async () => {
@@ -121,8 +123,42 @@ export default function SettingsPage() {
           </div>
         </motion.div>
 
-        {/* Language */}
+        {/* Team */}
         <motion.div initial="hidden" animate="show" custom={2} variants={fade}>
+          <div className="rounded-2xl overflow-hidden border" style={{ background: "var(--surface-card)", borderColor: "var(--control-border)" }}>
+            <div className="px-5 py-3 border-b flex items-center gap-2" style={{ borderColor: "var(--control-border)" }}>
+              <Users size={15} className="text-[#3b6fd4]" />
+              <span className="text-sm font-semibold" style={{ color: "var(--control-text)" }}>
+                {lang === "fr" ? "Mon équipe" : "My team"}
+              </span>
+            </div>
+            <div className="px-5 py-4 flex items-center justify-between gap-3">
+              {myTeamName ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-xl bg-[#3b6fd4]/15 flex items-center justify-center flex-shrink-0">
+                    <Crown size={14} className="text-[#3b6fd4]" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold" style={{ color: "var(--control-text)" }}>{myTeamName}</p>
+                    <p className="text-xs" style={{ color: "var(--control-text)", opacity: 0.4 }}>
+                      {lang === "fr" ? "Membre actif" : "Active member"}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-sm" style={{ color: "var(--control-text)", opacity: 0.45 }}>
+                  {lang === "fr" ? "Vous n'êtes dans aucune équipe." : "You are not in any team."}
+                </p>
+              )}
+              <a href="/team" className="text-xs font-semibold text-[#3b6fd4] bg-[#3b6fd4]/10 hover:bg-[#3b6fd4]/20 px-3 py-1.5 rounded-xl transition-all flex-shrink-0">
+                {lang === "fr" ? "Voir les équipes" : "View teams"}
+              </a>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Language */}
+        <motion.div initial="hidden" animate="show" custom={3} variants={fade}>
           <div className="rounded-2xl overflow-hidden border" style={{ background: "var(--surface-card)", borderColor: "var(--control-border)" }}>
             <div className="px-5 py-3 border-b flex items-center gap-2" style={{ borderColor: "var(--control-border)" }}>
               <Globe size={15} className="text-[#3b6fd4]" />
@@ -136,7 +172,7 @@ export default function SettingsPage() {
         </motion.div>
 
         {/* Theme */}
-        <motion.div initial="hidden" animate="show" custom={3} variants={fade}>
+        <motion.div initial="hidden" animate="show" custom={4} variants={fade}>
           <div className="rounded-2xl overflow-hidden border" style={{ background: "var(--surface-card)", borderColor: "var(--control-border)" }}>
             <div className="px-5 py-3 border-b flex items-center gap-2" style={{ borderColor: "var(--control-border)" }}>
               <Globe size={15} className="text-[#6c4de6]" />

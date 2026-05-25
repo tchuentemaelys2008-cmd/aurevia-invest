@@ -5,13 +5,17 @@ import { prisma } from "@/lib/prisma";
 import { getAuthUser } from "@/lib/auth";
 
 export async function GET() {
-  const teams = await prisma.team.findMany({
-    where: { isActive: true },
-    include: { leader: { select: { name: true } }, _count: { select: { members: true } } },
-    orderBy: { totalInvested: "desc" },
-    take: 30,
-  });
-  return NextResponse.json({ teams });
+  const auth = await getAuthUser();
+  const [teams, membership] = await Promise.all([
+    prisma.team.findMany({
+      where: { isActive: true },
+      include: { leader: { select: { id: true, name: true } }, _count: { select: { members: true } } },
+      orderBy: { totalInvested: "desc" },
+      take: 30,
+    }),
+    auth ? prisma.teamMember.findUnique({ where: { userId: auth.userId }, include: { team: { select: { id: true, name: true } } } }) : null,
+  ]);
+  return NextResponse.json({ teams, myMemberTeamId: membership?.teamId ?? null, myTeamName: membership?.team?.name ?? null });
 }
 
 export async function POST(req: NextRequest) {

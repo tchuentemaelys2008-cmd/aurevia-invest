@@ -23,6 +23,9 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const existing = await prisma.teamMember.findUnique({ where: { userId: auth.userId } });
   if (existing) return NextResponse.json({ error: "Vous êtes déjà dans une équipe" }, { status: 400 });
 
+  const activePass = await prisma.userPass.findFirst({ where: { userId: auth.userId, status: "ACTIVE" } });
+  if (!activePass) return NextResponse.json({ error: "Vous devez posséder un pass actif pour rejoindre une équipe" }, { status: 400 });
+
   const existingRequest = await prisma.teamJoinRequest.findUnique({
     where: { teamId_userId: { teamId: params.id, userId: auth.userId } },
   });

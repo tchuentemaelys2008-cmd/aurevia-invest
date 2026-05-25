@@ -12,7 +12,7 @@ const fade = { hidden: { opacity: 0, y: 24 }, show: (i: number) => ({ opacity: 1
 const stats = [
   { value: "12 000+", label_fr: "Membres actifs", label_en: "Active members" },
   { value: "98M+ FCFA", label_fr: "Revenus distribués", label_en: "Revenue distributed" },
-  { value: "120j", label_fr: "Durée par pass", label_en: "Duration per pass" },
+  { value: "90j", label_fr: "Durée par pass", label_en: "Duration per pass" },
   { value: "5%", label_fr: "Commission parrainage", label_en: "Referral commission" },
 ];
 
@@ -20,8 +20,8 @@ const features = [
   {
     icon: <ShoppingBag size={20} className="text-[#3b6fd4]" />,
     title_fr: "Achète un Pass", title_en: "Buy a Pass",
-    desc_fr: "Investis à partir de 5 000 FCFA et génère un revenu journalier pendant 120 jours.",
-    desc_en: "Invest from 5,000 FCFA and earn daily revenue for 120 days.",
+    desc_fr: "Investis à partir de 2 000 FCFA et génère un revenu journalier pendant 90 jours.",
+    desc_en: "Invest from 2,000 FCFA and earn daily revenue for 90 days.",
   },
   {
     icon: <TrendingUp size={20} className="text-emerald-400" />,

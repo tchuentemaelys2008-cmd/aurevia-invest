@@ -6,15 +6,16 @@ const prisma = new PrismaClient();
 
 async function main() {
   const passes = [
-    { name: "Aurevia Starter", price: 4000, dailyReturn: 10, duration: 120, color: "#3b6fd4", icon: "shield", description: "Ideal pour demarrer avec un revenu clair et simple." },
-    { name: "Aurevia Mini", price: 5000, dailyReturn: 10, duration: 120, color: "#3b6fd4", icon: "zap", description: "Un petit depot pour tester Aurevia et lancer vos revenus." },
-    { name: "Aurevia Boost", price: 8000, dailyReturn: 10, duration: 120, color: "#b87333", icon: "zap", description: "Un pack accessible pour accelerer vos premiers revenus." },
-    { name: "Aurevia Bronze", price: 10000, dailyReturn: 10, duration: 120, color: "#b87333", icon: "zap", description: "Premier palier intermediaire avec revenu attractif." },
-    { name: "Aurevia Plus", price: 15000, dailyReturn: 10, duration: 120, color: "#6c4de6", icon: "star", description: "Un palier equilibre entre depot et revenu." },
-    { name: "Aurevia Silver", price: 25000, dailyReturn: 10, duration: 120, color: "#6c4de6", icon: "star", description: "Acces Silver avec meilleur suivi et priorite de support." },
-    { name: "Aurevia Gold", price: 50000, dailyReturn: 13, duration: 120, color: "#e6874d", icon: "trending-up", description: "Niveau Gold pour des objectifs plus ambitieux." },
-    { name: "Aurevia Platinum", price: 75000, dailyReturn: 16, duration: 120, color: "#e6d44d", icon: "award", description: "Statut Platinum avec gains premium." },
-    { name: "Aurevia VIP", price: 100000, dailyReturn: 20, duration: 120, color: "#e6404d", icon: "crown", description: "Niveau ultime avec revenus maximum et support dedie." },
+    { name: "Aurevia 2000", price: 2000, dailyReturn: 6, duration: 90, color: "#3b6fd4", icon: "zap", description: "Decouvrez Aurevia avec un mini-depot et gagnez des la premiere semaine." },
+    { name: "Aurevia Starter", price: 4000, dailyReturn: 10, duration: 90, color: "#3b6fd4", icon: "shield", description: "Ideal pour demarrer avec un revenu clair et simple." },
+    { name: "Aurevia Mini", price: 5000, dailyReturn: 10, duration: 90, color: "#3b6fd4", icon: "zap", description: "Un petit depot pour tester Aurevia et lancer vos revenus." },
+    { name: "Aurevia Boost", price: 8000, dailyReturn: 10, duration: 90, color: "#b87333", icon: "zap", description: "Un pack accessible pour accelerer vos premiers revenus." },
+    { name: "Aurevia Bronze", price: 10000, dailyReturn: 10, duration: 90, color: "#b87333", icon: "zap", description: "Premier palier intermediaire avec revenu attractif." },
+    { name: "Aurevia Plus", price: 15000, dailyReturn: 10, duration: 90, color: "#6c4de6", icon: "star", description: "Un palier equilibre entre depot et revenu." },
+    { name: "Aurevia Silver", price: 25000, dailyReturn: 10, duration: 90, color: "#6c4de6", icon: "star", description: "Acces Silver avec meilleur suivi et priorite de support." },
+    { name: "Aurevia Gold", price: 50000, dailyReturn: 13, duration: 90, color: "#e6874d", icon: "trending-up", description: "Niveau Gold pour des objectifs plus ambitieux." },
+    { name: "Aurevia Platinum", price: 75000, dailyReturn: 16, duration: 90, color: "#e6d44d", icon: "award", description: "Statut Platinum avec gains premium." },
+    { name: "Aurevia VIP", price: 100000, dailyReturn: 20, duration: 90, color: "#e6404d", icon: "crown", description: "Niveau ultime avec revenus maximum et support dedie." },
   ];
 
   await prisma.pass.deleteMany({});

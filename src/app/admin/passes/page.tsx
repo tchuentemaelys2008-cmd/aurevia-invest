@@ -12,7 +12,7 @@ interface Pass {
   duration: number; description: string; color: string; isActive: boolean;
 }
 
-const defaultForm = { name: "", price: 0, dailyReturn: 0, duration: 120, description: "", color: "#3b6fd4" };
+const defaultForm = { name: "", price: 0, dailyReturn: 0, duration: 90, description: "", color: "#3b6fd4" };
 
 export default function AdminPassesPage() {
   const [passes, setPasses] = useState<Pass[]>([]);
