@@ -40,7 +40,7 @@ export default function LoginPage() {
   return (
     <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
       <div className="text-center mb-8">
-        <div className="w-24 h-24 rounded-2xl mx-auto mb-4 shadow-[0_0_40px_rgba(59,111,212,0.4)] overflow-hidden border border-white/10 flex-shrink-0">
+        <div className="w-32 h-32 rounded-2xl mx-auto mb-4 shadow-[0_0_60px_rgba(59,111,212,0.45)] overflow-hidden border border-white/10 flex-shrink-0">
           <img
             src="/photo_2026-05-25_14-14-19.jpg"
             alt="Aurevia Invest"

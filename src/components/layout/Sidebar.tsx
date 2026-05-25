@@ -43,7 +43,7 @@ function SidebarContent({ onClose, isAdmin }: { onClose?: () => void; isAdmin: b
       {/* Header */}
       <div className="p-5 border-b border-white/5 flex items-center justify-between flex-shrink-0">
         <Link href="/dashboard" onClick={onClose} className="flex items-center gap-3">
-          <img src="/photo_2026-05-25_14-14-19.jpg" alt="Aurevia" className="w-9 h-9 rounded-xl object-cover border border-white/10" />
+          <img src="/photo_2026-05-25_14-14-19.jpg" alt="Aurevia" className="w-11 h-11 rounded-xl object-cover border border-white/10" />
           <span className="font-display font-bold text-white text-lg">Aurevia</span>
         </Link>
         <div className="flex items-center gap-2">

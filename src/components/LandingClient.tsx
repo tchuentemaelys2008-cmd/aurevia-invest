@@ -60,7 +60,7 @@ export default function LandingClient() {
         style={{ background: scrolled ? "var(--surface-nav)" : "transparent", borderBottom: scrolled ? "1px solid var(--control-border)" : "none" }}>
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <img src="/photo_2026-05-25_14-14-19.jpg" alt="Aurevia" className="w-8 h-8 rounded-xl object-cover border border-white/10 flex-shrink-0" />
+            <img src="/photo_2026-05-25_14-14-19.jpg" alt="Aurevia" className="w-10 h-10 rounded-xl object-cover border border-white/10 flex-shrink-0" />
             <span className="font-display font-bold text-white text-base">Aurevia</span>
           </div>
           <div className="flex items-center gap-2">
@@ -79,7 +79,7 @@ export default function LandingClient() {
         </div>
 
         <motion.div initial="hidden" animate="show" custom={0} variants={fade} className="relative">
-          <div className="w-24 h-24 rounded-3xl mx-auto mb-6 shadow-[0_0_60px_rgba(59,111,212,0.35)] overflow-hidden border-2 border-white/10">
+          <div className="w-36 h-36 rounded-3xl mx-auto mb-6 shadow-[0_0_80px_rgba(59,111,212,0.4)] overflow-hidden border-2 border-white/10">
             <img src="/photo_2026-05-25_14-14-19.jpg" alt="Aurevia Invest" className="w-full h-full object-cover" />
           </div>
         </motion.div>
