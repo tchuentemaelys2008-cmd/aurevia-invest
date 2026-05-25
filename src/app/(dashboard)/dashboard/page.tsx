@@ -73,8 +73,8 @@ export default function DashboardPage() {
   const xpProgress = Math.min(100, Math.round((user.xp % 1000) / 10));
   const trustScore = Math.min(98, 62 + activePasses.length * 9 + (user.isVerified ? 18 : 0));
   const smartCopy = activePasses.length
-    ? t("dash_earned") + " " + formatCurrency(user.totalEarnings) + " · " + (lang === "fr" ? "mode argent intelligent actif" : "smart money mode active")
-    : t("dash_discover") + " · " + t("passes_activation_delay");
+    ? formatCurrency(user.totalEarnings) + " " + t("dash_earned").toLowerCase() + " · " + (lang === "fr" ? "IA active, passes activés instantanément" : "IA active, passes activated instantly")
+    : (lang === "fr" ? "Achetez un pass · activation instantanée" : "Buy a pass · instant activation");
 
   return (
     <div className="max-w-4xl mx-auto px-4 pt-8 pb-6 space-y-6">
@@ -169,18 +169,42 @@ export default function DashboardPage() {
       <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4, delay: 0.22 }}
         className="grid gap-3 sm:grid-cols-3">
         <Card className="relative overflow-hidden animate-float-soft">
-          <div className="flex items-center gap-2 text-xs text-white/45 mb-3"><Gauge size={14} /> {lang === "fr" ? "Niveau" : "Level"} {user.level}</div>
-          <div className="h-2 rounded-full bg-white/8 overflow-hidden"><div className="h-full rounded-full bg-gradient-to-r from-[#3b6fd4] to-emerald-400" style={{ width: `${xpProgress}%` }} /></div>
+          <div className="flex items-center gap-2 text-xs text-white/45 mb-3">
+            <Gauge size={14} />
+            <span>{lang === "fr" ? "Niveau" : "Level"} {user.level}</span>
+          </div>
+          <div className="h-2 rounded-full bg-white/8 overflow-hidden">
+            <div className="h-full rounded-full bg-gradient-to-r from-[#3b6fd4] to-emerald-400" style={{ width: `${xpProgress}%` }} />
+          </div>
           <p className="mt-2 text-xs text-white/35">{xpProgress}% XP</p>
+          {user.level >= 3 && (
+            <div className="mt-2 flex flex-wrap gap-1">
+              {user.level >= 3 && (
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-orange-400/10 text-orange-400 border border-orange-400/20 flex items-center gap-0.5">
+                  <Flame size={8} /> Auto Money
+                </span>
+              )}
+              {user.level >= 5 && (
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#6c4de6]/10 text-[#6c4de6] border border-[#6c4de6]/20 flex items-center gap-0.5">
+                  <Bot size={8} /> IA Advisor
+                </span>
+              )}
+            </div>
+          )}
         </Card>
         <Card className="relative overflow-hidden">
           <div className="flex items-center gap-2 text-xs text-white/45 mb-2"><ShieldCheck size={14} /> Trust score</div>
           <p className="text-2xl font-display font-bold text-white">{trustScore}/100</p>
-          <p className="text-xs text-emerald-400">{user.isVerified ? (lang === "fr" ? "Badge verifie" : "Verified badge") : (lang === "fr" ? "Verification disponible" : "Account review ready")}</p>
+          <p className="text-xs text-emerald-400">{user.isVerified ? (lang === "fr" ? "Badge verifié" : "Verified badge") : (lang === "fr" ? "Vérification disponible" : "Account review ready")}</p>
         </Card>
         <Card className="relative overflow-hidden">
-          <div className="flex items-center gap-2 text-xs text-white/45 mb-2"><Bot size={14} /> AI Advisor</div>
-          <p className="text-sm text-white/75 leading-relaxed">{smartCopy}</p>
+          <div className="flex items-center gap-2 text-xs text-white/45 mb-2"><Bot size={14} /> IA Advisor</div>
+          <p className="text-xs text-white/75 leading-relaxed">{smartCopy}</p>
+          {activePasses.length > 0 && (
+            <span className="mt-2 inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/20">
+              ● {lang === "fr" ? "Actif" : "Active"}
+            </span>
+          )}
         </Card>
       </motion.div>
 
@@ -191,8 +215,8 @@ export default function DashboardPage() {
               <p className="flex items-center gap-2 text-sm font-semibold text-white"><Flame size={16} className="text-orange-400" /> {lang === "fr" ? "Mode argent auto" : "Auto Money Mode"}</p>
               <p className="mt-1 text-xs text-white/45">
                 {lang === "fr"
-                  ? "Auto-invest, bonus de depot, alertes anti-perte et progression visuelle sont ajustes selon vos passes."
-                  : "Auto-invest, deposit bonus, loss aversion alerts and visual progress are prepared from your pass activity."}
+                  ? "Auto-invest, bonus de dépôt, alertes anti-perte et progression visuelle ajustés selon vos passes actifs."
+                  : "Auto-invest, deposit bonus, loss aversion alerts and visual progress tuned from your active passes."}
               </p>
             </div>
             <Link href="/passes">
@@ -229,9 +253,9 @@ export default function DashboardPage() {
                   <p className="font-semibold text-white text-sm">{up.pass.name}</p>
                   <p className="text-xs text-white/40">{t("dash_expires")} {formatDate(up.endDate)}</p>
                 </div>
-                <div className="text-right">
+                <div className="text-right flex-shrink-0">
                   <p className="text-emerald-400 font-bold text-sm">+{up.pass.dailyReturn}%</p>
-                  <p className="text-xs text-white/30">{t("passes_return")}</p>
+                  <p className="text-xs font-semibold" style={{ color: "var(--control-text)", opacity: 0.5 }}>{t("passes_return")}</p>
                 </div>
               </Card>
             ))}
@@ -247,9 +271,9 @@ export default function DashboardPage() {
         </div>
         <Card className="divide-y divide-white/5">
           {recentTransactions.length === 0 ? (
-            <p className="text-white/40 text-sm text-center py-6">{t("dash_no_activity")}</p>
+            <p className="text-sm text-center py-6" style={{ color: "var(--control-text)", opacity: 0.4 }}>{t("dash_no_activity")}</p>
           ) : (
-            recentTransactions.slice(0, 5).map((tx) => (
+            recentTransactions.slice(0, 8).map((tx) => (
               <div key={tx.id} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
                 <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${tx.amount > 0 ? "bg-emerald-400/10" : "bg-red-400/10"}`}>
                   {tx.amount > 0
@@ -257,11 +281,11 @@ export default function DashboardPage() {
                     : <ArrowUpRight size={16} className="text-red-400" />}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-white font-medium truncate">{txTypeLabel[tx.type] || tx.type}</p>
-                  <p className="text-xs text-white/30">{formatDate(tx.createdAt)}</p>
+                  <p className="text-sm font-semibold truncate" style={{ color: "var(--control-text)" }}>{txTypeLabel[tx.type] || tx.type}</p>
+                  <p className="text-xs" style={{ color: "var(--control-text)", opacity: 0.35 }}>{formatDate(tx.createdAt)}</p>
                 </div>
-                <span className={`text-sm font-bold ${tx.amount > 0 ? "text-emerald-400" : "text-white/70"}`}>
-                  {tx.amount > 0 ? "+" : ""}{formatCurrency(Math.abs(tx.amount))}
+                <span className={`text-sm font-bold flex-shrink-0 ${tx.amount > 0 ? "text-emerald-400" : "text-red-400"}`}>
+                  {tx.amount > 0 ? "+" : "-"}{formatCurrency(Math.abs(tx.amount))}
                 </span>
               </div>
             ))

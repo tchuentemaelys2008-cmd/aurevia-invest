@@ -15,8 +15,11 @@ const siteUrl = process.env.NEXT_PUBLIC_URL || "https://aurevia-invest.vercel.ap
 const siteName = "Aurevia Invest";
 const siteTagline = "Investissez en Afrique, récoltez chaque jour";
 const description =
-  "Aurevia Invest — la plateforme d'investissement africaine. Achetez un pass, générez des revenus quotidiens en FCFA, retirez via Mobile Money (Orange, MTN, Wave) et boostez vos gains grâce au parrainage.";
+  "Aurevia Invest — Plateforme d'investissement africaine. Achetez un pass, générez des revenus quotidiens en FCFA et retirez via Mobile Money (Orange, MTN, Wave).";
+const ogDescription =
+  "Investissez en Afrique et gagnez chaque jour. Revenus quotidiens en FCFA, retrait Mobile Money, programme de parrainage. Rejoignez Aurevia Invest maintenant !";
 const logoUrl = "/photo_2026-05-25_14-14-19.jpg";
+const ogImageUrl = `${siteUrl}${logoUrl}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -55,9 +58,7 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: [
-      { url: logoUrl, type: "image/jpeg" },
-    ],
+    icon: [{ url: logoUrl, type: "image/jpeg" }],
     shortcut: logoUrl,
     apple: { url: logoUrl, sizes: "180x180" },
   },
@@ -67,23 +68,24 @@ export const metadata: Metadata = {
     alternateLocale: ["en_US"],
     url: siteUrl,
     siteName,
-    title: `${siteName} — ${siteTagline}`,
-    description,
+    title: `${siteName} — Make Money & Dream Big`,
+    description: ogDescription,
     images: [
       {
-        url: logoUrl,
-        width: 800,
-        height: 420,
+        url: ogImageUrl,
+        width: 1200,
+        height: 630,
         alt: "Aurevia Invest — Plateforme d'investissement africaine",
         type: "image/jpeg",
+        secureUrl: ogImageUrl,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteName} — ${siteTagline}`,
-    description,
-    images: [{ url: logoUrl, alt: "Aurevia Invest" }],
+    title: `${siteName} — Make Money & Dream Big`,
+    description: ogDescription,
+    images: [{ url: ogImageUrl, alt: "Aurevia Invest — Make Money & Dream Big" }],
   },
   robots: {
     index: true,

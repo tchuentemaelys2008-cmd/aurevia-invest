@@ -47,23 +47,48 @@ html.light {
 }
 
 html.light .text-white { color: #08111f; }
+html.light .text-white\/75 { color: rgba(8,17,31,0.75); }
 html.light .text-white\/70 { color: rgba(8,17,31,0.7); }
+html.light .text-white\/65 { color: rgba(8,17,31,0.65); }
 html.light .text-white\/60 { color: rgba(8,17,31,0.6); }
 html.light .text-white\/50 { color: rgba(8,17,31,0.5); }
-html.light .text-white\/40 { color: rgba(8,17,31,0.48); }
+html.light .text-white\/45 { color: rgba(8,17,31,0.48); }
+html.light .text-white\/40 { color: rgba(8,17,31,0.44); }
+html.light .text-white\/35 { color: rgba(8,17,31,0.4); }
 html.light .text-white\/30 { color: rgba(8,17,31,0.36); }
+html.light .text-white\/25 { color: rgba(8,17,31,0.3); }
+html.light .text-white\/20 { color: rgba(8,17,31,0.24); }
 html.light .bg-\[\#070d1a\],
 html.light .bg-\[\#07090f\],
 html.light .bg-\[\#0c1428\] { background-color: #ffffff; }
+html.light .bg-white\/4,
+html.light .bg-white\/5,
+html.light .bg-white\/6,
+html.light .bg-white\/8 { background-color: rgba(8,17,31,0.04); }
 html.light .border-white\/5,
 html.light .border-white\/8,
-html.light .border-white\/10 { border-color: rgba(8,17,31,0.1); }
+html.light .border-white\/10,
+html.light .border-white\/15 { border-color: rgba(8,17,31,0.1); }
+html.light .divide-white\/5 { --tw-divide-opacity: 1; }
+html.light .divide-white\/5 > * + * { border-color: rgba(8,17,31,0.08); }
 html.light .glass,
 html.light .glass-card {
-  background: rgba(255,255,255,0.86);
+  background: rgba(255,255,255,0.92);
   border-color: rgba(8,17,31,0.08);
   box-shadow: 0 12px 32px rgba(15,23,42,0.08);
 }
+html.light .text-emerald-400 { color: #059669; }
+html.light .bg-emerald-400\/10 { background-color: rgba(5,150,105,0.1); }
+html.light .border-emerald-400\/20 { border-color: rgba(5,150,105,0.2); }
+html.light .text-red-400 { color: #dc2626; }
+html.light .bg-red-400\/10 { background-color: rgba(220,38,38,0.1); }
+html.light .text-yellow-400 { color: #d97706; }
+html.light .bg-yellow-400\/10 { background-color: rgba(217,119,6,0.1); }
+html.light .text-orange-400 { color: #ea580c; }
+html.light .bg-orange-400\/10 { background-color: rgba(234,88,12,0.1); }
+/* Transaction amounts in light mode */
+html.light [class*="text-white"][class*="font-bold"],
+html.light [class*="text-white"][class*="font-semibold"] { color: #08111f; }
 
 .ui-action-button {
   background: var(--control-bg);
@@ -196,3 +221,23 @@ html.light .glass-card {
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.16), transparent);
   animation: shine-sweep 5s ease-in-out infinite;
 }
+
+/* iOS touch fix — prevent ghost-click and ensure tap events fire */
+button, [role="button"], a {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+/* Ensure inputs don't zoom on iOS */
+input, textarea, select {
+  font-size: 16px;
+}
+@media (min-width: 640px) {
+  input, textarea, select { font-size: 14px; }
+}
+
+/* Light theme: Card backgrounds */
+html.light .bg-\[\#0c1428\] { background-color: #ffffff; }
+html.light .rounded-2xl.border { border-color: rgba(8,17,31,0.1); }
+html.light .bg-gradient-to-br.from-\[\#3b6fd4\]\/30 { background: linear-gradient(135deg, rgba(59,111,212,0.08), rgba(255,255,255,1)); }

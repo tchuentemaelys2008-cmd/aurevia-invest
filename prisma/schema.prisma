@@ -44,6 +44,8 @@ model User {
   ledTeams      Team[]           @relation("TeamLeader")
   spinResults   SpinResult[]
   leaderboardEntry LeaderboardEntry?
+  teamJoinRequests TeamJoinRequest[]
+  giftClaims    GiftClaim[]
 
   @@map("users")
 }
@@ -264,10 +266,25 @@ model Team {
   leaderId      String
   leader        User         @relation("TeamLeader", fields: [leaderId], references: [id])
   members       TeamMember[]
+  joinRequests  TeamJoinRequest[]
   totalInvested Float        @default(0)
   isActive      Boolean      @default(true)
   createdAt     DateTime     @default(now())
   @@map("teams")
+}
+
+model TeamJoinRequest {
+  id        String   @id @default(cuid())
+  teamId    String
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message   String
+  phone     String
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+  @@unique([teamId, userId])
+  @@map("team_join_requests")
 }
 
 model TeamMember {
@@ -358,4 +375,27 @@ model Settings {
   value String
 
   @@map("settings")
+}
+
+model GiftCode {
+  id          String      @id @default(cuid())
+  code        String      @unique
+  description String?
+  value       Float       @default(0)
+  maxWinners  Int         @default(3)
+  isActive    Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  claims      GiftClaim[]
+  @@map("gift_codes")
+}
+
+model GiftClaim {
+  id        String   @id @default(cuid())
+  codeId    String
+  giftCode  GiftCode @relation(fields: [codeId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  claimedAt DateTime @default(now())
+  @@unique([codeId, userId])
+  @@map("gift_claims")
 }

@@ -46,11 +46,13 @@ function RegisterForm() {
   return (
     <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
       <div className="text-center mb-8">
-        <img
-          src="/photo_2026-05-25_14-14-19.jpg"
-          alt="Aurevia Invest"
-          className="w-44 h-24 rounded-2xl object-cover mx-auto mb-4 shadow-[0_0_40px_rgba(59,111,212,0.4)]"
-        />
+        <div className="w-24 h-24 rounded-2xl mx-auto mb-4 shadow-[0_0_40px_rgba(59,111,212,0.4)] overflow-hidden border border-white/10 flex-shrink-0">
+          <img
+            src="/photo_2026-05-25_14-14-19.jpg"
+            alt="Aurevia Invest"
+            className="w-full h-full object-cover"
+          />
+        </div>
         <h1 className="text-2xl font-display font-bold text-white">{t("auth_register_title")}</h1>
         <p className="text-white/40 text-sm mt-1">{t("auth_register_sub")}</p>
       </div>
