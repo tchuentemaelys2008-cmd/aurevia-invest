@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Users, TrendingUp, ShoppingBag, ArrowDownCircle, DollarSign } from "lucide-react";
+import { Users, TrendingUp, ShoppingBag, ArrowDownCircle, DollarSign, Repeat2, Percent } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import toast from "react-hot-toast";
 
@@ -10,6 +10,9 @@ interface Stats {
   totalUsers: number;
   activeUsers: number;
   totalRevenue: number;
+  totalDeposits: number;
+  totalWithdrawals: number;
+  conversionRate: number;
   activePasses: number;
   pendingWithdrawals: number;
   recentUsers: Array<{ id: string; name: string; email: string; balance: number; createdAt: string }>;
@@ -61,6 +64,9 @@ export default function AdminDashboardPage() {
         <StatCard title="Utilisateurs" value={stats.totalUsers} icon={<Users size={18} />} color="border-blue-500/20" />
         <StatCard title="Actifs" value={stats.activeUsers} icon={<TrendingUp size={18} />} color="border-emerald-500/20" />
         <StatCard title="Revenu total" value={formatCurrency(stats.totalRevenue)} icon={<DollarSign size={18} />} color="border-purple-500/20" />
+        <StatCard title="Depots" value={formatCurrency(stats.totalDeposits)} icon={<Repeat2 size={18} />} color="border-cyan-500/20" />
+        <StatCard title="Conversion" value={`${stats.conversionRate}%`} icon={<Percent size={18} />} color="border-emerald-500/20" />
+        <StatCard title="Retraits payes" value={formatCurrency(stats.totalWithdrawals)} icon={<ArrowDownCircle size={18} />} color="border-rose-500/20" />
         <StatCard title="Passes actifs" value={stats.activePasses} icon={<ShoppingBag size={18} />} color="border-orange-500/20" />
         <StatCard title="Retraits en attente" value={stats.pendingWithdrawals} icon={<ArrowDownCircle size={18} />} color="border-yellow-500/20" />
       </div>

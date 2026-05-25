@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { LanguageProvider } from "@/lib/i18n";
+import { ThemeProvider } from "@/lib/theme";
 import "./globals.css";
 
 const inter = Inter({
@@ -149,7 +150,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
-        <LanguageProvider>{children}</LanguageProvider>
+        <ThemeProvider>
+          <LanguageProvider>{children}</LanguageProvider>
+        </ThemeProvider>
         <Toaster
           position="top-center"
           toastOptions={{

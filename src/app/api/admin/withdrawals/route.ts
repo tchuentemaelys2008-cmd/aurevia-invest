@@ -1,3 +1,5 @@
+﻿export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -5,7 +7,7 @@ import { prisma } from "@/lib/prisma";
 export async function GET() {
   try {
     const auth = await getAuthUser();
-    if (!auth || auth.role !== "ADMIN") return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    if (!auth || auth.role !== "ADMIN") return NextResponse.json({ error: "AccÃ¨s refusÃ©" }, { status: 403 });
 
     const withdrawals = await prisma.withdrawal.findMany({
       include: { user: { select: { name: true, email: true } } },
@@ -22,7 +24,7 @@ export async function GET() {
 export async function PATCH(req: NextRequest) {
   try {
     const auth = await getAuthUser();
-    if (!auth || auth.role !== "ADMIN") return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    if (!auth || auth.role !== "ADMIN") return NextResponse.json({ error: "AccÃ¨s refusÃ©" }, { status: 403 });
 
     const { withdrawalId, status, notes } = await req.json();
     const withdrawal = await prisma.withdrawal.findUnique({ where: { id: withdrawalId } });
@@ -37,7 +39,7 @@ export async function PATCH(req: NextRequest) {
     if (status === "REJECTED") {
       await prisma.user.update({ where: { id: withdrawal.userId }, data: { balance: { increment: withdrawal.amount } } });
       await prisma.transaction.create({
-        data: { userId: withdrawal.userId, type: "WITHDRAWAL", amount: withdrawal.amount, description: "Retrait refusé - remboursement", status: "FAILED" },
+        data: { userId: withdrawal.userId, type: "WITHDRAWAL", amount: withdrawal.amount, description: "Retrait refusÃ© - remboursement", status: "FAILED" },
       });
     }
 

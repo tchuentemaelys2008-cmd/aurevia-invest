@@ -1,3 +1,5 @@
+﻿export const dynamic = "force-dynamic";
+
 import { NextResponse } from "next/server";
 import { getAuthUser, signToken } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -5,13 +7,15 @@ import { prisma } from "@/lib/prisma";
 export async function GET() {
   try {
     const auth = await getAuthUser();
-    if (!auth) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+    if (!auth) return NextResponse.json({ error: "Non authentifiÃ©" }, { status: 401 });
 
     const user = await prisma.user.findUnique({
       where: { id: auth.userId },
-      select: { id: true, name: true, email: true, phone: true, role: true, referralCode: true, balance: true, totalEarnings: true, totalInvested: true, createdAt: true },
+      select: { id: true, name: true, email: true, phone: true, role: true, referralCode: true, balance: true, totalEarnings: true, totalInvested: true, isVerified: true, isSuspended: true, createdAt: true },
     });
     if (!user) return NextResponse.json({ error: "Utilisateur introuvable" }, { status: 404 });
+    if (user.isSuspended) return NextResponse.json({ error: "Compte suspendu" }, { status: 403 });
+    await prisma.user.update({ where: { id: user.id }, data: { lastActive: new Date() } });
 
     const res = NextResponse.json({ user });
 

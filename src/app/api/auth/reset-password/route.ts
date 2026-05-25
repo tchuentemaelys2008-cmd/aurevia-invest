@@ -1,3 +1,5 @@
+﻿export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth";
@@ -8,10 +10,10 @@ export async function POST(req: NextRequest) {
     const { token, password } = await req.json();
 
     if (!token || !password || typeof token !== "string" || typeof password !== "string") {
-      return NextResponse.json({ error: "Données invalides" }, { status: 400 });
+      return NextResponse.json({ error: "DonnÃ©es invalides" }, { status: 400 });
     }
     if (password.length < 8) {
-      return NextResponse.json({ error: "Le mot de passe doit contenir au moins 8 caractères" }, { status: 400 });
+      return NextResponse.json({ error: "Le mot de passe doit contenir au moins 8 caractÃ¨res" }, { status: 400 });
     }
 
     const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
@@ -19,9 +21,9 @@ export async function POST(req: NextRequest) {
     const record = await prisma.passwordResetToken.findUnique({ where: { tokenHash } });
 
     if (!record || record.expiresAt < new Date()) {
-      // Nettoyer les tokens expirés
+      // Nettoyer les tokens expirÃ©s
       if (record) await prisma.passwordResetToken.delete({ where: { tokenHash } });
-      return NextResponse.json({ error: "Lien invalide ou expiré" }, { status: 400 });
+      return NextResponse.json({ error: "Lien invalide ou expirÃ©" }, { status: 400 });
     }
 
     const hashed = await hashPassword(password);

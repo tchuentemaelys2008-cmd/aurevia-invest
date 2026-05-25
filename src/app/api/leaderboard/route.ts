@@ -1,10 +1,12 @@
+﻿export const dynamic = "force-dynamic";
+
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthUser } from "@/lib/auth";
 
 export async function GET() {
   const auth = await getAuthUser();
-  if (!auth) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+  if (!auth) return NextResponse.json({ error: "Non authentifiÃ©" }, { status: 401 });
 
   const top = await prisma.user.findMany({
     where: { isActive: true },

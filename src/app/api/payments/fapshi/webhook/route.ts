@@ -1,3 +1,5 @@
+﻿export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
@@ -44,15 +46,15 @@ export async function POST(req: NextRequest) {
           data: { userId: payment.userId, type: "PASS_PURCHASE", amount: -payment.amount, description: "Achat Pass FAPSHI - " + reference, status: "SUCCESS", reference },
         });
         await prisma.notification.create({
-          data: { userId: payment.userId, title: "Paiement confirmé !", message: `Votre pass a été activé via FAPSHI.`, type: "success" },
+          data: { userId: payment.userId, title: "Paiement confirmÃ© !", message: `Votre pass a Ã©tÃ© activÃ© via FAPSHI.`, type: "success" },
         });
 
         const user = await prisma.user.findUnique({ where: { id: payment.userId }, select: { referredById: true } });
         if (user?.referredById) {
           const commission = parseFloat((payment.amount * 0.10).toFixed(2));
           await prisma.user.update({ where: { id: user.referredById }, data: { balance: { increment: commission }, totalEarnings: { increment: commission } } });
-          await prisma.transaction.create({ data: { userId: user.referredById, type: "REFERRAL_BONUS", amount: commission, description: "Commission parrainage 10% — FAPSHI", status: "SUCCESS" } });
-          await prisma.notification.create({ data: { userId: user.referredById, title: "Commission de parrainage !", message: `Vous avez reçu ${commission} FCFA (10%) grâce à votre filleul.`, type: "success" } });
+          await prisma.transaction.create({ data: { userId: user.referredById, type: "REFERRAL_BONUS", amount: commission, description: "Commission parrainage 10% â€” FAPSHI", status: "SUCCESS" } });
+          await prisma.notification.create({ data: { userId: user.referredById, title: "Commission de parrainage !", message: `Vous avez reÃ§u ${commission} FCFA (10%) grÃ¢ce Ã  votre filleul.`, type: "success" } });
         }
       }
     } else if (status === "FAILED" || status === "CANCELLED") {

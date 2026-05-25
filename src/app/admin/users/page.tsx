@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Search, UserCheck, UserX, Edit2, X, Check } from "lucide-react";
+import { Search, UserCheck, UserX, Edit2, X, Check, BadgeCheck, PauseCircle } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import toast from "react-hot-toast";
@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 interface User {
   id: string; name: string; email: string; phone?: string;
   balance: number; totalInvested: number; totalEarnings: number;
-  isActive: boolean; createdAt: string;
+  isActive: boolean; isSuspended: boolean; isVerified: boolean; lastActive?: string; createdAt: string;
 }
 
 export default function AdminUsersPage() {
@@ -43,6 +43,17 @@ export default function AdminUsersPage() {
     if (res.ok) { setUsers((p) => p.map((u) => u.id === userId ? { ...u, isActive: !isActive } : u)); toast.success(isActive ? "Désactivé" : "Activé"); }
     else toast.error("Erreur");
     setToggling(null);
+  };
+
+  const patchUser = async (userId: string, patch: Partial<Pick<User, "isSuspended" | "isVerified">>, label: string) => {
+    const res = await fetch("/api/admin/users", {
+      method: "PATCH", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId, ...patch }),
+    });
+    if (res.ok) {
+      setUsers((p) => p.map((u) => u.id === userId ? { ...u, ...patch } : u));
+      toast.success(label);
+    } else toast.error("Erreur");
   };
 
   const saveBalance = async () => {
@@ -82,8 +93,8 @@ export default function AdminUsersPage() {
                   <p className="text-sm text-white font-semibold">{u.name}</p>
                   <p className="text-xs text-white/40">{u.email}</p>
                 </div>
-                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${u.isActive ? "text-emerald-400 bg-emerald-400/10" : "text-red-400 bg-red-400/10"}`}>
-                  {u.isActive ? "Actif" : "Inactif"}
+                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${u.isSuspended || !u.isActive ? "text-red-400 bg-red-400/10" : "text-emerald-400 bg-emerald-400/10"}`}>
+                  {u.isSuspended ? "Suspendu" : u.isActive ? "Actif" : "Banni"}
                 </span>
               </div>
               <div className="flex items-center justify-between">
@@ -94,6 +105,10 @@ export default function AdminUsersPage() {
                 <div className="flex gap-1.5">
                   <button onClick={() => { setEditUser(u); setNewBalance(String(u.balance)); }}
                     className="w-8 h-8 rounded-xl bg-blue-400/10 flex items-center justify-center text-blue-400 hover:bg-blue-400/20"><Edit2 size={13} /></button>
+                  <button onClick={() => patchUser(u.id, { isVerified: !u.isVerified }, u.isVerified ? "Badge retire" : "Compte verifie")}
+                    className="w-8 h-8 rounded-xl bg-emerald-400/10 flex items-center justify-center text-emerald-400 hover:bg-emerald-400/20"><BadgeCheck size={13} /></button>
+                  <button onClick={() => patchUser(u.id, { isSuspended: !u.isSuspended }, u.isSuspended ? "Compte reactive" : "Compte suspendu")}
+                    className="w-8 h-8 rounded-xl bg-yellow-400/10 flex items-center justify-center text-yellow-400 hover:bg-yellow-400/20"><PauseCircle size={13} /></button>
                   <button onClick={() => toggleUser(u.id, u.isActive)} disabled={toggling === u.id}
                     className={`w-8 h-8 rounded-xl flex items-center justify-center ${u.isActive ? "bg-red-400/10 text-red-400" : "bg-emerald-400/10 text-emerald-400"}`}>
                     {u.isActive ? <UserX size={13} /> : <UserCheck size={13} />}
@@ -109,26 +124,30 @@ export default function AdminUsersPage() {
         {loading ? <div className="p-6 space-y-3">{[...Array(5)].map((_, i) => <div key={i} className="skeleton h-10 rounded-xl" />)}</div> : (
           <table className="w-full">
             <thead><tr className="border-b border-white/5">
-              {["Utilisateur","Solde","Investi","Inscrit","Statut",""].map((h) => (
+              {["Utilisateur","Solde","Investi","Derniere activite","Statut",""].map((h) => (
                 <th key={h} className="text-left px-4 py-2.5 text-xs text-white/40 uppercase tracking-wider">{h}</th>
               ))}
             </tr></thead>
             <tbody className="divide-y divide-white/5">
               {users.map((u) => (
                 <tr key={u.id} className="hover:bg-white/2">
-                  <td className="px-4 py-2.5"><p className="text-sm text-white font-medium">{u.name}</p><p className="text-xs text-white/40">{u.email}</p></td>
+                  <td className="px-4 py-2.5"><p className="text-sm text-white font-medium flex items-center gap-1.5">{u.name}{u.isVerified && <BadgeCheck size={13} className="text-emerald-400" />}</p><p className="text-xs text-white/40">{u.email}</p></td>
                   <td className="px-4 py-2.5 text-sm text-emerald-400 font-semibold">{formatCurrency(u.balance)}</td>
                   <td className="px-4 py-2.5 text-sm text-white/60">{formatCurrency(u.totalInvested)}</td>
-                  <td className="px-4 py-2.5 text-xs text-white/30">{formatDate(u.createdAt)}</td>
+                  <td className="px-4 py-2.5 text-xs text-white/30">{u.lastActive ? formatDate(u.lastActive) : formatDate(u.createdAt)}</td>
                   <td className="px-4 py-2.5">
-                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${u.isActive ? "text-emerald-400 bg-emerald-400/10" : "text-red-400 bg-red-400/10"}`}>
-                      {u.isActive ? "Actif" : "Inactif"}
+                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${u.isSuspended || !u.isActive ? "text-red-400 bg-red-400/10" : "text-emerald-400 bg-emerald-400/10"}`}>
+                      {u.isSuspended ? "Suspendu" : u.isActive ? "Actif" : "Banni"}
                     </span>
                   </td>
                   <td className="px-4 py-2.5">
                     <div className="flex gap-1.5">
                       <button onClick={() => { setEditUser(u); setNewBalance(String(u.balance)); }}
                         className="w-7 h-7 rounded-lg bg-blue-400/10 flex items-center justify-center text-blue-400 hover:bg-blue-400/20"><Edit2 size={12} /></button>
+                      <button onClick={() => patchUser(u.id, { isVerified: !u.isVerified }, u.isVerified ? "Badge retire" : "Compte verifie")}
+                        className="w-7 h-7 rounded-lg bg-emerald-400/10 flex items-center justify-center text-emerald-400 hover:bg-emerald-400/20"><BadgeCheck size={12} /></button>
+                      <button onClick={() => patchUser(u.id, { isSuspended: !u.isSuspended }, u.isSuspended ? "Compte reactive" : "Compte suspendu")}
+                        className="w-7 h-7 rounded-lg bg-yellow-400/10 flex items-center justify-center text-yellow-400 hover:bg-yellow-400/20"><PauseCircle size={12} /></button>
                       <button onClick={() => toggleUser(u.id, u.isActive)} disabled={toggling === u.id}
                         className={`w-7 h-7 rounded-lg flex items-center justify-center ${u.isActive ? "bg-red-400/10 text-red-400" : "bg-emerald-400/10 text-emerald-400"}`}>
                         {u.isActive ? <UserX size={12} /> : <UserCheck size={12} />}

@@ -1,3 +1,5 @@
+﻿export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -12,7 +14,7 @@ const schema = z.object({
 export async function POST(req: NextRequest) {
   try {
     const auth = await getAuthUser();
-    if (!auth) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+    if (!auth) return NextResponse.json({ error: "Non authentifiÃ©" }, { status: 401 });
 
     const body = await req.json();
     const data = schema.parse(body);
@@ -29,7 +31,7 @@ export async function POST(req: NextRequest) {
     if (!user || user.balance < data.amount) {
       return NextResponse.json({ error: "Solde insuffisant" }, { status: 400 });
     }
-    if (pending >= 1) return NextResponse.json({ error: "Vous avez déjà une demande de retrait en attente" }, { status: 400 });
+    if (pending >= 1) return NextResponse.json({ error: "Vous avez dÃ©jÃ  une demande de retrait en attente" }, { status: 400 });
 
     await prisma.$transaction([
       prisma.withdrawal.create({
@@ -41,7 +43,7 @@ export async function POST(req: NextRequest) {
       }),
     ]);
 
-    return NextResponse.json({ success: true, message: "Demande de retrait soumise avec succès" });
+    return NextResponse.json({ success: true, message: "Demande de retrait soumise avec succÃ¨s" });
   } catch (err) {
     if (err instanceof z.ZodError) return NextResponse.json({ error: err.errors[0].message }, { status: 400 });
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });

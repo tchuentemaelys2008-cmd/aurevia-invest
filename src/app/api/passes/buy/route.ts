@@ -1,3 +1,5 @@
+﻿export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -30,7 +32,7 @@ const GENIUSPAY_METHOD_MAP: Record<string, GeniusPayMethod> = {
 export async function POST(req: NextRequest) {
   try {
     const auth = await getAuthUser();
-    if (!auth) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+    if (!auth) return NextResponse.json({ error: "Non authentifiÃ©" }, { status: 401 });
 
     const body = await req.json();
     const data = schema.parse(body);
@@ -94,7 +96,7 @@ export async function POST(req: NextRequest) {
             email: auth.email,
             redirectUrl: `${baseUrl}/dashboard?payment=${reference}`,
             externalId: reference,
-            message: `Achat Pass ${pass.name} — Aurevia Invest`,
+            message: `Achat Pass ${pass.name} â€” Aurevia Invest`,
           }),
         });
         const fapshiData = await fapshiRes.json();
@@ -118,7 +120,7 @@ export async function POST(req: NextRequest) {
         const gpMethod = GENIUSPAY_METHOD_MAP[data.paymentMethod] as GeniusPayMethod | undefined;
         const gpData = await createGeniusPayPayment({
           amount: pass.price,
-          description: `Achat Pass ${pass.name} — Aurevia Invest`,
+          description: `Achat Pass ${pass.name} â€” Aurevia Invest`,
           reference,
           successUrl: `${baseUrl}/dashboard?payment=${reference}&status=success`,
           errorUrl: `${baseUrl}/passes?payment=${reference}&status=error`,
@@ -131,9 +133,9 @@ export async function POST(req: NextRequest) {
       } else {
         // Sandbox / dev mode
         const methodLabel =
-          data.paymentMethod === "GENIUSPAY_ORANGE" ? "orange" :
-          data.paymentMethod === "GENIUSPAY_MTN" ? "mtn" :
           data.paymentMethod === "GENIUSPAY_WAVE" ? "wave" :
+          data.paymentMethod === "GENIUSPAY_MOOV" ? "moov" :
+          data.paymentMethod === "CARD" ? "card" :
           "geniuspay";
         paymentUrl = `/payment/simulate?ref=${reference}&method=${methodLabel}&amount=${pass.price}`;
       }

@@ -3,6 +3,7 @@ import { jwtVerify } from "jose";
 
 const PUBLIC_PATHS = ["/login", "/register", "/forgot-password", "/reset-password"];
 const ADMIN_PATHS = ["/admin"];
+const ADMIN_ROLES = ["ADMIN", "SUPER_ADMIN", "MODERATOR"];
 
 const JWT_SECRET = new TextEncoder().encode(
   process.env.JWT_SECRET || "aurevia-super-secret-jwt-key-2024"
@@ -27,7 +28,7 @@ export async function middleware(req: NextRequest) {
   try {
     const { payload } = await jwtVerify(token, JWT_SECRET);
 
-    if (ADMIN_PATHS.some((p) => pathname.startsWith(p)) && payload.role !== "ADMIN") {
+    if (ADMIN_PATHS.some((p) => pathname.startsWith(p)) && !ADMIN_ROLES.includes(String(payload.role))) {
       return NextResponse.redirect(new URL("/dashboard", req.url));
     }
 

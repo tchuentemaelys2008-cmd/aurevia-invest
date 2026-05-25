@@ -1,3 +1,5 @@
+﻿export const dynamic = "force-dynamic";
+
 import { NextResponse } from "next/server";
 import { getAuthUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -5,14 +7,14 @@ import { prisma } from "@/lib/prisma";
 export async function GET() {
   try {
     const auth = await getAuthUser();
-    if (!auth) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+    if (!auth) return NextResponse.json({ error: "Non authentifiÃ©" }, { status: 401 });
 
     const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
     const [user, activePasses, recentTransactions, last7DaysTx] = await Promise.all([
       prisma.user.findUnique({
         where: { id: auth.userId },
-        select: { id: true, name: true, balance: true, totalEarnings: true, totalInvested: true, referralCode: true },
+        select: { id: true, name: true, balance: true, totalEarnings: true, totalInvested: true, referralCode: true, level: true, xp: true, isVerified: true },
       }),
       prisma.userPass.findMany({
         where: { userId: auth.userId, status: "ACTIVE" },

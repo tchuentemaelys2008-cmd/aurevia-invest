@@ -1,3 +1,5 @@
+﻿export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
@@ -22,7 +24,7 @@ export async function POST(req: NextRequest) {
         data: { userId: payment.userId, type: "PASS_PURCHASE", amount: -payment.amount, description: "Achat Pass - Ref: " + reference, status: "SUCCESS", reference },
       });
       await prisma.notification.create({
-        data: { userId: payment.userId, title: "Pass activé !", message: "Votre pass est maintenant actif. Vos revenus journaliers démarrent aujourd'hui.", type: "success" },
+        data: { userId: payment.userId, title: "Pass activÃ© !", message: "Votre pass est maintenant actif. Vos revenus journaliers dÃ©marrent aujourd'hui.", type: "success" },
       });
 
       // Commission parrainage 10%
@@ -34,10 +36,10 @@ export async function POST(req: NextRequest) {
           data: { balance: { increment: commission }, totalEarnings: { increment: commission } },
         });
         await prisma.transaction.create({
-          data: { userId: buyer.referredById, type: "REFERRAL_BONUS", amount: commission, description: `Commission parrainage 10% — achat de pass`, status: "SUCCESS" },
+          data: { userId: buyer.referredById, type: "REFERRAL_BONUS", amount: commission, description: `Commission parrainage 10% â€” achat de pass`, status: "SUCCESS" },
         });
         await prisma.notification.create({
-          data: { userId: buyer.referredById, title: "Commission de parrainage !", message: `Vous avez reçu ${commission} FCFA (10%) grâce à votre filleul.`, type: "success" },
+          data: { userId: buyer.referredById, title: "Commission de parrainage !", message: `Vous avez reÃ§u ${commission} FCFA (10%) grÃ¢ce Ã  votre filleul.`, type: "success" },
         });
       }
     }

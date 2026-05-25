@@ -1,3 +1,5 @@
+﻿export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -15,7 +17,7 @@ const schema = z.object({
 export async function POST(req: NextRequest) {
   try {
     const auth = await getAuthUser();
-    if (!auth || auth.role !== "ADMIN") return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    if (!auth || auth.role !== "ADMIN") return NextResponse.json({ error: "AccÃ¨s refusÃ©" }, { status: 403 });
     const body = await req.json();
     const data = schema.parse(body);
     const pass = await prisma.pass.create({ data });
@@ -29,7 +31,7 @@ export async function POST(req: NextRequest) {
 export async function PATCH(req: NextRequest) {
   try {
     const auth = await getAuthUser();
-    if (!auth || auth.role !== "ADMIN") return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    if (!auth || auth.role !== "ADMIN") return NextResponse.json({ error: "AccÃ¨s refusÃ©" }, { status: 403 });
     const { id, ...data } = await req.json();
     if (!id) return NextResponse.json({ error: "ID requis" }, { status: 400 });
     const pass = await prisma.pass.update({ where: { id }, data });
@@ -42,7 +44,7 @@ export async function PATCH(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   try {
     const auth = await getAuthUser();
-    if (!auth || auth.role !== "ADMIN") return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    if (!auth || auth.role !== "ADMIN") return NextResponse.json({ error: "AccÃ¨s refusÃ©" }, { status: 403 });
     const { id } = await req.json();
     await prisma.pass.update({ where: { id }, data: { isActive: false } });
     return NextResponse.json({ success: true });

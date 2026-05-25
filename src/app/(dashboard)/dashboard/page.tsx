@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { TrendingUp, ShoppingBag, CheckSquare, ArrowUpRight, ArrowDownRight, Bell, Wallet } from "lucide-react";
+import { TrendingUp, ShoppingBag, CheckSquare, ArrowUpRight, ArrowDownRight, Bell, Wallet, Bot, ShieldCheck, Gauge, Flame } from "lucide-react";
 import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer } from "recharts";
 import Card, { StatCard } from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
@@ -13,7 +13,7 @@ import { useLanguage } from "@/lib/i18n";
 import toast from "react-hot-toast";
 
 interface DashboardData {
-  user: { name: string; balance: number; totalEarnings: number; totalInvested: number; referralCode: string };
+  user: { name: string; balance: number; totalEarnings: number; totalInvested: number; referralCode: string; level: number; xp: number; isVerified: boolean };
   activePasses: Array<{ id: string; pass: { name: string; dailyReturn: number }; status: string; endDate: string }>;
   recentTransactions: Array<{ id: string; type: string; amount: number; description: string; createdAt: string; status: string }>;
   chartPoints: Array<{ day: number; label: string; value: number }>;
@@ -34,7 +34,7 @@ const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -71,6 +71,11 @@ export default function DashboardPage() {
   };
   const { user, activePasses, recentTransactions, chartPoints } = data;
   const growthPct = user.totalInvested > 0 ? ((user.totalEarnings / user.totalInvested) * 100).toFixed(1) : "0";
+  const xpProgress = Math.min(100, Math.round((user.xp % 1000) / 10));
+  const trustScore = Math.min(98, 62 + activePasses.length * 9 + (user.isVerified ? 18 : 0));
+  const smartCopy = activePasses.length
+    ? t("dash_earned") + " " + formatCurrency(user.totalEarnings) + " · " + (lang === "fr" ? "mode argent intelligent actif" : "smart money mode active")
+    : t("dash_discover") + " · " + t("passes_activation_delay");
 
   return (
     <div className="max-w-4xl mx-auto px-4 pt-8 pb-6 space-y-6">
@@ -167,6 +172,42 @@ export default function DashboardPage() {
         className="grid grid-cols-2 gap-3">
         <StatCard title={t("dash_invested")} value={formatCurrency(user.totalInvested)} trend={parseFloat(growthPct)} />
         <StatCard title={t("dash_earned")} value={formatCurrency(user.totalEarnings)} sub={t("dash_since_start")} icon={<TrendingUp size={16} />} />
+      </motion.div>
+
+      <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4, delay: 0.22 }}
+        className="grid gap-3 sm:grid-cols-3">
+        <Card className="relative overflow-hidden animate-float-soft">
+          <div className="flex items-center gap-2 text-xs text-white/45 mb-3"><Gauge size={14} /> {lang === "fr" ? "Niveau" : "Level"} {user.level}</div>
+          <div className="h-2 rounded-full bg-white/8 overflow-hidden"><div className="h-full rounded-full bg-gradient-to-r from-[#3b6fd4] to-emerald-400" style={{ width: `${xpProgress}%` }} /></div>
+          <p className="mt-2 text-xs text-white/35">{xpProgress}% XP</p>
+        </Card>
+        <Card className="relative overflow-hidden">
+          <div className="flex items-center gap-2 text-xs text-white/45 mb-2"><ShieldCheck size={14} /> Trust score</div>
+          <p className="text-2xl font-display font-bold text-white">{trustScore}/100</p>
+          <p className="text-xs text-emerald-400">{user.isVerified ? (lang === "fr" ? "Badge verifie" : "Verified badge") : (lang === "fr" ? "Verification disponible" : "Account review ready")}</p>
+        </Card>
+        <Card className="relative overflow-hidden">
+          <div className="flex items-center gap-2 text-xs text-white/45 mb-2"><Bot size={14} /> AI Advisor</div>
+          <p className="text-sm text-white/75 leading-relaxed">{smartCopy}</p>
+        </Card>
+      </motion.div>
+
+      <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4, delay: 0.24 }}>
+        <Card className="relative overflow-hidden shine-card">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="flex items-center gap-2 text-sm font-semibold text-white"><Flame size={16} className="text-orange-400" /> {lang === "fr" ? "Mode argent auto" : "Auto Money Mode"}</p>
+              <p className="mt-1 text-xs text-white/45">
+                {lang === "fr"
+                  ? "Auto-invest, bonus de depot, alertes anti-perte et progression visuelle sont ajustes selon vos passes."
+                  : "Auto-invest, deposit bonus, loss aversion alerts and visual progress are prepared from your pass activity."}
+              </p>
+            </div>
+            <Link href="/passes">
+              <Button variant="primary" size="sm">{t("dash_buy_pass")}</Button>
+            </Link>
+          </div>
+        </Card>
       </motion.div>
 
       {/* Active Passes */}

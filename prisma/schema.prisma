@@ -22,6 +22,7 @@ model User {
   totalEarnings Float    @default(0)
   totalInvested Float    @default(0)
   isActive      Boolean  @default(true)
+  isSuspended   Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -49,7 +50,9 @@ model User {
 
 enum Role {
   USER
+  MODERATOR
   ADMIN
+  SUPER_ADMIN
 }
 
 model Pass {
@@ -330,9 +333,11 @@ model AdminLog {
   id         String   @id @default(cuid())
   adminId    String
   adminEmail String
+  adminRole  String   @default("ADMIN")
   action     String
   target     String?
   details    Json?
+  ipAddress  String?
   createdAt  DateTime @default(now())
   @@map("admin_logs")
 }

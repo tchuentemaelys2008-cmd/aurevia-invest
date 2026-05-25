@@ -1,9 +1,17 @@
+﻿export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Resend } from "resend";
 import crypto from "node:crypto";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resendClient: Resend | null = null;
+
+function getResend() {
+  if (!process.env.RESEND_API_KEY || process.env.RESEND_API_KEY === "re_your_resend_key") return null;
+  if (!resendClient) resendClient = new Resend(process.env.RESEND_API_KEY);
+  return resendClient;
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,15 +22,15 @@ export async function POST(req: NextRequest) {
 
     const user = await prisma.user.findUnique({ where: { email: email.toLowerCase().trim() } });
 
-    // On répond toujours success pour ne pas révéler si l'email existe
+    // On rÃ©pond toujours success pour ne pas rÃ©vÃ©ler si l'email existe
     if (!user) {
       return NextResponse.json({ success: true });
     }
 
-    // Supprimer les anciens tokens non expirés
+    // Supprimer les anciens tokens non expirÃ©s
     await prisma.passwordResetToken.deleteMany({ where: { userId: user.id } });
 
-    // Générer un token sécurisé
+    // GÃ©nÃ©rer un token sÃ©curisÃ©
     const rawToken = crypto.randomBytes(32).toString("hex");
     const tokenHash = crypto.createHash("sha256").update(rawToken).digest("hex");
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 heure
@@ -34,11 +42,12 @@ export async function POST(req: NextRequest) {
     const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000";
     const resetUrl = `${baseUrl}/reset-password/${rawToken}`;
 
-    if (process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== "re_your_resend_key") {
+    const resend = getResend();
+    if (resend) {
       await resend.emails.send({
         from: process.env.EMAIL_FROM || "noreply@aurevia-invest.com",
         to: user.email,
-        subject: "Réinitialisation de votre mot de passe — Aurevia Invest",
+        subject: "RÃ©initialisation de votre mot de passe â€” Aurevia Invest",
         html: `
 <!DOCTYPE html>
 <html lang="fr">
@@ -49,17 +58,17 @@ export async function POST(req: NextRequest) {
       <div style="display:inline-block;background:rgba(255,255,255,0.15);border-radius:12px;padding:10px 20px;margin-bottom:12px;">
         <span style="color:#fff;font-weight:700;font-size:20px;letter-spacing:0.5px;">Aurevia Invest</span>
       </div>
-      <h1 style="color:#fff;margin:0;font-size:22px;font-weight:700;">Réinitialisation du mot de passe</h1>
+      <h1 style="color:#fff;margin:0;font-size:22px;font-weight:700;">RÃ©initialisation du mot de passe</h1>
     </div>
     <div style="padding:32px;">
       <p style="color:#cdd6f0;font-size:15px;margin:0 0 8px;">Bonjour <strong style="color:#fff;">${user.name}</strong>,</p>
       <p style="color:#8892aa;font-size:14px;margin:0 0 28px;line-height:1.6;">
-        Nous avons reçu une demande de réinitialisation de mot de passe pour votre compte Aurevia Invest.<br>
+        Nous avons reÃ§u une demande de rÃ©initialisation de mot de passe pour votre compte Aurevia Invest.<br>
         Ce lien est valable pendant <strong style="color:#cdd6f0;">1 heure</strong>.
       </p>
       <div style="text-align:center;margin:0 0 28px;">
         <a href="${resetUrl}" style="display:inline-block;background:linear-gradient(135deg,#3b6fd4,#6c4de6);color:#fff;text-decoration:none;padding:14px 32px;border-radius:12px;font-weight:700;font-size:15px;">
-          Réinitialiser mon mot de passe
+          RÃ©initialiser mon mot de passe
         </a>
       </div>
       <p style="color:#8892aa;font-size:12px;margin:0 0 8px;line-height:1.6;">
@@ -67,19 +76,19 @@ export async function POST(req: NextRequest) {
       </p>
       <p style="color:#3b6fd4;font-size:12px;word-break:break-all;margin:0 0 28px;">${resetUrl}</p>
       <p style="color:#8892aa;font-size:12px;margin:0;line-height:1.6;">
-        Si vous n'avez pas demandé cette réinitialisation, ignorez cet email. Votre mot de passe ne sera pas modifié.
+        Si vous n'avez pas demandÃ© cette rÃ©initialisation, ignorez cet email. Votre mot de passe ne sera pas modifiÃ©.
       </p>
     </div>
     <div style="background:rgba(255,255,255,0.03);padding:16px 32px;text-align:center;border-top:1px solid rgba(255,255,255,0.06);">
-      <p style="color:#8892aa;font-size:12px;margin:0;">© ${new Date().getFullYear()} Aurevia Invest. Tous droits réservés.</p>
+      <p style="color:#8892aa;font-size:12px;margin:0;">Â© ${new Date().getFullYear()} Aurevia Invest. Tous droits rÃ©servÃ©s.</p>
     </div>
   </div>
 </body>
 </html>`,
       });
     } else {
-      // Dev mode — log dans la console
-      console.log("\n📧 [DEV] Reset password link:", resetUrl, "\n");
+      // Dev mode â€” log dans la console
+      console.log("\nðŸ“§ [DEV] Reset password link:", resetUrl, "\n");
     }
 
     return NextResponse.json({ success: true });

@@ -9,10 +9,11 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import LangToggle from "@/components/ui/LangToggle";
-import { useLanguage } from "@/lib/i18n";
+import ThemeToggle from "@/components/ui/ThemeToggle";
+import { TKey, useLanguage } from "@/lib/i18n";
 import toast from "react-hot-toast";
 
-const NAV_ITEMS = (t: (k: string) => string) => [
+const NAV_ITEMS = (t: (k: TKey) => string) => [
   { href: "/dashboard",   label: t("nav_home"),        icon: Home },
   { href: "/passes",      label: t("nav_passes"),       icon: ShoppingBag },
   { href: "/tasks",       label: t("nav_tasks"),        icon: CheckSquare },
@@ -46,6 +47,7 @@ function SidebarContent({ onClose, isAdmin }: { onClose?: () => void; isAdmin: b
           <span className="font-display font-bold text-white text-lg">Aurevia</span>
         </Link>
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <LangToggle />
           {onClose && (
             <button onClick={onClose} className="w-8 h-8 flex items-center justify-center text-white/40 hover:text-white rounded-lg hover:bg-white/5 transition-all lg:hidden">
@@ -117,7 +119,7 @@ export default function Sidebar() {
   useEffect(() => {
     fetch("/api/auth/me")
       .then((r) => r.json())
-      .then((d) => { if (d.user?.role === "ADMIN") setIsAdmin(true); })
+      .then((d) => { if (["ADMIN", "SUPER_ADMIN", "MODERATOR"].includes(d.user?.role)) setIsAdmin(true); })
       .catch(() => {});
   }, []);
 
@@ -140,6 +142,7 @@ export default function Sidebar() {
           <img src="/aurevia-logo.jpg" alt="Aurevia" className="w-7 h-7 rounded-lg object-cover border border-white/10" />
           <span className="font-display font-bold text-white text-base">Aurevia</span>
         </Link>
+        <ThemeToggle />
         <LangToggle />
       </header>
 

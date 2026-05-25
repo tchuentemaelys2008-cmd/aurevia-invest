@@ -47,7 +47,7 @@ async function main() {
       name: "Admin Aurevia",
       email: "admin@aurevia.com",
       password: adminPassword,
-      role: "ADMIN",
+      role: "SUPER_ADMIN",
       referralCode: nanoid(8).toUpperCase(),
       balance: 0,
     },

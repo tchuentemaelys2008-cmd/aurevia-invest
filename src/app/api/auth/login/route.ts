@@ -1,3 +1,5 @@
+﻿export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { comparePassword, signToken } from "@/lib/auth";
@@ -16,7 +18,7 @@ export async function POST(req: NextRequest) {
     if (!user || !(await comparePassword(data.password, user.password))) {
       return NextResponse.json({ error: "Email ou mot de passe incorrect" }, { status: 401 });
     }
-    if (!user.isActive) return NextResponse.json({ error: "Compte désactivé" }, { status: 403 });
+    if (!user.isActive || user.isSuspended) return NextResponse.json({ error: "Compte dÃ©sactivÃ© ou suspendu" }, { status: 403 });
 
     const token = signToken({ userId: user.id, email: user.email, role: user.role });
     const response = NextResponse.json({ success: true, user: { id: user.id, name: user.name, email: user.email, role: user.role } });

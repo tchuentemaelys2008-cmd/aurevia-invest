@@ -1,3 +1,5 @@
+﻿export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { hashPassword, signToken } from "@/lib/auth";
@@ -20,7 +22,7 @@ export async function POST(req: NextRequest) {
     const existing = await prisma.user.findFirst({
       where: { OR: [{ email: data.email }, ...(data.phone ? [{ phone: data.phone }] : [])] },
     });
-    if (existing) return NextResponse.json({ error: "Email ou téléphone déjà utilisé" }, { status: 400 });
+    if (existing) return NextResponse.json({ error: "Email ou tÃ©lÃ©phone dÃ©jÃ  utilisÃ©" }, { status: 400 });
 
     let referredById: string | undefined;
     if (data.referralCode) {
@@ -40,7 +42,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // La commission parrainage (10%) sera versée au moment de l'achat du pass
+    // La commission parrainage (10%) sera versÃ©e au moment de l'achat du pass
 
     const token = signToken({ userId: user.id, email: user.email, role: user.role });
     const response = NextResponse.json({ success: true, user: { id: user.id, name: user.name, email: user.email, role: user.role } });

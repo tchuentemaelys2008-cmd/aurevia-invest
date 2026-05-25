@@ -1,3 +1,5 @@
+﻿export const dynamic = "force-dynamic";
+
 import { NextResponse } from "next/server";
 import { getAuthUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -5,7 +7,7 @@ import { prisma } from "@/lib/prisma";
 export async function GET() {
   try {
     const auth = await getAuthUser();
-    if (!auth) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+    if (!auth) return NextResponse.json({ error: "Non authentifiÃ©" }, { status: 401 });
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
