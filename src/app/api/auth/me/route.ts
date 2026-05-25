@@ -9,15 +9,18 @@ export async function GET() {
     const auth = await getAuthUser();
     if (!auth) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
 
-    const user = await prisma.user.findUnique({
-      where: { id: auth.userId },
-      select: { id: true, name: true, email: true, phone: true, role: true, referralCode: true, balance: true, totalEarnings: true, totalInvested: true, isVerified: true, isSuspended: true, createdAt: true },
-    });
+    const [user, membership] = await Promise.all([
+      prisma.user.findUnique({
+        where: { id: auth.userId },
+        select: { id: true, name: true, email: true, phone: true, role: true, referralCode: true, balance: true, totalEarnings: true, totalInvested: true, isVerified: true, isSuspended: true, createdAt: true },
+      }),
+      prisma.teamMember.findUnique({ where: { userId: auth.userId }, include: { team: { select: { id: true, name: true } } } }),
+    ]);
     if (!user) return NextResponse.json({ error: "Utilisateur introuvable" }, { status: 404 });
     if (user.isSuspended) return NextResponse.json({ error: "Compte suspendu" }, { status: 403 });
     await prisma.user.update({ where: { id: user.id }, data: { lastActive: new Date() } });
 
-    const res = NextResponse.json({ user });
+    const res = NextResponse.json({ user, myTeamName: membership?.team?.name ?? null });
 
     if (user.role !== auth.role) {
       const newToken = signToken({ userId: user.id, email: user.email, role: user.role });

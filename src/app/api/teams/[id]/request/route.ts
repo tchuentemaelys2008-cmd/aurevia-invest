@@ -10,21 +10,21 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
   const { message, phone } = await req.json();
   if (!message?.trim() || !phone?.trim()) {
-    return NextResponse.json({ error: "Message et numéro requis" }, { status: 400 });
+    return NextResponse.json({ error: "Message and phone number are required" }, { status: 400 });
   }
 
   const team = await prisma.team.findUnique({ where: { id: params.id }, include: { leader: { select: { id: true, name: true } } } });
-  if (!team || !team.isActive) return NextResponse.json({ error: "Équipe introuvable" }, { status: 404 });
+  if (!team || !team.isActive) return NextResponse.json({ error: "Team not found" }, { status: 404 });
 
   if (team.leaderId === auth.userId) {
-    return NextResponse.json({ error: "Vous êtes le leader de cette équipe" }, { status: 400 });
+    return NextResponse.json({ error: "You are the leader of this team" }, { status: 400 });
   }
 
   const existing = await prisma.teamMember.findUnique({ where: { userId: auth.userId } });
-  if (existing) return NextResponse.json({ error: "Vous êtes déjà dans une équipe" }, { status: 400 });
+  if (existing) return NextResponse.json({ error: "You are already in a team" }, { status: 400 });
 
   const activePass = await prisma.userPass.findFirst({ where: { userId: auth.userId, status: "ACTIVE" } });
-  if (!activePass) return NextResponse.json({ error: "Vous devez posséder un pass actif pour rejoindre une équipe" }, { status: 400 });
+  if (!activePass) return NextResponse.json({ error: "An active pass is required to join a team" }, { status: 400 });
 
   const existingRequest = await prisma.teamJoinRequest.findUnique({
     where: { teamId_userId: { teamId: params.id, userId: auth.userId } },

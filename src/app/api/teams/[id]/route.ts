@@ -15,6 +15,10 @@ export async function DELETE(_req: NextRequest, { params }: { params: { id: stri
     return NextResponse.json({ error: "Seul le leader peut supprimer l'équipe" }, { status: 403 });
   }
 
-  await prisma.team.update({ where: { id: params.id }, data: { isActive: false } });
+  await prisma.$transaction([
+    prisma.teamMember.deleteMany({ where: { teamId: params.id } }),
+    prisma.teamJoinRequest.deleteMany({ where: { teamId: params.id } }),
+    prisma.team.update({ where: { id: params.id }, data: { isActive: false } }),
+  ]);
   return NextResponse.json({ success: true });
 }

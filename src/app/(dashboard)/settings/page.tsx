@@ -22,17 +22,17 @@ export default function SettingsPage() {
   const [myTeamName, setMyTeamName] = useState<string | null>(null);
 
   useEffect(() => {
-    Promise.all([
-      fetch("/api/auth/me").then(r => r.json()),
-      fetch("/api/teams").then(r => r.json()).catch(() => ({})),
-    ]).then(([d, teamsData]) => {
-      if (d.user) {
-        setProfile(d.user);
-        setForm({ name: d.user.name || "", phone: d.user.phone || "" });
-      }
-      if (teamsData.myTeamName) setMyTeamName(teamsData.myTeamName);
-      setLoading(false);
-    }).catch(() => setLoading(false));
+    fetch("/api/auth/me")
+      .then(r => r.json())
+      .then(d => {
+        if (d.user) {
+          setProfile(d.user);
+          setForm({ name: d.user.name || "", phone: d.user.phone || "" });
+        }
+        if (d.myTeamName) setMyTeamName(d.myTeamName);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, []);
 
   const save = async () => {

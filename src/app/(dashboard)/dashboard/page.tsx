@@ -14,7 +14,7 @@ import toast from "react-hot-toast";
 
 interface DashboardData {
   user: { name: string; balance: number; totalEarnings: number; totalInvested: number; referralCode: string; level: number; xp: number; isVerified: boolean };
-  activePasses: Array<{ id: string; pass: { name: string; dailyReturn: number }; status: string; endDate: string }>;
+  activePasses: Array<{ id: string; pass: { name: string; dailyReturn: number }; status: string; endDate: string | null }>;
   recentTransactions: Array<{ id: string; type: string; amount: number; description: string; createdAt: string; status: string }>;
   chartPoints: Array<{ day: number; label: string; value: number }>;
 }
@@ -252,7 +252,11 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-white text-sm">{up.pass.name}</p>
-                  <p className="text-xs text-white/40">{t("dash_expires")} {formatDate(up.endDate)}</p>
+                  <p className="text-xs text-white/40">
+                    {up.status === "ACTIVE" && up.endDate
+                      ? `${t("dash_expires")} ${formatDate(up.endDate)}`
+                      : lang === "fr" ? "En attente d'activation" : "Awaiting activation"}
+                  </p>
                 </div>
                 <div className="text-right flex-shrink-0">
                   <p className="text-emerald-400 font-bold text-sm">+{up.pass.dailyReturn}%</p>

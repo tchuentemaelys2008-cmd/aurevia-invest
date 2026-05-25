@@ -34,9 +34,15 @@ export default function WelcomePopup() {
         if (s.whatsapp_link || s.telegram_link || s.whatsapp_group_link) {
           setLinks(s);
           setTimeout(() => setOpen(true), 1200);
+        } else {
+          // No links configured — mark shown so we don't retry every visit
+          sessionStorage.setItem("aurevia-welcome-shown", "1");
         }
       })
-      .catch(() => {});
+      .catch(() => {
+        // On error mark shown to avoid retrying on every navigation
+        sessionStorage.setItem("aurevia-welcome-shown", "1");
+      });
   }, []);
 
   const dismiss = () => {
