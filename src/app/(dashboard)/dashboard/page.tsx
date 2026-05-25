@@ -7,6 +7,7 @@ import { TrendingUp, ShoppingBag, CheckSquare, ArrowUpRight, ArrowDownRight, Wal
 import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer } from "recharts";
 import Card, { StatCard } from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
+import TelegramBanner from "@/components/ui/TelegramBanner";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n";
 import toast from "react-hot-toast";
@@ -291,6 +292,10 @@ export default function DashboardPage() {
             ))
           )}
         </Card>
+      </motion.div>
+      {/* TelegramBanner only on home */}
+      <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4, delay: 0.35 }}>
+        <TelegramBanner />
       </motion.div>
     </div>
   );

@@ -1,13 +1,13 @@
-﻿export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic";
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getAuthUser, signToken } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
     const auth = await getAuthUser();
-    if (!auth) return NextResponse.json({ error: "Non authentifiÃ©" }, { status: 401 });
+    if (!auth) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
 
     const user = await prisma.user.findUnique({
       where: { id: auth.userId },
@@ -19,7 +19,6 @@ export async function GET() {
 
     const res = NextResponse.json({ user });
 
-    // Refresh JWT if role in DB differs from role in token (e.g. user was promoted to ADMIN)
     if (user.role !== auth.role) {
       const newToken = signToken({ userId: user.id, email: user.email, role: user.role });
       res.cookies.set("auth-token", newToken, {
@@ -31,6 +30,41 @@ export async function GET() {
     }
 
     return res;
+  } catch {
+    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+  }
+}
+
+export async function PATCH(req: NextRequest) {
+  try {
+    const auth = await getAuthUser();
+    if (!auth) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+
+    const { name, phone } = await req.json();
+    const updateData: { name?: string; phone?: string } = {};
+
+    if (name?.trim()) updateData.name = name.trim();
+    if (phone !== undefined) {
+      if (phone.trim()) {
+        const existing = await prisma.user.findFirst({ where: { phone: phone.trim(), NOT: { id: auth.userId } } });
+        if (existing) return NextResponse.json({ error: "Ce numéro est déjà utilisé" }, { status: 400 });
+        updateData.phone = phone.trim();
+      } else {
+        updateData.phone = "";
+      }
+    }
+
+    if (Object.keys(updateData).length === 0) {
+      return NextResponse.json({ error: "Aucune donnée à mettre à jour" }, { status: 400 });
+    }
+
+    const user = await prisma.user.update({
+      where: { id: auth.userId },
+      data: updateData,
+      select: { id: true, name: true, email: true, phone: true, referralCode: true },
+    });
+
+    return NextResponse.json({ user });
   } catch {
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
