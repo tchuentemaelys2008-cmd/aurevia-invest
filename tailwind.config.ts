@@ -18,8 +18,8 @@ const config: Config = {
         }
       },
       fontFamily: {
-        sans: ["var(--font-outfit)", "system-ui"],
-        display: ["var(--font-syne)", "system-ui"],
+        sans: ["var(--font-montserrat)", "system-ui"],
+        display: ["var(--font-montserrat)", "system-ui"],
         mono: ["var(--font-space-mono)", "monospace"],
       },
       backgroundImage: {

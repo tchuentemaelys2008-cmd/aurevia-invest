@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -35,7 +35,7 @@ function RegisterForm() {
       });
       const data = await res.json();
       if (!res.ok) { toast.error(data.error); setLoading(false); return; }
-      toast.success("Compte créé avec succès !");
+      toast.success("Compte crÃ©Ã© avec succÃ¨s !");
       router.push("/dashboard");
     } catch {
       toast.error("Erreur d'inscription");
@@ -47,7 +47,7 @@ function RegisterForm() {
     <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
       <div className="text-center mb-8">
         <img
-          src="/aurevia-logo.jpg"
+          src="/photo_2026-05-25_14-14-19.jpg"
           alt="Aurevia Invest"
           className="w-44 h-24 rounded-2xl object-cover mx-auto mb-4 shadow-[0_0_40px_rgba(59,111,212,0.4)]"
         />
@@ -63,9 +63,9 @@ function RegisterForm() {
             value={form.email} onChange={(e) => set("email", e.target.value)} icon={<Mail size={15} />} required />
           <Input label={t("auth_phone")} type="tel" placeholder="+237 6XX XXX XXX"
             value={form.phone} onChange={(e) => set("phone", e.target.value)} icon={<Phone size={15} />} />
-          <Input label={t("auth_password")} type="password" placeholder="Min. 8 caractères"
+          <Input label={t("auth_password")} type="password" placeholder="Min. 8 caractÃ¨res"
             value={form.password} onChange={(e) => set("password", e.target.value)} icon={<Lock size={15} />} required />
-          <Input label={t("auth_confirm_password")} type="password" placeholder="••••••••"
+          <Input label={t("auth_confirm_password")} type="password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
             value={form.confirmPassword} onChange={(e) => set("confirmPassword", e.target.value)} icon={<Lock size={15} />} required />
           <div>
             <Input label={t("auth_referral")} type="text" placeholder="Ex: AB12CD34"

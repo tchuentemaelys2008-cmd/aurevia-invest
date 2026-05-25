@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -37,7 +37,7 @@ export default function BottomNav() {
           <div className="flex items-center justify-between">
             <Link href="/dashboard" className="flex items-center gap-3">
               <img
-                src="/aurevia-logo.jpg"
+                src="/photo_2026-05-25_14-14-19.jpg"
                 alt="Aurevia Invest"
                 className="w-9 h-9 rounded-xl object-cover bg-white/5 border border-white/10"
               />

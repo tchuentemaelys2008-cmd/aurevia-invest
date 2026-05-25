@@ -5,17 +5,17 @@ import { createContext, ReactNode, useContext, useEffect, useState } from "react
 type Theme = "dark" | "light";
 
 const ThemeContext = createContext({
-  theme: "dark" as Theme,
+  theme: "light" as Theme,
   setTheme: (_theme: Theme) => {},
   toggleTheme: () => {},
 });
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("dark");
+  const [theme, setThemeState] = useState<Theme>("light");
 
   useEffect(() => {
     const saved = localStorage.getItem("aurevia-theme") as Theme | null;
-    const next = saved === "light" || saved === "dark" ? saved : "dark";
+    const next = saved === "light" || saved === "dark" ? saved : "light";
     setThemeState(next);
     document.documentElement.classList.toggle("light", next === "light");
     document.documentElement.classList.toggle("dark", next === "dark");

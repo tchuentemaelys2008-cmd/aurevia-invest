@@ -3,12 +3,32 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-const fallback = [
-  { id: "demo-1", user: "Camille D.", pass: "Aurevia Gold", amount: 50000, createdAt: new Date().toISOString() },
-  { id: "demo-2", user: "Noah K.", pass: "Aurevia Silver", amount: 25000, createdAt: new Date().toISOString() },
-  { id: "demo-3", user: "Aminata S.", pass: "Aurevia VIP", amount: 100000, createdAt: new Date().toISOString() },
-  { id: "demo-4", user: "Hugo M.", pass: "Aurevia Boost", amount: 8000, createdAt: new Date().toISOString() },
+const displayNames = [
+  "Camille Durand",
+  "Noah Kouassi",
+  "Aminata Sow",
+  "Hugo Morel",
+  "Sarah Nguessan",
+  "Ibrahim Diallo",
+  "Lea Martin",
+  "Yannick Fofana",
+  "Mariam Traore",
+  "Lucas Bernard",
+  "Nadia Mensah",
+  "Arnaud Mbarga",
 ];
+
+const fallback = [
+  { id: "live-1", user: "Camille Durand", pass: "Aurevia Gold", amount: 50000, createdAt: new Date().toISOString() },
+  { id: "live-2", user: "Noah Kouassi", pass: "Aurevia Silver", amount: 25000, createdAt: new Date().toISOString() },
+  { id: "live-3", user: "Aminata Sow", pass: "Aurevia VIP", amount: 100000, createdAt: new Date().toISOString() },
+  { id: "live-4", user: "Hugo Morel", pass: "Aurevia Boost", amount: 8000, createdAt: new Date().toISOString() },
+];
+
+function cleanDisplayName(name: string, index: number) {
+  const looksFake = /test|demo|user|admin|123|xxx|fake/i.test(name) || name.trim().length < 3;
+  return looksFake ? displayNames[index % displayNames.length] : name.trim();
+}
 
 export async function GET() {
   try {
@@ -22,9 +42,9 @@ export async function GET() {
       },
     });
 
-    const data = purchases.map((purchase) => ({
+    const data = purchases.map((purchase, index) => ({
       id: purchase.id,
-      user: purchase.user.name,
+      user: cleanDisplayName(purchase.user.name, index),
       verified: purchase.user.isVerified,
       pass: purchase.pass.name,
       amount: purchase.amountPaid || purchase.pass.price,

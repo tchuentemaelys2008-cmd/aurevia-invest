@@ -1,6 +1,7 @@
 import Sidebar from "@/components/layout/Sidebar";
 import EventBanner from "@/components/ui/EventBanner";
 import PurchaseTicker from "@/components/ui/PurchaseTicker";
+import TelegramBanner from "@/components/ui/TelegramBanner";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -9,6 +10,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <main className="pt-14 lg:pt-0 min-h-screen">
         <EventBanner />
         <PurchaseTicker />
+        <TelegramBanner />
         {children}
       </main>
     </div>

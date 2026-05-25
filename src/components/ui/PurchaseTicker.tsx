@@ -30,10 +30,10 @@ export default function PurchaseTicker() {
 
   return (
     <section className="px-4 pt-4">
-      <div className="relative mx-auto max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-[#0c1428]/80 p-3 shine-card">
+      <div className="relative mx-auto max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-[var(--surface-card)] p-3 shine-card">
         <div className="relative flex items-center gap-3">
           <div className="hidden sm:block h-14 w-14 overflow-hidden rounded-xl border border-white/10 bg-white/5">
-            <img src="/telegram-pass.jpg" alt="Aurevia pass" className="h-full w-full object-cover" />
+            <img src="/photo_2026-05-25_14-14-19.jpg" alt="Aurevia pass" className="h-full w-full object-cover" />
           </div>
           <div className="min-w-0 flex-1">
             <div className="mb-2 flex items-center gap-2 text-xs font-semibold text-[#9fb9ff]">
@@ -45,7 +45,7 @@ export default function PurchaseTicker() {
                 {doubled.map((purchase, index) => (
                   <div
                     key={`${purchase.id}-${index}`}
-                    className="flex min-w-[230px] items-center gap-3 rounded-xl border border-white/8 bg-white/5 px-3 py-2"
+                    className="flex min-w-[250px] items-center gap-3 rounded-xl border border-white/8 bg-white/5 px-3 py-2"
                   >
                     <div
                       className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg text-white"

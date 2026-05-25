@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -41,7 +41,7 @@ export default function LoginPage() {
     <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
       <div className="text-center mb-8">
         <img
-          src="/aurevia-logo.jpg"
+          src="/photo_2026-05-25_14-14-19.jpg"
           alt="Aurevia Invest"
           className="w-44 h-24 rounded-2xl object-cover mx-auto mb-4 shadow-[0_0_40px_rgba(59,111,212,0.4)]"
         />
@@ -57,7 +57,7 @@ export default function LoginPage() {
           <Input label={t("auth_email")} type="email" placeholder="votre@email.com"
             value={email} onChange={(e) => setEmail(e.target.value)}
             icon={<Mail size={15} />} error={errors.email} required />
-          <Input label={t("auth_password")} type="password" placeholder="••••••••"
+          <Input label={t("auth_password")} type="password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
             value={password} onChange={(e) => setPassword(e.target.value)}
             icon={<Lock size={15} />} error={errors.password} required />
           <div className="text-right">

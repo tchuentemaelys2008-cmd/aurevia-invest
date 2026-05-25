@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -30,7 +30,7 @@ export default function ForgotPasswordPage() {
         return;
       }
       setSent(true);
-      toast.success("Email envoyé !");
+      toast.success("Email envoyÃ© !");
     } finally {
       setLoading(false);
     }
@@ -40,7 +40,7 @@ export default function ForgotPasswordPage() {
     <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
       <div className="text-center mb-8">
         <img
-          src="/aurevia-logo.jpg"
+          src="/photo_2026-05-25_14-14-19.jpg"
           alt="Aurevia Invest"
           className="w-44 h-24 rounded-2xl object-cover mx-auto mb-4 shadow-[0_0_40px_rgba(59,111,212,0.4)]"
         />

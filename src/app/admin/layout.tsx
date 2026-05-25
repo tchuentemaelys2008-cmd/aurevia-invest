@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -40,7 +40,7 @@ function Sidebar({ onClose }: { onClose?: () => void }) {
     <div className="flex flex-col h-full">
       <div className="p-4 border-b border-white/5 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <img src="/aurevia-logo.jpg" alt="Aurevia" className="w-8 h-8 rounded-lg object-cover flex-shrink-0" />
+          <img src="/photo_2026-05-25_14-14-19.jpg" alt="Aurevia" className="w-8 h-8 rounded-lg object-cover flex-shrink-0" />
           <div>
             <p className="font-display font-bold text-white text-sm">Aurevia Admin</p>
             <p className="text-[10px] text-white/30">{lang === "fr" ? "Panneau de gestion" : "Control panel"}</p>
@@ -73,7 +73,7 @@ function Sidebar({ onClose }: { onClose?: () => void }) {
         <button onClick={logout} className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-white/40 hover:text-red-400 hover:bg-red-400/10 transition-all">
           <LogOut size={16} /> {lang === "fr" ? "Deconnexion" : "Logout"}
         </button>
-        <div className="flex gap-2 px-3 pt-2">
+        <div className="hidden lg:flex gap-2 px-3 pt-2">
           <ThemeToggle />
           <LangToggle />
         </div>
@@ -90,25 +90,25 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="min-h-screen flex">
-      <aside className="hidden lg:flex w-56 bg-[#07090f] border-r border-white/5 flex-col fixed h-screen z-40">
+      <aside className="hidden lg:flex w-56 bg-[var(--surface-panel)] border-r border-white/5 flex-col fixed h-screen z-40">
         <Sidebar />
       </aside>
 
       {open && (
         <div className="lg:hidden fixed inset-0 z-50 flex">
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setOpen(false)} />
-          <aside className="relative w-64 bg-[#07090f] border-r border-white/5 flex flex-col h-full z-50">
+          <aside className="relative w-64 bg-[var(--surface-panel)] border-r border-white/5 flex flex-col h-full z-50">
             <Sidebar onClose={() => setOpen(false)} />
           </aside>
         </div>
       )}
 
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-30 bg-[#07090f]/95 backdrop-blur border-b border-white/5 px-4 py-3 flex items-center gap-3">
-        <button onClick={() => setOpen(true)} className="w-8 h-8 flex items-center justify-center text-white/60 hover:text-white">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-30 bg-[var(--surface-nav)] backdrop-blur border-b border-white/5 px-4 py-3 flex items-center gap-2">
+        <button onClick={() => setOpen(true)} className="ui-action-button w-8 h-8 flex items-center justify-center rounded-lg">
           <Menu size={20} />
         </button>
         <div className="flex items-center gap-2 flex-1">
-          <img src="/aurevia-logo.jpg" alt="Aurevia" className="w-6 h-6 rounded-md object-cover" />
+          <img src="/photo_2026-05-25_14-14-19.jpg" alt="Aurevia" className="w-6 h-6 rounded-md object-cover" />
           <span className="font-display font-bold text-white text-sm">Admin</span>
         </div>
         <ThemeToggle />

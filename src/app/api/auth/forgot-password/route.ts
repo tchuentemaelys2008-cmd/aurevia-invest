@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
       });
     } else {
       // Dev mode â€” log dans la console
-      console.log("\nðŸ“§ [DEV] Reset password link:", resetUrl, "\n");
+      console.log("\n[DEV] Reset password link:", resetUrl, "\n");
     }
 
     return NextResponse.json({ success: true });

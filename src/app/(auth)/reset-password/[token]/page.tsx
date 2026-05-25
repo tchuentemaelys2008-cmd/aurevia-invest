@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -20,7 +20,7 @@ export default function ResetPasswordPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password.length < 8) {
-      toast.error("Le mot de passe doit contenir au moins 8 caractères");
+      toast.error("Le mot de passe doit contenir au moins 8 caractÃ¨res");
       return;
     }
     if (password !== confirm) {
@@ -36,7 +36,7 @@ export default function ResetPasswordPage() {
       });
       const data = await res.json();
       if (!res.ok) {
-        toast.error(data.error || "Erreur lors de la réinitialisation");
+        toast.error(data.error || "Erreur lors de la rÃ©initialisation");
         return;
       }
       setDone(true);
@@ -50,12 +50,12 @@ export default function ResetPasswordPage() {
     <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
       <div className="text-center mb-8">
         <img
-          src="/aurevia-logo.jpg"
+          src="/photo_2026-05-25_14-14-19.jpg"
           alt="Aurevia Invest"
           className="w-44 h-24 rounded-2xl object-cover mx-auto mb-4 shadow-[0_0_40px_rgba(59,111,212,0.4)]"
         />
         <h1 className="text-2xl font-display font-bold text-white">Nouveau mot de passe</h1>
-        <p className="text-white/40 text-sm mt-1">Choisissez un mot de passe sécurisé</p>
+        <p className="text-white/40 text-sm mt-1">Choisissez un mot de passe sÃ©curisÃ©</p>
       </div>
 
       <div className="glass-card rounded-2xl p-6">
@@ -64,22 +64,22 @@ export default function ResetPasswordPage() {
             <div className="w-16 h-16 bg-emerald-400/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <CheckCircle size={28} className="text-emerald-400" />
             </div>
-            <h2 className="text-lg font-display font-bold text-white mb-2">Mot de passe mis à jour !</h2>
-            <p className="text-white/50 text-sm mb-6">Vous allez être redirigé vers la connexion…</p>
+            <h2 className="text-lg font-display font-bold text-white mb-2">Mot de passe mis Ã  jour !</h2>
+            <p className="text-white/50 text-sm mb-6">Vous allez Ãªtre redirigÃ© vers la connexionâ€¦</p>
             <Link href="/login" className="flex items-center justify-center gap-2 text-sm text-[#3b6fd4] hover:text-blue-300 transition-colors">
               <ArrowLeft size={14} /> Se connecter maintenant
             </Link>
           </div>
         ) : (
           <>
-            <h2 className="text-xl font-display font-bold text-white mb-1">Réinitialiser le mot de passe</h2>
+            <h2 className="text-xl font-display font-bold text-white mb-1">RÃ©initialiser le mot de passe</h2>
             <p className="text-white/40 text-sm mb-6">Entrez et confirmez votre nouveau mot de passe.</p>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="relative">
                 <Input
                   label="Nouveau mot de passe"
                   type={showPwd ? "text" : "password"}
-                  placeholder="Minimum 8 caractères"
+                  placeholder="Minimum 8 caractÃ¨res"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   icon={<Lock size={15} />}
@@ -96,14 +96,14 @@ export default function ResetPasswordPage() {
               <Input
                 label="Confirmer le mot de passe"
                 type={showPwd ? "text" : "password"}
-                placeholder="Répétez le mot de passe"
+                placeholder="RÃ©pÃ©tez le mot de passe"
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}
                 icon={<Lock size={15} />}
                 required
               />
               <Button type="submit" variant="primary" size="lg" className="w-full" loading={loading}>
-                Mettre à jour le mot de passe
+                Mettre Ã  jour le mot de passe
               </Button>
             </form>
           </>
@@ -112,7 +112,7 @@ export default function ResetPasswordPage() {
 
       <p className="text-center text-white/40 text-sm mt-5">
         <Link href="/login" className="flex items-center justify-center gap-1.5 text-[#3b6fd4] hover:text-blue-300 transition-colors">
-          <ArrowLeft size={14} /> Retour à la connexion
+          <ArrowLeft size={14} /> Retour Ã  la connexion
         </Link>
       </p>
     </motion.div>

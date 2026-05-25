@@ -1,18 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { LanguageProvider } from "@/lib/i18n";
 import { ThemeProvider } from "@/lib/theme";
 import "./globals.css";
 
-const inter = Inter({
+const montserrat = Montserrat({
   subsets: ["latin"],
-  variable: "--font-inter",
-});
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-display",
+  weight: ["600"],
+  variable: "--font-montserrat",
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_URL || "https://aurevia-invest.vercel.app";
@@ -20,7 +16,7 @@ const siteName = "Aurevia Invest";
 const siteTagline = "Investissez en Afrique, récoltez chaque jour";
 const description =
   "Aurevia Invest — la plateforme d'investissement africaine. Achetez un pass, générez des revenus quotidiens en FCFA, retirez via Mobile Money (Orange, MTN, Wave) et boostez vos gains grâce au parrainage.";
-const logoUrl = "/aurevia-logo.jpg";
+const logoUrl = "/photo_2026-05-25_14-14-19.jpg";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -103,8 +99,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#070d1a",
-  colorScheme: "dark",
+  themeColor: "#f5f7fb",
+  colorScheme: "light dark",
   width: "device-width",
   initialScale: 1,
 };
@@ -141,7 +137,7 @@ const websiteJsonLd = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr" suppressHydrationWarning>
-      <body className={`${inter.variable} ${spaceGrotesk.variable} font-sans`}>
+      <body className={`${montserrat.variable} font-sans`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}

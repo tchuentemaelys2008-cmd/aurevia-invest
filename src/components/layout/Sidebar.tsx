@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import {
   Home, ShoppingBag, CheckSquare, Target, Trophy, Users, Share2,
   Wallet, Settings, LayoutDashboard, HelpCircle, X, LogOut,
-  Sparkles, TrendingUp, Menu,
+  Sparkles, TrendingUp, Menu, Bell,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import LangToggle from "@/components/ui/LangToggle";
@@ -43,12 +43,10 @@ function SidebarContent({ onClose, isAdmin }: { onClose?: () => void; isAdmin: b
       {/* Header */}
       <div className="p-5 border-b border-white/5 flex items-center justify-between flex-shrink-0">
         <Link href="/dashboard" onClick={onClose} className="flex items-center gap-3">
-          <img src="/aurevia-logo.jpg" alt="Aurevia" className="w-9 h-9 rounded-xl object-cover border border-white/10" />
+          <img src="/photo_2026-05-25_14-14-19.jpg" alt="Aurevia" className="w-9 h-9 rounded-xl object-cover border border-white/10" />
           <span className="font-display font-bold text-white text-lg">Aurevia</span>
         </Link>
         <div className="flex items-center gap-2">
-          <ThemeToggle />
-          <LangToggle />
           {onClose && (
             <button onClick={onClose} className="w-8 h-8 flex items-center justify-center text-white/40 hover:text-white rounded-lg hover:bg-white/5 transition-all lg:hidden">
               <X size={18} />
@@ -126,21 +124,24 @@ export default function Sidebar() {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-64 flex-col bg-[#070d1a] border-r border-white/5 z-50">
+      <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-64 flex-col bg-[var(--surface-panel)] border-r border-white/5 z-50">
         <SidebarContent isAdmin={isAdmin} />
       </aside>
 
       {/* Mobile top bar */}
-      <header className="lg:hidden fixed top-0 left-0 right-0 z-50 h-14 bg-[#070d1a]/95 backdrop-blur-xl border-b border-white/5 flex items-center px-4 gap-3">
+      <header className="lg:hidden fixed top-0 left-0 right-0 z-50 h-14 bg-[var(--surface-nav)] backdrop-blur-xl border-b border-white/5 flex items-center px-4 gap-2">
         <button
           onClick={() => setOpen(true)}
-          className="w-9 h-9 flex items-center justify-center text-white/60 hover:text-white rounded-xl hover:bg-white/5 transition-all"
+          className="ui-action-button w-9 h-9 flex items-center justify-center rounded-xl transition-all"
         >
           <Menu size={22} />
         </button>
         <Link href="/dashboard" className="flex items-center gap-2.5 flex-1">
-          <img src="/aurevia-logo.jpg" alt="Aurevia" className="w-7 h-7 rounded-lg object-cover border border-white/10" />
+          <img src="/photo_2026-05-25_14-14-19.jpg" alt="Aurevia" className="w-7 h-7 rounded-lg object-cover border border-white/10" />
           <span className="font-display font-bold text-white text-base">Aurevia</span>
+        </Link>
+        <Link href="/notifications" className="ui-action-button w-8 h-8 rounded-lg flex items-center justify-center transition-all" aria-label="Notifications">
+          <Bell size={15} />
         </Link>
         <ThemeToggle />
         <LangToggle />
@@ -150,7 +151,7 @@ export default function Sidebar() {
       {open && (
         <div className="lg:hidden fixed inset-0 z-[60] flex">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setOpen(false)} />
-          <aside className="relative w-72 max-w-[85vw] h-full bg-[#070d1a] border-r border-white/5 flex flex-col overflow-y-auto">
+          <aside className="relative w-72 max-w-[85vw] h-full bg-[var(--surface-panel)] border-r border-white/5 flex flex-col overflow-y-auto">
             <SidebarContent onClose={() => setOpen(false)} isAdmin={isAdmin} />
           </aside>
         </div>

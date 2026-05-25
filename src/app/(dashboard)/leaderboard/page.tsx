@@ -8,6 +8,12 @@ interface Entry { id: string; name: string; totalInvested: number; totalEarnings
 
 const MEDAL_COLORS = ["#f59e0b", "#9ca3af", "#b45309"];
 
+function RankIcon({ rank, size = 18 }: { rank: number; size?: number }) {
+  if (rank === 0) return <Trophy size={size} />;
+  if (rank === 1) return <Medal size={size} />;
+  return <Star size={size} />;
+}
+
 export default function LeaderboardPage() {
   const { t } = useLanguage();
   const [data, setData] = useState<{ leaderboard: Entry[]; myRank: Entry | null } | null>(null);
@@ -45,7 +51,7 @@ export default function LeaderboardPage() {
             return u ? (
               <div key={u.id} className={`glass-card rounded-2xl p-4 text-center ${sizes[i]}`}>
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-2 font-bold text-lg`} style={{ background: `${MEDAL_COLORS[positions[i]]}20`, color: MEDAL_COLORS[positions[i]] }}>
-                  {positions[i] === 0 ? "🥇" : positions[i] === 1 ? "🥈" : "🥉"}
+                  <RankIcon rank={positions[i]} size={18} />
                 </div>
                 <p className="text-white font-semibold text-xs truncate">{u.name.split(" ")[0]}</p>
                 <p className="text-white/40 text-[10px]">Niv.{u.level}</p>
@@ -66,7 +72,7 @@ export default function LeaderboardPage() {
               <motion.div key={u.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.02 }}
                 className="flex items-center gap-4 px-5 py-3.5">
                 <div className="w-8 text-center font-bold text-sm" style={{ color: i < 3 ? MEDAL_COLORS[i] : "rgba(255,255,255,0.3)" }}>
-                  {i < 3 ? ["🥇","🥈","🥉"][i] : `#${u.rank}`}
+                  {i < 3 ? <span className="inline-flex justify-center"><RankIcon rank={i} size={16} /></span> : `#${u.rank}`}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5">

@@ -3,11 +3,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { TrendingUp, ShoppingBag, CheckSquare, ArrowUpRight, ArrowDownRight, Bell, Wallet, Bot, ShieldCheck, Gauge, Flame } from "lucide-react";
+import { TrendingUp, ShoppingBag, CheckSquare, ArrowUpRight, ArrowDownRight, Wallet, Bot, ShieldCheck, Gauge, Flame } from "lucide-react";
 import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer } from "recharts";
 import Card, { StatCard } from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
-import LangToggle from "@/components/ui/LangToggle";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n";
 import toast from "react-hot-toast";
@@ -90,13 +89,6 @@ export default function DashboardPage() {
               {user.name.split(" ")[0]}
             </span>
           </h1>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="lg:hidden"><LangToggle /></div>
-          <Link href="/notifications" className="w-10 h-10 glass-card rounded-xl flex items-center justify-center relative">
-            <Bell size={18} className="text-white/60" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-blue-500 rounded-full" />
-          </Link>
         </div>
       </motion.div>
 
