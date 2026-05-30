@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import axios, { type AxiosProxyConfig } from "axios";
 
 // The merchant API base URL is fixed by GeniusPay's docs. We only honour an
 // override if it actually looks like the merchant API path — otherwise a stale
@@ -10,6 +11,35 @@ const BASE_URL = (() => {
   if (env && /\/api\/v\d+\/merchant$/.test(env)) return env;
   return CANONICAL_BASE_URL;
 })();
+
+// GeniusPay is behind Cloudflare, which blocks Vercel's datacenter IPs with a
+// "Just a moment..." challenge. Routing the request through an outbound proxy
+// with a clean/whitelisted IP gets around it. Set GENIUSPAY_PROXY_URL (or the
+// standard HTTPS_PROXY) to e.g. http://user:pass@host:port to enable it.
+// When unset, requests go out directly (current behaviour).
+function getProxyConfig(): AxiosProxyConfig | false {
+  const raw =
+    process.env.GENIUSPAY_PROXY_URL ||
+    process.env.HTTPS_PROXY ||
+    process.env.https_proxy;
+  if (!raw) return false;
+  try {
+    const u = new URL(raw);
+    return {
+      protocol: u.protocol.replace(":", ""),
+      host: u.hostname,
+      port: u.port ? parseInt(u.port, 10) : u.protocol === "https:" ? 443 : 80,
+      ...(u.username && {
+        auth: {
+          username: decodeURIComponent(u.username),
+          password: decodeURIComponent(u.password),
+        },
+      }),
+    };
+  } catch {
+    return false;
+  }
+}
 
 export type GeniusPayMethod =
   | "wave"
@@ -52,27 +82,31 @@ export async function createGeniusPayPayment(params: CreatePaymentParams) {
     };
   }
 
-  const res = await fetch(`${BASE_URL}/payments`, {
-    method: "POST",
+  // Use axios (Node http stack) so we can route through an outbound proxy when
+  // configured. validateStatus lets us read the body on any status code.
+  const res = await axios.post(`${BASE_URL}/payments`, body, {
+    timeout: 25000,
+    proxy: getProxyConfig(),
+    validateStatus: () => true,
+    responseType: "text",
+    transformResponse: [(d) => d], // keep raw text, we parse ourselves
     headers: {
       "X-API-Key": process.env.GENIUSPAY_API_KEY!,
       "X-API-Secret": process.env.GENIUSPAY_SECRET!,
       "Content-Type": "application/json",
-      // GeniusPay sits behind Cloudflare, which challenges server requests that
-      // lack a browser-like User-Agent ("Just a moment..." 403 page). These
-      // headers make the request look like a normal client and clear the basic
-      // Bot Fight Mode challenge.
+      // Browser-like headers help clear a basic Cloudflare Bot Fight Mode.
       Accept: "application/json",
       "Accept-Language": "fr-FR,fr;q=0.9,en;q=0.8",
       "User-Agent":
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
     },
-    body: JSON.stringify(body),
   });
 
-  // Read as text first so a non-JSON response (HTML error page, WAF challenge)
+  const status = res.status;
+  const text = typeof res.data === "string" ? res.data : JSON.stringify(res.data);
+
+  // Parse the body ourselves so a non-JSON response (Cloudflare HTML challenge)
   // yields a legible error instead of "Unexpected token '<'".
-  const text = await res.text();
   let json: {
     success?: boolean;
     error?: { message?: string; code?: string };
@@ -83,11 +117,11 @@ export async function createGeniusPayPayment(params: CreatePaymentParams) {
   } catch {
     const snippet = text.slice(0, 100).replace(/\s+/g, " ").trim();
     throw new Error(
-      `réponse non-JSON (HTTP ${res.status}) depuis ${BASE_URL}/payments — vérifiez l'URL et les clés. Début: ${snippet}`
+      `réponse non-JSON (HTTP ${status}) depuis ${BASE_URL}/payments — Cloudflare bloque probablement la requête. Début: ${snippet}`
     );
   }
-  if (!res.ok || !json.success) {
-    throw new Error(json.error?.message || `échec de l'initialisation (HTTP ${res.status})`);
+  if (status < 200 || status >= 300 || !json.success) {
+    throw new Error(json.error?.message || `échec de l'initialisation (HTTP ${status})`);
   }
   return json.data as {
     id: number;
