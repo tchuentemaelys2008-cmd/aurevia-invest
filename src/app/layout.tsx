@@ -19,7 +19,6 @@ const description =
 const ogDescription =
   "Investissez en Afrique et gagnez chaque jour. Revenus quotidiens en FCFA, retrait Mobile Money, programme de parrainage. Rejoignez Aurevia Invest maintenant !";
 const logoUrl = "/photo_2026-05-25_14-14-19.jpg";
-const ogImageUrl = `${siteUrl}${logoUrl}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -58,8 +57,11 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: [{ url: logoUrl, type: "image/jpeg" }],
-    shortcut: logoUrl,
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: logoUrl, type: "image/jpeg" },
+    ],
+    shortcut: "/icon.svg",
     apple: { url: logoUrl, sizes: "180x180" },
   },
   openGraph: {
@@ -70,22 +72,13 @@ export const metadata: Metadata = {
     siteName,
     title: `${siteName} — Make Money & Dream Big`,
     description: ogDescription,
-    images: [
-      {
-        url: ogImageUrl,
-        width: 1200,
-        height: 630,
-        alt: "Aurevia Invest — Plateforme d'investissement africaine",
-        type: "image/jpeg",
-        secureUrl: ogImageUrl,
-      },
-    ],
+    // og:image is provided by the generated app/opengraph-image.tsx card.
   },
   twitter: {
     card: "summary_large_image",
     title: `${siteName} — Make Money & Dream Big`,
     description: ogDescription,
-    images: [{ url: ogImageUrl, alt: "Aurevia Invest — Make Money & Dream Big" }],
+    // twitter image falls back to the generated opengraph-image card.
   },
   robots: {
     index: true,

@@ -84,6 +84,14 @@ export default function PassesPage() {
     });
   }, []);
 
+  // Lock background scroll while the purchase modal is open so the
+  // full-screen overlay always covers the viewport cleanly.
+  useEffect(() => {
+    const open = showModal || bankDone;
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [showModal, bankDone]);
+
   const passDescriptionKeys: Record<string, TKey> = {
     "Aurevia Starter": "pass_desc_starter",
     "Aurevia Mini": "pass_desc_mini",
@@ -244,7 +252,7 @@ export default function PassesPage() {
       )}
 
       {showModal && selectedPass && !bankDone && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-3 bg-black/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center p-3 bg-black/60 backdrop-blur-sm">
           <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md bg-[#0c1428] border border-white/10 rounded-2xl overflow-hidden max-h-[90vh] flex flex-col">
             <div className="flex items-center justify-between px-5 py-4 border-b border-white/8 flex-shrink-0">
               <div className="flex items-center gap-2">
@@ -356,7 +364,7 @@ export default function PassesPage() {
       )}
 
       {bankDone && showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-sm bg-[#0c1428] border border-white/10 rounded-2xl p-6 text-center">
             <div className="w-16 h-16 rounded-2xl bg-purple-400/10 flex items-center justify-center mx-auto mb-4">
               <Clock size={28} className="text-purple-400" />

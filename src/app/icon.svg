@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Aurevia Invest">
+  <defs>
+    <linearGradient id="auBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3b6fd4"/>
+      <stop offset="1" stop-color="#6c4de6"/>
+    </linearGradient>
+    <linearGradient id="auShine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="0.5" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="116" fill="url(#auBg)"/>
+  <rect width="512" height="512" rx="116" fill="url(#auShine)"/>
+  <!-- Monogram "A" -->
+  <path d="M150 392 L256 120 L362 392" fill="none" stroke="#ffffff" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M196 312 H316" fill="none" stroke="#ffffff" stroke-width="40" stroke-linecap="round"/>
+  <!-- Upward growth accent -->
+  <path d="M300 196 L360 136" fill="none" stroke="#ffffff" stroke-opacity="0.55" stroke-width="22" stroke-linecap="round"/>
+  <path d="M336 136 H360 V160" fill="none" stroke="#ffffff" stroke-opacity="0.55" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

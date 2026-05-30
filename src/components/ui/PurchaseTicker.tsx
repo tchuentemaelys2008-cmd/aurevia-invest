@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { BadgeCheck, ShoppingBag, Sparkles } from "lucide-react";
+import { BadgeCheck } from "lucide-react";
 import { useLanguage } from "@/lib/i18n";
 import { formatCurrency } from "@/lib/utils";
 
@@ -14,6 +14,15 @@ type Purchase = {
   color?: string;
 };
 
+const initials = (name: string) =>
+  name
+    .split(" ")
+    .map((w) => w[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+
 export default function PurchaseTicker() {
   const { lang } = useLanguage();
   const [items, setItems] = useState<Purchase[]>([]);
@@ -25,47 +34,63 @@ export default function PurchaseTicker() {
       .catch(() => setItems([]));
   }, []);
 
+  // Duplicate the list so the marquee loops seamlessly.
   const doubled = useMemo(() => [...items, ...items], [items]);
   if (!items.length) return null;
 
   return (
     <section className="px-4 pt-4">
-      <div className="relative mx-auto max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-[var(--surface-card)] p-3 shine-card">
-        <div className="relative flex items-center gap-3">
-          <div className="hidden sm:block h-14 w-14 overflow-hidden rounded-xl border border-white/10 bg-white/5">
-            <img src="/photo_2026-05-25_14-14-19.jpg" alt="Aurevia pass" className="h-full w-full object-cover" />
+      <div className="mx-auto max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-[var(--surface-card)] shadow-[0_8px_30px_rgba(0,0,0,0.25)]">
+        {/* Header */}
+        <div className="flex items-center justify-between gap-3 border-b border-white/8 px-4 py-2.5">
+          <div className="flex items-center gap-2">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
+            </span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-white/70">
+              {lang === "fr" ? "Achats en direct" : "Live purchases"}
+            </span>
           </div>
-          <div className="min-w-0 flex-1">
-            <div className="mb-2 flex items-center gap-2 text-xs font-semibold text-[#9fb9ff]">
-              <Sparkles size={14} />
-              <span>{lang === "fr" ? "Achats de passes en direct" : "Live pass purchases"}</span>
-            </div>
-            <div className="overflow-hidden">
-              <div className="ticker-track flex gap-3">
-                {doubled.map((purchase, index) => (
-                  <div
-                    key={`${purchase.id}-${index}`}
-                    className="flex min-w-[250px] items-center gap-3 rounded-xl border border-white/8 bg-white/5 px-3 py-2"
-                  >
-                    <div
-                      className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg text-white"
-                      style={{ background: purchase.color || "linear-gradient(135deg,#3b6fd4,#6c4de6)" }}
-                    >
-                      <ShoppingBag size={15} />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="flex items-center gap-1 truncate text-sm font-semibold text-white">
-                        {purchase.user}
-                        {purchase.verified && <BadgeCheck size={13} className="text-emerald-400" />}
-                      </p>
-                      <p className="truncate text-xs text-white/45">
-                        {lang === "fr" ? "a achete" : "bought"} {purchase.pass} · {formatCurrency(purchase.amount)}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+          <span className="rounded-full bg-emerald-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-400">
+            {lang === "fr" ? "Vérifié" : "Verified"}
+          </span>
+        </div>
+
+        {/* Marquee */}
+        <div className="ticker-mask relative overflow-hidden px-4 py-3">
+          <div className="ticker-track flex gap-2.5">
+            {doubled.map((purchase, index) => (
+              <div
+                key={`${purchase.id}-${index}`}
+                className="flex min-w-[238px] items-center gap-3 rounded-xl border border-white/8 bg-white/[0.04] px-3 py-2 transition-colors hover:border-white/15"
+              >
+                <div
+                  className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl text-xs font-bold text-white shadow-inner"
+                  style={{
+                    background:
+                      purchase.color || "linear-gradient(135deg,#3b6fd4,#6c4de6)",
+                  }}
+                >
+                  {initials(purchase.user)}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="flex items-center gap-1 truncate text-sm font-semibold text-white">
+                    {purchase.user}
+                    {purchase.verified && (
+                      <BadgeCheck size={13} className="flex-shrink-0 text-emerald-400" />
+                    )}
+                  </p>
+                  <p className="truncate text-xs text-white/45">
+                    {lang === "fr" ? "vient d'acheter" : "just bought"}{" "}
+                    <span className="text-white/70">{purchase.pass}</span>
+                  </p>
+                </div>
+                <span className="flex-shrink-0 rounded-lg bg-emerald-400/10 px-2 py-1 text-xs font-bold text-emerald-400">
+                  {formatCurrency(purchase.amount)}
+                </span>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
