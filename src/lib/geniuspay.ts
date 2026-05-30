@@ -1,6 +1,7 @@
 import crypto from "crypto";
 
-const BASE_URL = "https://pay.genius.ci/api/v1/merchant";
+const BASE_URL =
+  process.env.GENIUSPAY_BASE_URL || "https://geniuspay.ci/api/v1/merchant";
 
 export type GeniusPayMethod =
   | "wave"

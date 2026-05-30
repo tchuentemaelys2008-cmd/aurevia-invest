@@ -18,6 +18,13 @@ export async function middleware(req: NextRequest) {
   if (pathname.startsWith("/payment")) return NextResponse.next();
   if (pathname.startsWith("/api/events")) return NextResponse.next();
   if (pathname.startsWith("/api/leaderboard")) return NextResponse.next();
+  // Payment provider webhooks must stay public — they arrive without an auth
+  // cookie, so they must never be redirected to /login.
+  if (
+    pathname.startsWith("/api/payments/geniuspay/webhook") ||
+    pathname.startsWith("/api/payments/fapshi/webhook")
+  )
+    return NextResponse.next();
 
   if (!token) {
     const loginUrl = new URL("/login", req.url);
