@@ -116,8 +116,21 @@ export async function createGeniusPayPayment(params: CreatePaymentParams) {
     json = JSON.parse(text);
   } catch {
     const snippet = text.slice(0, 100).replace(/\s+/g, " ").trim();
+    // Surface the Cloudflare Ray ID so GeniusPay support can locate the exact
+    // blocked request in their Cloudflare dashboard and actually whitelist it.
+    const h = res.headers as Record<string, string | undefined>;
+    const cfRay = h["cf-ray"];
+    const cfServer = h["server"];
+    console.error("GeniusPay Cloudflare block:", {
+      status,
+      cfRay,
+      server: cfServer,
+      url: `${BASE_URL}/payments`,
+    });
     throw new Error(
-      `réponse non-JSON (HTTP ${status}) depuis ${BASE_URL}/payments — Cloudflare bloque probablement la requête. Début: ${snippet}`
+      `Cloudflare bloque la requête serveur (HTTP ${status})` +
+        (cfRay ? ` — Ray ID Cloudflare: ${cfRay}` : "") +
+        `. Communiquez ce Ray ID au support GeniusPay.`
     );
   }
   if (status < 200 || status >= 300 || !json.success) {
