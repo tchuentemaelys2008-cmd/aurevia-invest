@@ -58,6 +58,14 @@ export async function createGeniusPayPayment(params: CreatePaymentParams) {
       "X-API-Key": process.env.GENIUSPAY_API_KEY!,
       "X-API-Secret": process.env.GENIUSPAY_SECRET!,
       "Content-Type": "application/json",
+      // GeniusPay sits behind Cloudflare, which challenges server requests that
+      // lack a browser-like User-Agent ("Just a moment..." 403 page). These
+      // headers make the request look like a normal client and clear the basic
+      // Bot Fight Mode challenge.
+      Accept: "application/json",
+      "Accept-Language": "fr-FR,fr;q=0.9,en;q=0.8",
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
     },
     body: JSON.stringify(body),
   });
