@@ -46,7 +46,20 @@ export async function POST(req: NextRequest) {
     }
 
     const reference = `AUR-${nanoid(12).toUpperCase()}`;
-    const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000";
+    // Prefer a real, public NEXT_PUBLIC_URL. If it's missing or localhost,
+    // derive the origin from the incoming request so success/error URLs sent
+    // to GeniusPay are always valid public URLs (the gateway rejects localhost).
+    const envUrl = process.env.NEXT_PUBLIC_URL;
+    const reqHost = req.headers.get("x-forwarded-host") || req.headers.get("host");
+    const reqProto =
+      req.headers.get("x-forwarded-proto") ||
+      (reqHost?.includes("localhost") ? "http" : "https");
+    const baseUrl =
+      envUrl && envUrl.startsWith("http") && !envUrl.includes("localhost")
+        ? envUrl
+        : reqHost
+          ? `${reqProto}://${reqHost}`
+          : envUrl || "http://localhost:3000";
 
     const payment = await prisma.payment.create({
       data: {
@@ -118,18 +131,36 @@ export async function POST(req: NextRequest) {
         process.env.NODE_ENV === "production"
       ) {
         const gpMethod = GENIUSPAY_METHOD_MAP[data.paymentMethod] as GeniusPayMethod | undefined;
-        const gpData = await createGeniusPayPayment({
-          amount: pass.price,
-          description: `Achat Pass ${pass.name} â€” Aurevia Invest`,
-          reference,
-          successUrl: `${baseUrl}/dashboard?payment=${reference}&status=success`,
-          errorUrl: `${baseUrl}/passes?payment=${reference}&status=error`,
-          paymentMethod: gpMethod,
-          phone: data.phoneNumber,
-          metadata: { pass_name: pass.name, pass_id: pass.id },
-        });
+        try {
+          const gpData = await createGeniusPayPayment({
+            amount: pass.price,
+            description: `Achat Pass ${pass.name} â€” Aurevia Invest`,
+            reference,
+            successUrl: `${baseUrl}/dashboard?payment=${reference}&status=success`,
+            errorUrl: `${baseUrl}/passes?payment=${reference}&status=error`,
+            paymentMethod: gpMethod,
+            phone: data.phoneNumber,
+            metadata: { pass_name: pass.name, pass_id: pass.id },
+          });
+          paymentUrl = gpData.checkout_url || gpData.payment_url || "";
+        } catch (e) {
+          // Surface the real GeniusPay error instead of a generic 500, and
+          // roll back the PENDING records so a failed init leaves nothing behind.
+          await prisma.payment.delete({ where: { reference } }).catch(() => {});
+          await prisma.userPass.deleteMany({ where: { paymentRef: reference } });
+          const msg = e instanceof Error ? e.message : "échec de l'initialisation";
+          console.error("GeniusPay init error:", msg);
+          return NextResponse.json({ error: "GeniusPay: " + msg }, { status: 502 });
+        }
 
-        paymentUrl = gpData.checkout_url || gpData.payment_url || `/payment/simulate?ref=${reference}&method=geniuspay&amount=${pass.price}`;
+        if (!paymentUrl) {
+          await prisma.payment.delete({ where: { reference } }).catch(() => {});
+          await prisma.userPass.deleteMany({ where: { paymentRef: reference } });
+          return NextResponse.json(
+            { error: "GeniusPay n'a pas renvoyé d'URL de paiement." },
+            { status: 502 }
+          );
+        }
       } else {
         // Sandbox / dev mode
         const methodLabel =

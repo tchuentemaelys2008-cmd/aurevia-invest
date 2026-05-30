@@ -153,7 +153,8 @@ export default function PassesPage() {
         body: JSON.stringify({ passId: selectedPass.id, paymentMethod, phoneNumber: phone || undefined }),
       });
       const data = await res.json();
-      if (!res.ok) { toast.error(data.error || "Erreur"); setBuying(false); return; }
+      if (!res.ok) { toast.error(data.error || "Erreur"); setShowModal(true); setBuying(false); return; }
+      if (!data.paymentUrl) { toast.error("Aucune URL de paiement reçue"); setShowModal(true); setBuying(false); return; }
       toast.success("Redirection...");
       if (data.paymentUrl.startsWith("http")) window.location.href = data.paymentUrl;
       else router.push(data.paymentUrl);
