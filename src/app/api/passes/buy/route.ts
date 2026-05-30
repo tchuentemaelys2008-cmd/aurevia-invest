@@ -19,6 +19,7 @@ const schema = z.object({
     "CARD",
   ]),
   phoneNumber: z.string().optional(),
+  country: z.string().optional(),
 });
 
 const GENIUSPAY_METHOD_MAP: Record<string, GeniusPayMethod> = {
@@ -40,8 +41,12 @@ export async function POST(req: NextRequest) {
     const pass = await prisma.pass.findUnique({ where: { id: data.passId } });
     if (!pass) return NextResponse.json({ error: "Pass introuvable" }, { status: 404 });
 
-    // Orange Money et MTN passent toujours par Fapshi
-    if (data.paymentMethod === "GENIUSPAY_ORANGE" || data.paymentMethod === "GENIUSPAY_MTN") {
+    // Au Cameroun, Orange Money et MTN passent par Fapshi. Ailleurs (CI, SN, ML...)
+    // ils passent par GeniusPay (orange_money / mtn_money).
+    if (
+      data.country === "CM" &&
+      (data.paymentMethod === "GENIUSPAY_ORANGE" || data.paymentMethod === "GENIUSPAY_MTN")
+    ) {
       data.paymentMethod = "FAPSHI";
     }
 

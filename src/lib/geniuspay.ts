@@ -1,7 +1,15 @@
 import crypto from "crypto";
 
-const BASE_URL =
-  process.env.GENIUSPAY_BASE_URL || "https://geniuspay.ci/api/v1/merchant";
+// The merchant API base URL is fixed by GeniusPay's docs. We only honour an
+// override if it actually looks like the merchant API path — otherwise a stale
+// value (old domain, or the bare domain without /api/v1/merchant) makes the
+// gateway return an HTML page instead of JSON ("Unexpected token '<'").
+const CANONICAL_BASE_URL = "https://geniuspay.ci/api/v1/merchant";
+const BASE_URL = (() => {
+  const env = process.env.GENIUSPAY_BASE_URL?.trim().replace(/\/+$/, "");
+  if (env && /\/api\/v\d+\/merchant$/.test(env)) return env;
+  return CANONICAL_BASE_URL;
+})();
 
 export type GeniusPayMethod =
   | "wave"
@@ -54,9 +62,24 @@ export async function createGeniusPayPayment(params: CreatePaymentParams) {
     body: JSON.stringify(body),
   });
 
-  const json = await res.json();
+  // Read as text first so a non-JSON response (HTML error page, WAF challenge)
+  // yields a legible error instead of "Unexpected token '<'".
+  const text = await res.text();
+  let json: {
+    success?: boolean;
+    error?: { message?: string; code?: string };
+    data?: unknown;
+  };
+  try {
+    json = JSON.parse(text);
+  } catch {
+    const snippet = text.slice(0, 100).replace(/\s+/g, " ").trim();
+    throw new Error(
+      `réponse non-JSON (HTTP ${res.status}) depuis ${BASE_URL}/payments — vérifiez l'URL et les clés. Début: ${snippet}`
+    );
+  }
   if (!res.ok || !json.success) {
-    throw new Error(json.error?.message || "GeniusPay: échec de l'initialisation");
+    throw new Error(json.error?.message || `échec de l'initialisation (HTTP ${res.status})`);
   }
   return json.data as {
     id: number;

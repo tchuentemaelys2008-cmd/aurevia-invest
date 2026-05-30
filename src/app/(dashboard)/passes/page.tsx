@@ -27,17 +27,17 @@ const colorMap: Record<string, { bg: string; border: string; glow: string }> = {
 };
 
 const COUNTRIES = [
-  { code: "CM", label: "CM", name: "Cameroun", nameEn: "Cameroon", methods: ["FAPSHI", "GENIUSPAY_ORANGE", "GENIUSPAY_MTN"] },
-  { code: "CI", label: "CI", name: "Cote d'Ivoire", nameEn: "Ivory Coast", methods: ["GENIUSPAY_ORANGE", "GENIUSPAY_MTN", "GENIUSPAY_WAVE", "GENIUSPAY_MOOV"] },
-  { code: "SN", label: "SN", name: "Senegal", nameEn: "Senegal", methods: ["GENIUSPAY_ORANGE", "GENIUSPAY_WAVE"] },
-  { code: "ML", label: "ML", name: "Mali", nameEn: "Mali", methods: ["GENIUSPAY_ORANGE", "GENIUSPAY_MOOV"] },
-  { code: "BF", label: "BF", name: "Burkina Faso", nameEn: "Burkina Faso", methods: ["GENIUSPAY_ORANGE", "GENIUSPAY_MOOV"] },
-  { code: "TG", label: "TG", name: "Togo", nameEn: "Togo", methods: ["GENIUSPAY_MOOV"] },
-  { code: "CG", label: "CG", name: "Congo", nameEn: "Congo", methods: ["GENIUSPAY_MTN"] },
-  { code: "RW", label: "RW", name: "Rwanda", nameEn: "Rwanda", methods: ["GENIUSPAY_MTN"] },
-  { code: "UG", label: "UG", name: "Uganda", nameEn: "Uganda", methods: ["GENIUSPAY_MTN"] },
-  { code: "OTHER_AF", label: "AF", name: "Autre Afrique", nameEn: "Other Africa", methods: ["GENIUSPAY"] },
-  { code: "EU", label: "EU", name: "Europe / Monde", nameEn: "Europe / World", methods: ["BANK_TRANSFER"] },
+  { code: "CM", label: "CM", name: "Cameroun", nameEn: "Cameroon", dial: "+237", methods: ["FAPSHI", "GENIUSPAY_ORANGE", "GENIUSPAY_MTN"] },
+  { code: "CI", label: "CI", name: "Cote d'Ivoire", nameEn: "Ivory Coast", dial: "+225", methods: ["GENIUSPAY_ORANGE", "GENIUSPAY_MTN", "GENIUSPAY_WAVE", "GENIUSPAY_MOOV"] },
+  { code: "SN", label: "SN", name: "Senegal", nameEn: "Senegal", dial: "+221", methods: ["GENIUSPAY_ORANGE", "GENIUSPAY_WAVE"] },
+  { code: "ML", label: "ML", name: "Mali", nameEn: "Mali", dial: "+223", methods: ["GENIUSPAY_ORANGE", "GENIUSPAY_MOOV"] },
+  { code: "BF", label: "BF", name: "Burkina Faso", nameEn: "Burkina Faso", dial: "+226", methods: ["GENIUSPAY_ORANGE", "GENIUSPAY_MOOV"] },
+  { code: "TG", label: "TG", name: "Togo", nameEn: "Togo", dial: "+228", methods: ["GENIUSPAY_MOOV"] },
+  { code: "CG", label: "CG", name: "Congo", nameEn: "Congo", dial: "+242", methods: ["GENIUSPAY_MTN"] },
+  { code: "RW", label: "RW", name: "Rwanda", nameEn: "Rwanda", dial: "+250", methods: ["GENIUSPAY_MTN"] },
+  { code: "UG", label: "UG", name: "Uganda", nameEn: "Uganda", dial: "+256", methods: ["GENIUSPAY_MTN"] },
+  { code: "OTHER_AF", label: "AF", name: "Autre Afrique", nameEn: "Other Africa", dial: "", methods: ["GENIUSPAY"] },
+  { code: "EU", label: "EU", name: "Europe / Monde", nameEn: "Europe / World", dial: "", methods: ["BANK_TRANSFER"] },
 ];
 
 const METHOD_INFO: Record<string, { label: string; icon: React.ReactNode; badge?: string }> = {
@@ -142,7 +142,7 @@ export default function PassesPage() {
         return;
       }
 
-      if (NEEDS_PHONE.includes(paymentMethod) && !phone.trim()) {
+      if (NEEDS_PHONE.includes(paymentMethod) && phone.replace(/\D/g, "").length < 8) {
         toast.error(t("passes_phone_placeholder"));
         setBuying(false);
         return;
@@ -150,7 +150,7 @@ export default function PassesPage() {
       setShowModal(false);
       const res = await fetch("/api/passes/buy", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ passId: selectedPass.id, paymentMethod, phoneNumber: phone || undefined }),
+        body: JSON.stringify({ passId: selectedPass.id, paymentMethod, phoneNumber: phone.replace(/[^\d+]/g, "") || undefined, country: selectedCountry?.code }),
       });
       const data = await res.json();
       if (!res.ok) { toast.error(data.error || "Erreur"); setShowModal(true); setBuying(false); return; }
@@ -283,7 +283,7 @@ export default function PassesPage() {
               {step === "country" && (
                 <div className="p-4 grid grid-cols-2 gap-2">
                   {COUNTRIES.map((c) => (
-                    <button key={c.code} onClick={() => { setSelectedCountry(c); setPaymentMethod(""); setStep("method"); }} className="flex items-center gap-2.5 p-3 rounded-xl border border-white/8 bg-white/4 hover:bg-white/8 transition-colors text-left">
+                    <button key={c.code} onClick={() => { setSelectedCountry(c); setPaymentMethod(""); setPhone(c.dial ? c.dial + " " : ""); setStep("method"); }} className="flex items-center gap-2.5 p-3 rounded-xl border border-white/8 bg-white/4 hover:bg-white/8 transition-colors text-left">
                       <span className="text-xs font-bold text-white/40 w-6">{c.label}</span>
                       <span className="text-sm text-white font-medium leading-tight">{lang === "en" ? c.nameEn : c.name}</span>
                     </button>
