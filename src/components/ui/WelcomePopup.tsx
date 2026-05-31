@@ -73,7 +73,7 @@ export default function WelcomePopup() {
         >
           {/* Glow bg */}
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 bg-[#3b6fd4]/10 blur-[60px] rounded-full" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 bg-[#5b6ef5]/10 blur-[60px] rounded-full" />
           </div>
 
           <button type="button" onClick={dismiss} className="absolute top-4 right-4 w-8 h-8 rounded-xl flex items-center justify-center touch-manipulation" style={{ background: "var(--control-bg)", color: "var(--control-text)", opacity: 0.5 }}>
@@ -81,7 +81,7 @@ export default function WelcomePopup() {
           </button>
 
           <div className="relative text-center mb-6">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#3b6fd4] to-[#6c4de6] flex items-center justify-center mx-auto mb-3 shadow-lg shadow-[#3b6fd4]/30">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#5b6ef5] to-[#6c5ce7] flex items-center justify-center mx-auto mb-3 shadow-lg shadow-[#5b6ef5]/30">
               <img src="/photo_2026-05-25_14-14-19.jpg" alt="Aurevia" className="w-full h-full object-cover rounded-2xl" />
             </div>
             <h3 className="font-display font-bold text-lg" style={{ color: "var(--control-text)" }}>

@@ -12,7 +12,7 @@ interface Pass {
   duration: number; description: string; color: string; isActive: boolean;
 }
 
-const defaultForm = { name: "", price: 0, dailyReturn: 0, duration: 90, description: "", color: "#3b6fd4" };
+const defaultForm = { name: "", price: 0, dailyReturn: 0, duration: 90, description: "", color: "#5b6ef5" };
 
 export default function AdminPassesPage() {
   const [passes, setPasses] = useState<Pass[]>([]);
@@ -156,7 +156,7 @@ export default function AdminPassesPage() {
               <div>
                 <label className="text-sm font-medium text-white/70 mb-1.5 block">Couleur</label>
                 <div className="flex items-center gap-3">
-                  {["#3b6fd4", "#6c4de6", "#e6874d", "#e6d44d", "#4de68a"].map((c) => (
+                  {["#5b6ef5", "#6c5ce7", "#e6874d", "#e6d44d", "#4de68a"].map((c) => (
                     <button key={c} onClick={() => setForm({ ...form, color: c })}
                       className={`w-8 h-8 rounded-xl transition-transform ${form.color === c ? "scale-110 ring-2 ring-white/50" : ""}`}
                       style={{ backgroundColor: c }} />

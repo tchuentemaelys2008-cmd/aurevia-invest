@@ -63,7 +63,7 @@ export default function SettingsPage() {
   return (
     <div className="p-4 lg:p-8 max-w-xl mx-auto pb-24">
       <motion.div initial="hidden" animate="show" custom={0} variants={fade} className="mb-8">
-        <p className="text-xs font-semibold text-[#3b6fd4] uppercase tracking-widest mb-1">{lang === "fr" ? "Compte" : "Account"}</p>
+        <p className="text-xs font-semibold text-[#5b6ef5] uppercase tracking-widest mb-1">{lang === "fr" ? "Compte" : "Account"}</p>
         <h1 className="text-2xl font-display font-bold" style={{ color: "var(--control-text)" }}>{t("settings_title")}</h1>
       </motion.div>
 
@@ -72,7 +72,7 @@ export default function SettingsPage() {
         <motion.div initial="hidden" animate="show" custom={1} variants={fade}>
           <div className="rounded-2xl overflow-hidden border" style={{ background: "var(--surface-card)", borderColor: "var(--control-border)" }}>
             <div className="px-5 py-3 border-b flex items-center gap-2" style={{ borderColor: "var(--control-border)" }}>
-              <User size={15} className="text-[#3b6fd4]" />
+              <User size={15} className="text-[#5b6ef5]" />
               <span className="text-sm font-semibold" style={{ color: "var(--control-text)" }}>
                 {lang === "fr" ? "Mon profil" : "My profile"}
               </span>
@@ -127,7 +127,7 @@ export default function SettingsPage() {
         <motion.div initial="hidden" animate="show" custom={2} variants={fade}>
           <div className="rounded-2xl overflow-hidden border" style={{ background: "var(--surface-card)", borderColor: "var(--control-border)" }}>
             <div className="px-5 py-3 border-b flex items-center gap-2" style={{ borderColor: "var(--control-border)" }}>
-              <Users size={15} className="text-[#3b6fd4]" />
+              <Users size={15} className="text-[#5b6ef5]" />
               <span className="text-sm font-semibold" style={{ color: "var(--control-text)" }}>
                 {lang === "fr" ? "Mon équipe" : "My team"}
               </span>
@@ -135,8 +135,8 @@ export default function SettingsPage() {
             <div className="px-5 py-4 flex items-center justify-between gap-3">
               {myTeamName ? (
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-xl bg-[#3b6fd4]/15 flex items-center justify-center flex-shrink-0">
-                    <Crown size={14} className="text-[#3b6fd4]" />
+                  <div className="w-8 h-8 rounded-xl bg-[#5b6ef5]/15 flex items-center justify-center flex-shrink-0">
+                    <Crown size={14} className="text-[#5b6ef5]" />
                   </div>
                   <div>
                     <p className="text-sm font-semibold" style={{ color: "var(--control-text)" }}>{myTeamName}</p>
@@ -150,7 +150,7 @@ export default function SettingsPage() {
                   {lang === "fr" ? "Vous n'êtes dans aucune équipe." : "You are not in any team."}
                 </p>
               )}
-              <a href="/team" className="text-xs font-semibold text-[#3b6fd4] bg-[#3b6fd4]/10 hover:bg-[#3b6fd4]/20 px-3 py-1.5 rounded-xl transition-all flex-shrink-0">
+              <a href="/team" className="text-xs font-semibold text-[#5b6ef5] bg-[#5b6ef5]/10 hover:bg-[#5b6ef5]/20 px-3 py-1.5 rounded-xl transition-all flex-shrink-0">
                 {lang === "fr" ? "Voir les équipes" : "View teams"}
               </a>
             </div>
@@ -161,7 +161,7 @@ export default function SettingsPage() {
         <motion.div initial="hidden" animate="show" custom={3} variants={fade}>
           <div className="rounded-2xl overflow-hidden border" style={{ background: "var(--surface-card)", borderColor: "var(--control-border)" }}>
             <div className="px-5 py-3 border-b flex items-center gap-2" style={{ borderColor: "var(--control-border)" }}>
-              <Globe size={15} className="text-[#3b6fd4]" />
+              <Globe size={15} className="text-[#5b6ef5]" />
               <span className="text-sm font-semibold" style={{ color: "var(--control-text)" }}>{t("settings_language")}</span>
             </div>
             <div className="px-5 py-4 flex items-center justify-between">
@@ -175,7 +175,7 @@ export default function SettingsPage() {
         <motion.div initial="hidden" animate="show" custom={4} variants={fade}>
           <div className="rounded-2xl overflow-hidden border" style={{ background: "var(--surface-card)", borderColor: "var(--control-border)" }}>
             <div className="px-5 py-3 border-b flex items-center gap-2" style={{ borderColor: "var(--control-border)" }}>
-              <Globe size={15} className="text-[#6c4de6]" />
+              <Globe size={15} className="text-[#6c5ce7]" />
               <span className="text-sm font-semibold" style={{ color: "var(--control-text)" }}>
                 {lang === "fr" ? "Apparence" : "Appearance"}
               </span>

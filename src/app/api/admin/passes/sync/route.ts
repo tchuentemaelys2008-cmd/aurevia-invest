@@ -27,7 +27,7 @@ export async function POST() {
         price: 2000,
         dailyReturn: 6,
         duration: 90,
-        color: "#3b6fd4",
+        color: "#5b6ef5",
         icon: "zap",
         description: "Decouvrez Aurevia avec un mini-depot et gagnez des la premiere semaine.",
         isActive: true,

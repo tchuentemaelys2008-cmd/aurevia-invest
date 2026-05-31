@@ -42,7 +42,7 @@ export default function LoginPage() {
     <motion.div className="auth-glow" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
       <div className="relative z-10">
         <div className="text-center mb-8">
-          <div className="w-32 h-32 rounded-3xl mx-auto mb-4 shadow-[0_0_60px_rgba(59,111,212,0.45)] overflow-hidden border border-white/10 bg-[#0c1428]">
+          <div className="w-32 h-32 rounded-3xl mx-auto mb-4 shadow-[0_0_60px_rgba(91,110,245,0.45)] overflow-hidden border border-white/10 bg-[#0c1428]">
             <img
               src="/photo_2026-05-25_14-14-19.jpg"
               alt="Aurevia Invest"
@@ -68,7 +68,7 @@ export default function LoginPage() {
               value={password} onChange={(e) => setPassword(e.target.value)}
               icon={<Lock size={15} />} error={errors.password} required />
             <div className="text-right">
-              <Link href="/forgot-password" className="text-sm text-[#3b6fd4] hover:text-blue-300 transition-colors">
+              <Link href="/forgot-password" className="text-sm text-[#5b6ef5] hover:text-blue-300 transition-colors">
                 {t("auth_forgot")}
               </Link>
             </div>
@@ -82,7 +82,7 @@ export default function LoginPage() {
 
         <p className="text-center text-white/40 text-sm mt-5">
           {t("auth_no_account")}{" "}
-          <Link href="/register" className="text-[#3b6fd4] hover:text-blue-300 font-semibold transition-colors">
+          <Link href="/register" className="text-[#5b6ef5] hover:text-blue-300 font-semibold transition-colors">
             {t("auth_signup")}
           </Link>
         </p>

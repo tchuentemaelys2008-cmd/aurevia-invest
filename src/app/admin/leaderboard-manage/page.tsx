@@ -60,7 +60,7 @@ export default function AdminLeaderboardPage() {
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-white">{u.name}</span>
-                    {u.isVerified && <ShieldCheck size={12} className="text-[#3b6fd4]" />}
+                    {u.isVerified && <ShieldCheck size={12} className="text-[#5b6ef5]" />}
                   </div>
                   <p className="text-white/30 text-xs">{u.email}</p>
                 </td>

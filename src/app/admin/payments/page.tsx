@@ -83,7 +83,7 @@ export default function AdminPaymentsPage() {
               </div>
               {p.metadata?.proofBase64 && (
                 <button onClick={() => setPreview(p.metadata!.proofBase64!)}
-                  className="mt-3 flex items-center gap-2 text-xs text-[#3b6fd4] hover:text-blue-300 transition-colors">
+                  className="mt-3 flex items-center gap-2 text-xs text-[#5b6ef5] hover:text-blue-300 transition-colors">
                   <ImageIcon size={13} /> Voir la preuve de paiement
                 </button>
               )}

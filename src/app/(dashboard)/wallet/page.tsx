@@ -82,8 +82,8 @@ export default function WalletPage() {
 
       {/* Balance card */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mb-5">
-        <div className="relative rounded-2xl overflow-hidden border border-[#3b6fd4]/20 bg-gradient-to-br from-[#3b6fd4]/15 to-[#6c4de6]/10 p-6">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#3b6fd4] to-[#6c4de6] flex items-center justify-center mb-4">
+        <div className="relative rounded-2xl overflow-hidden border border-[#5b6ef5]/20 bg-gradient-to-br from-[#5b6ef5]/15 to-[#6c5ce7]/10 p-6">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#5b6ef5] to-[#6c5ce7] flex items-center justify-center mb-4">
             <Wallet size={22} className="text-white" />
           </div>
           <p className="text-white/50 text-sm mb-1">{t("wallet_balance")}</p>
@@ -155,7 +155,7 @@ export default function WalletPage() {
               <div>
                 <label className="text-sm font-medium text-white/70 mb-1.5 block">{t("wallet_method_label")}</label>
                 <select value={method} onChange={(e) => setMethod(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#3b6fd4]/50">
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#5b6ef5]/50">
                   <option value="Mobile Money">Mobile Money</option>
                   <option value="Orange Money">Orange Money</option>
                   <option value="MTN MoMo">MTN MoMo</option>

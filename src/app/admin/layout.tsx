@@ -59,9 +59,9 @@ function Sidebar({ onClose }: { onClose?: () => void }) {
           return (
             <Link key={href} href={href} onClick={onClose} className={cn(
               "flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all",
-              active ? "bg-[#3b6fd4]/15 text-white border border-[#3b6fd4]/20" : "text-white/40 hover:text-white hover:bg-white/5"
+              active ? "bg-[#5b6ef5]/15 text-white border border-[#5b6ef5]/20" : "text-white/40 hover:text-white hover:bg-white/5"
             )}>
-              <Icon size={16} className={active ? "text-[#3b6fd4]" : ""} />
+              <Icon size={16} className={active ? "text-[#5b6ef5]" : ""} />
               {label}
             </Link>
           );

@@ -35,16 +35,16 @@ export default function AdminEventsPage() {
 
   const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
 
-  const typeColors: Record<string, string> = { double_earnings: "#10b981", discount: "#f59e0b", bonus: "#6c4de6", xp_boost: "#3b6fd4" };
+  const typeColors: Record<string, string> = { double_earnings: "#10b981", discount: "#f59e0b", bonus: "#6c5ce7", xp_boost: "#5b6ef5" };
 
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-[#6c4de6]/20 rounded-xl flex items-center justify-center"><Zap size={18} className="text-[#6c4de6]" /></div>
+          <div className="w-9 h-9 bg-[#6c5ce7]/20 rounded-xl flex items-center justify-center"><Zap size={18} className="text-[#6c5ce7]" /></div>
           <div><h1 className="font-display font-bold text-white text-lg">Événements & Offres</h1><p className="text-white/40 text-xs">FOMO, bonus, double gains</p></div>
         </div>
-        <button onClick={() => setShowForm(v => !v)} className="flex items-center gap-2 bg-[#6c4de6] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:opacity-90 transition-all">
+        <button onClick={() => setShowForm(v => !v)} className="flex items-center gap-2 bg-[#6c5ce7] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:opacity-90 transition-all">
           <Plus size={15} /> Créer
         </button>
       </div>
@@ -55,7 +55,7 @@ export default function AdminEventsPage() {
             <div key={key as string} className={key === "description" ? "col-span-2" : ""}>
               <label className="text-xs text-white/40 mb-1 block">{label}</label>
               <input type={type as string} value={(form as Record<string,unknown>)[key as string] as string} onChange={e => set(key as string, type === "number" ? Number(e.target.value) : e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm outline-none focus:border-[#6c4de6]/50" />
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm outline-none focus:border-[#6c5ce7]/50" />
             </div>
           ))}
           <div>
@@ -65,7 +65,7 @@ export default function AdminEventsPage() {
             </select>
           </div>
           <div className="col-span-2 flex gap-3">
-            <button onClick={save} className="flex-1 bg-[#6c4de6] text-white text-sm font-semibold py-2.5 rounded-xl hover:opacity-90">Créer l'événement</button>
+            <button onClick={save} className="flex-1 bg-[#6c5ce7] text-white text-sm font-semibold py-2.5 rounded-xl hover:opacity-90">Créer l'événement</button>
             <button onClick={() => setShowForm(false)} className="px-4 text-white/40 hover:text-white text-sm">Annuler</button>
           </div>
         </div>

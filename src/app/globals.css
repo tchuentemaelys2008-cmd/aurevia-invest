@@ -9,8 +9,8 @@
   --navy-900: #070d1a;
   --navy-800: #0c1428;
   --navy-700: #111d38;
-  --accent-blue: #3b6fd4;
-  --accent-purple: #6c4de6;
+  --accent-blue: #5b6ef5;
+  --accent-purple: #6c5ce7;
 }
 
 * { box-sizing: border-box; }
@@ -106,23 +106,23 @@ html.light .rounded-2xl.border { border-color: rgba(8,17,31,0.09); }
 .glass-card {
   background: linear-gradient(145deg, rgba(13,22,48,0.85) 0%, rgba(7,13,26,0.92) 100%);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(59,111,212,0.13);
+  border: 1px solid rgba(91,110,245,0.13);
   box-shadow: 0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05);
   transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
 }
 .glass-card:hover {
-  box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(59,111,212,0.2), inset 0 1px 0 rgba(255,255,255,0.06);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(91,110,245,0.2), inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(59,111,212,0.35); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(59,111,212,0.55); }
+::-webkit-scrollbar-thumb { background: rgba(91,110,245,0.35); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(91,110,245,0.55); }
 
 /* ── Glow helpers ── */
-.glow-blue  { box-shadow: 0 0 40px rgba(59,111,212,0.22); }
-.glow-purple{ box-shadow: 0 0 40px rgba(108,77,230,0.22); }
+.glow-blue  { box-shadow: 0 0 40px rgba(91,110,245,0.22); }
+.glow-purple{ box-shadow: 0 0 40px rgba(108,92,231,0.22); }
 
 .ui-action-button {
   background: var(--control-bg);
@@ -131,9 +131,9 @@ html.light .rounded-2xl.border { border-color: rgba(8,17,31,0.09); }
   transition: all 0.18s ease;
 }
 .ui-action-button:hover {
-  background: rgba(59,111,212,0.1);
-  color: #3b6fd4;
-  border-color: rgba(59,111,212,0.25);
+  background: rgba(91,110,245,0.1);
+  color: #5b6ef5;
+  border-color: rgba(91,110,245,0.25);
 }
 
 /* ─────────────────────────────────────────────
@@ -196,12 +196,12 @@ html.light .skeleton {
    BUTTONS — press + glow
 ───────────────────────────────────────────── */
 .btn-primary {
-  background: linear-gradient(135deg, #3b6fd4 0%, #6c4de6 100%);
+  background: linear-gradient(135deg, #5b6ef5 0%, #6c5ce7 100%);
   border: none;
   color: white;
   font-weight: 600;
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
-  box-shadow: 0 4px 20px rgba(59,111,212,0.38), 0 1px 3px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 20px rgba(91,110,245,0.38), 0 1px 3px rgba(0,0,0,0.3);
   position: relative;
   overflow: hidden;
 }
@@ -214,11 +214,11 @@ html.light .skeleton {
 }
 .btn-primary:hover {
   transform: translateY(-1px) scale(1.01);
-  box-shadow: 0 8px 30px rgba(59,111,212,0.5), 0 2px 6px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 30px rgba(91,110,245,0.5), 0 2px 6px rgba(0,0,0,0.3);
 }
 .btn-primary:active {
   transform: translateY(0) scale(0.97);
-  box-shadow: 0 2px 10px rgba(59,111,212,0.3);
+  box-shadow: 0 2px 10px rgba(91,110,245,0.3);
 }
 
 .btn-secondary {
@@ -301,7 +301,7 @@ html.light .skeleton {
 }
 .card-lift:hover {
   transform: translateY(-3px);
-  box-shadow: 0 16px 48px rgba(0,0,0,0.45), 0 0 0 1px rgba(59,111,212,0.18);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.45), 0 0 0 1px rgba(91,110,245,0.18);
 }
 .card-lift:active {
   transform: translateY(0) scale(0.98);
@@ -318,7 +318,7 @@ html.light .skeleton {
   position: relative;
   border-radius: 20px;
   background: linear-gradient(var(--navy-800), var(--navy-800)) padding-box,
-              linear-gradient(135deg, rgba(59,111,212,0.6), rgba(108,77,230,0.6), rgba(59,111,212,0.6)) border-box;
+              linear-gradient(135deg, rgba(91,110,245,0.6), rgba(108,92,231,0.6), rgba(91,110,245,0.6)) border-box;
   border: 1px solid transparent;
 }
 
@@ -492,12 +492,12 @@ html.light .social-btn:hover { background: #f7f9fc; border-color: rgba(8,17,31,0
   top: -10%; left: 50%;
   width: 460px; height: 460px;
   transform: translateX(-50%);
-  background: rgba(59,111,212,0.18);
+  background: rgba(91,110,245,0.18);
 }
 .auth-glow::after {
   bottom: -15%; left: 30%;
   width: 360px; height: 360px;
-  background: rgba(108,77,230,0.14);
+  background: rgba(108,92,231,0.14);
 }
 
 /* Honor reduced-motion across decorative animations */

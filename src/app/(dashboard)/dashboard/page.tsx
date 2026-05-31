@@ -79,54 +79,71 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 pt-8 pb-6 space-y-6">
-      {/* Header */}
-      <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4 }}
-        className="flex items-start justify-between">
-        <div>
-          <p className="text-white/40 text-sm mb-1">{t("dash_label")}</p>
-          <h1 className="text-2xl font-display font-bold text-white leading-tight">
-            {t("dash_greeting")}<br />
-            <span className="bg-gradient-to-r from-[#3b6fd4] to-[#a78bfa] bg-clip-text text-transparent">
-              {user.name.split(" ")[0]}
-            </span>
-          </h1>
-        </div>
-      </motion.div>
+      {/* Balance Hero Card — indigo, image-style (theme-proof colors via inline styles) */}
+      <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4, delay: 0.05 }}>
+        <div className="relative rounded-3xl overflow-hidden p-6"
+          style={{ background: "linear-gradient(145deg, #5b6ef5 0%, #6c5ce7 58%, #5a4fd0 100%)", color: "#fff", boxShadow: "0 18px 40px rgba(91,110,245,0.35)" }}>
+          {/* Soft ambient glows */}
+          <div className="absolute -top-12 -right-10 w-44 h-44 rounded-full pointer-events-none" style={{ background: "rgba(255,255,255,0.14)", filter: "blur(40px)" }} />
+          <div className="absolute -bottom-16 -left-8 w-44 h-44 rounded-full pointer-events-none" style={{ background: "rgba(255,255,255,0.10)", filter: "blur(40px)" }} />
 
-      {/* Balance Hero Card */}
-      <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4, delay: 0.1 }}>
-        <div className="relative rounded-2xl overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#3b6fd4]/30 via-[#0c1428] to-[#6c4de6]/20" />
-          <div className="absolute inset-0 border border-[#3b6fd4]/20 rounded-2xl" />
-          <div className="relative p-6">
-            <div className="flex items-start justify-between mb-6">
+          {/* Greeting */}
+          <div className="relative flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center font-display font-bold flex-shrink-0" style={{ background: "rgba(255,255,255,0.22)", color: "#fff" }}>
+                {user.name.charAt(0).toUpperCase()}
+              </div>
               <div>
-                <p className="text-white/50 text-sm mb-2">{t("dash_balance")}</p>
-                <p className="text-4xl font-display font-bold text-white number-pop">{formatCurrency(user.balance)}</p>
-                <div className="flex items-center gap-2 mt-2">
-                  <span className="text-emerald-400 text-sm font-semibold flex items-center gap-1">
-                    <TrendingUp size={14} />+{growthPct}%
-                  </span>
-                  <span className="text-white/30 text-xs">{t("dash_7days")}</span>
-                </div>
+                <p className="text-xs" style={{ color: "rgba(255,255,255,0.75)" }}>{t("dash_greeting")}</p>
+                <p className="font-display font-bold leading-tight" style={{ color: "#fff" }}>{user.name.split(" ")[0]}</p>
               </div>
             </div>
-            {/* Mini chart */}
-            <div className="h-24 -mx-2">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chartPoints} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
-                  <defs>
-                    <linearGradient id="blueGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#3b6fd4" stopOpacity={0.4} />
-                      <stop offset="95%" stopColor="#3b6fd4" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <XAxis dataKey="label" hide />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Area type="monotone" dataKey="value" stroke="#3b6fd4" strokeWidth={2} fill="url(#blueGrad)" dot={false} />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
+            {user.isVerified && (
+              <span className="flex items-center gap-1 text-[11px] font-semibold rounded-full px-2.5 py-1" style={{ background: "rgba(255,255,255,0.18)", color: "#fff" }}>
+                <ShieldCheck size={12} /> {lang === "fr" ? "Vérifié" : "Verified"}
+              </span>
+            )}
+          </div>
+
+          {/* Balance */}
+          <p className="relative text-sm mb-1" style={{ color: "rgba(255,255,255,0.75)" }}>{t("dash_balance")}</p>
+          <p className="relative text-4xl font-display font-bold number-pop" style={{ color: "#fff" }}>{formatCurrency(user.balance)}</p>
+          <div className="relative flex items-center gap-2 mt-2">
+            <span className="flex items-center gap-1 text-xs font-semibold rounded-full px-2 py-0.5" style={{ background: "rgba(255,255,255,0.18)", color: "#fff" }}>
+              <TrendingUp size={13} />+{growthPct}%
+            </span>
+            <span className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>{t("dash_7days")}</span>
+          </div>
+
+          {/* Subtle sparkline */}
+          <div className="relative h-16 -mx-2 mt-3 mb-4">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={chartPoints} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
+                <defs>
+                  <linearGradient id="heroGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#ffffff" stopOpacity={0.35} />
+                    <stop offset="95%" stopColor="#ffffff" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="label" hide />
+                <Tooltip content={<CustomTooltip />} />
+                <Area type="monotone" dataKey="value" stroke="#ffffff" strokeWidth={2} fill="url(#heroGrad)" dot={false} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Action buttons inside the card */}
+          <div className="relative grid grid-cols-2 gap-3">
+            <Link href="/passes">
+              <button className="w-full flex items-center justify-center gap-2 rounded-2xl py-3 text-sm font-semibold press" style={{ background: "#fff", color: "#5b6ef5" }}>
+                <ArrowDownRight size={16} /> {t("dash_deposit")}
+              </button>
+            </Link>
+            <Link href="/wallet">
+              <button className="w-full flex items-center justify-center gap-2 rounded-2xl py-3 text-sm font-semibold press" style={{ background: "rgba(255,255,255,0.18)", color: "#fff", border: "1px solid rgba(255,255,255,0.32)" }}>
+                <Wallet size={16} /> {t("dash_withdraw")}
+              </button>
+            </Link>
           </div>
         </div>
       </motion.div>
@@ -134,18 +151,6 @@ export default function DashboardPage() {
       {/* CTA Buttons */}
       <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4, delay: 0.15 }}
         className="grid grid-cols-2 gap-3">
-            <Link href="/passes">
-              <Button variant="secondary" size="md" className="w-full rounded-xl">
-                <ArrowDownRight size={16} />
-                <span>{t("dash_deposit")}</span>
-              </Button>
-            </Link>
-            <Link href="/wallet">
-              <Button variant="secondary" size="md" className="w-full rounded-xl">
-                <Wallet size={16} />
-                <span>{t("dash_withdraw")}</span>
-              </Button>
-            </Link>
             <Link href="/passes">
               <Button variant="primary" size="lg" className="w-full rounded-2xl py-4">
                 <ShoppingBag size={18} />
@@ -175,7 +180,7 @@ export default function DashboardPage() {
             <span>{lang === "fr" ? "Niveau" : "Level"} {user.level}</span>
           </div>
           <div className="h-2 rounded-full bg-white/8 overflow-hidden">
-            <div className="h-full rounded-full bg-gradient-to-r from-[#3b6fd4] to-emerald-400" style={{ width: `${xpProgress}%` }} />
+            <div className="h-full rounded-full bg-gradient-to-r from-[#5b6ef5] to-emerald-400" style={{ width: `${xpProgress}%` }} />
           </div>
           <p className="mt-2 text-xs text-white/35">{xpProgress}% XP</p>
           {user.level >= 3 && (
@@ -186,7 +191,7 @@ export default function DashboardPage() {
                 </span>
               )}
               {user.level >= 5 && (
-                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#6c4de6]/10 text-[#6c4de6] border border-[#6c4de6]/20 flex items-center gap-0.5">
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#6c5ce7]/10 text-[#6c5ce7] border border-[#6c5ce7]/20 flex items-center gap-0.5">
                   <Bot size={8} /> IA Advisor
                 </span>
               )}
@@ -231,7 +236,7 @@ export default function DashboardPage() {
       <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4, delay: 0.25 }}>
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-display font-bold text-white">{t("dash_my_passes")}</h2>
-          <Link href="/passes" className="text-xs text-[#3b6fd4] hover:text-blue-300 transition-colors">{t("dash_see_all")}</Link>
+          <Link href="/passes" className="text-xs text-[#5b6ef5] hover:text-blue-300 transition-colors">{t("dash_see_all")}</Link>
         </div>
         {activePasses.length === 0 ? (
           <Card className="text-center py-8">
@@ -247,7 +252,7 @@ export default function DashboardPage() {
           <div className="space-y-2">
             {activePasses.map((up) => (
               <Card key={up.id} className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#3b6fd4] to-[#6c4de6] flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#5b6ef5] to-[#6c5ce7] flex items-center justify-center flex-shrink-0">
                   <ShoppingBag size={16} className="text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -272,7 +277,7 @@ export default function DashboardPage() {
       <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4, delay: 0.3 }}>
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-display font-bold text-white">{t("dash_activity")}</h2>
-          <Link href="/wallet" className="text-xs text-[#3b6fd4] hover:text-blue-300 transition-colors">{t("dash_see_all")}</Link>
+          <Link href="/wallet" className="text-xs text-[#5b6ef5] hover:text-blue-300 transition-colors">{t("dash_see_all")}</Link>
         </div>
         <Card className="divide-y divide-white/5">
           {recentTransactions.length === 0 ? (

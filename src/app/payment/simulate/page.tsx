@@ -45,7 +45,7 @@ function PaymentSimulateContent() {
         <div className="glass-card rounded-2xl p-6 text-center">
           {/* Provider header */}
           <div className="flex items-center justify-center gap-2 mb-6">
-            {method === "fapshi" ? <Smartphone size={20} className="text-[#3b6fd4]" /> : <CreditCard size={20} className="text-[#3b6fd4]" />}
+            {method === "fapshi" ? <Smartphone size={20} className="text-[#5b6ef5]" /> : <CreditCard size={20} className="text-[#5b6ef5]" />}
             <span className="font-display font-bold text-white text-lg">
               {method === "fapshi" ? "FAPSHI Mobile Money" : "GeniusPay"}
             </span>
@@ -61,8 +61,8 @@ function PaymentSimulateContent() {
           {/* Status displays */}
           {status === "pending" && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#3b6fd4]/15 border-2 border-[#3b6fd4]/30 flex items-center justify-center">
-                <Clock size={28} className="text-[#3b6fd4]" />
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#5b6ef5]/15 border-2 border-[#5b6ef5]/30 flex items-center justify-center">
+                <Clock size={28} className="text-[#5b6ef5]" />
               </div>
               <p className="text-white font-semibold mb-2">En attente de paiement</p>
               <p className="text-white/40 text-sm mb-6">
@@ -82,7 +82,7 @@ function PaymentSimulateContent() {
 
           {status === "processing" && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full border-2 border-[#3b6fd4] border-t-transparent animate-spin" />
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full border-2 border-[#5b6ef5] border-t-transparent animate-spin" />
               <p className="text-white font-semibold">Traitement en cours...</p>
             </motion.div>
           )}

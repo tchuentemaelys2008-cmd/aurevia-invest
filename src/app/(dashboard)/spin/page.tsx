@@ -112,7 +112,7 @@ export default function SpinPage() {
   return (
     <div className="p-4 lg:p-8 max-w-lg mx-auto">
       <div className="mb-8 text-center">
-        <p className="text-xs font-semibold text-[#6c4de6] uppercase tracking-widest mb-1">{t("spin_kicker")}</p>
+        <p className="text-xs font-semibold text-[#6c5ce7] uppercase tracking-widest mb-1">{t("spin_kicker")}</p>
         <h1 className="text-2xl font-display font-bold text-white">{t("spin_title")}</h1>
         <p className="text-white/40 text-sm mt-1">{t("spin_sub")}</p>
       </div>
@@ -133,7 +133,7 @@ export default function SpinPage() {
 
         {state?.canSpin ? (
           <button onClick={spin} disabled={spinning}
-            className="w-full py-4 bg-gradient-to-r from-[#6c4de6] to-[#3b6fd4] text-white font-bold rounded-2xl text-lg hover:opacity-90 transition-all disabled:opacity-50 flex items-center justify-center gap-3">
+            className="w-full py-4 bg-gradient-to-r from-[#6c5ce7] to-[#5b6ef5] text-white font-bold rounded-2xl text-lg hover:opacity-90 transition-all disabled:opacity-50 flex items-center justify-center gap-3">
             <Sparkles size={20} />
             {spinning ? t("spin_spinning") : t("spin_btn")}
           </button>

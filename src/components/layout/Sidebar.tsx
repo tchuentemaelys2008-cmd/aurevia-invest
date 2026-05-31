@@ -67,13 +67,13 @@ function SidebarContent({ onClose, isAdmin }: { onClose?: () => void; isAdmin: b
               className={cn(
                 "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-150",
                 active
-                  ? "bg-gradient-to-r from-[#3b6fd4]/20 to-[#6c4de6]/10 text-white border border-[#3b6fd4]/20"
+                  ? "bg-gradient-to-r from-[#5b6ef5]/20 to-[#6c5ce7]/10 text-white border border-[#5b6ef5]/20"
                   : "text-white/50 hover:text-white hover:bg-white/5"
               )}
             >
-              <Icon size={17} className={active ? "text-[#3b6fd4]" : ""} />
+              <Icon size={17} className={active ? "text-[#5b6ef5]" : ""} />
               <span className="truncate">{label}</span>
-              {active && <div className="ml-auto w-1.5 h-1.5 bg-[#3b6fd4] rounded-full flex-shrink-0" />}
+              {active && <div className="ml-auto w-1.5 h-1.5 bg-[#5b6ef5] rounded-full flex-shrink-0" />}
             </Link>
           );
         })}

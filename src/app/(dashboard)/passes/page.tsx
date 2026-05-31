@@ -18,9 +18,9 @@ const iconMap: Record<string, React.ReactNode> = {
 };
 
 const colorMap: Record<string, { bg: string; border: string; glow: string }> = {
-  "#3b6fd4": { bg: "from-[#3b6fd4] to-[#2d5bcc]", border: "border-[#3b6fd4]/30", glow: "shadow-[0_0_20px_rgba(59,111,212,0.2)]" },
+  "#5b6ef5": { bg: "from-[#5b6ef5] to-[#2d5bcc]", border: "border-[#5b6ef5]/30", glow: "shadow-[0_0_20px_rgba(91,110,245,0.2)]" },
   "#b87333": { bg: "from-[#b87333] to-[#a0621e]", border: "border-[#b87333]/30", glow: "shadow-[0_0_20px_rgba(184,115,51,0.2)]" },
-  "#6c4de6": { bg: "from-[#6c4de6] to-[#5538d4]", border: "border-[#6c4de6]/30", glow: "shadow-[0_0_20px_rgba(108,77,230,0.2)]" },
+  "#6c5ce7": { bg: "from-[#6c5ce7] to-[#5538d4]", border: "border-[#6c5ce7]/30", glow: "shadow-[0_0_20px_rgba(108,92,231,0.2)]" },
   "#e6874d": { bg: "from-[#e6874d] to-[#d4703a]", border: "border-[#e6874d]/30", glow: "shadow-[0_0_20px_rgba(230,135,77,0.2)]" },
   "#e6d44d": { bg: "from-[#e6d44d] to-[#d4c13a]", border: "border-[#e6d44d]/30", glow: "shadow-[0_0_20px_rgba(230,212,77,0.2)]" },
   "#e6404d": { bg: "from-[#e6404d] to-[#cc2030]", border: "border-[#e6404d]/30", glow: "shadow-[0_0_20px_rgba(230,64,77,0.25)]" },
@@ -41,12 +41,12 @@ const COUNTRIES = [
 ];
 
 const METHOD_INFO: Record<string, { label: string; icon: React.ReactNode; badge?: string }> = {
-  FAPSHI: { label: "FAPSHI Mobile Money", icon: <Smartphone size={16} className="text-[#3b6fd4]" />, badge: "CM" },
+  FAPSHI: { label: "FAPSHI Mobile Money", icon: <Smartphone size={16} className="text-[#5b6ef5]" />, badge: "CM" },
   GENIUSPAY_ORANGE: { label: "Orange Money", icon: <Smartphone size={16} className="text-orange-400" />, badge: "GeniusPay" },
   GENIUSPAY_MTN: { label: "MTN Mobile Money", icon: <Smartphone size={16} className="text-yellow-400" />, badge: "GeniusPay" },
   GENIUSPAY_WAVE: { label: "Wave", icon: <Waves size={16} className="text-sky-400" />, badge: "GeniusPay" },
   GENIUSPAY_MOOV: { label: "Moov Money", icon: <Smartphone size={16} className="text-green-400" />, badge: "GeniusPay" },
-  GENIUSPAY: { label: "GeniusPay", icon: <CreditCard size={16} className="text-[#3b6fd4]" />, badge: "GeniusPay" },
+  GENIUSPAY: { label: "GeniusPay", icon: <CreditCard size={16} className="text-[#5b6ef5]" />, badge: "GeniusPay" },
   BANK_TRANSFER: { label: "Bank transfer", icon: <Globe size={16} className="text-purple-400" />, badge: "Europe" },
 };
 
@@ -182,14 +182,14 @@ export default function PassesPage() {
 
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
         {passes.map((pass, i) => {
-          const colors = colorMap[pass.color] || colorMap["#3b6fd4"];
+          const colors = colorMap[pass.color] || colorMap["#5b6ef5"];
           const isOwned = ownedIds.includes(pass.id);
           const isPopular = pass.name.includes("Gold");
           return (
             <motion.div key={pass.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}>
               <div className={`relative rounded-2xl border ${colors.border} ${colors.glow} bg-[#0c1428] h-full card-lift cursor-pointer`}>
                 {isPopular && (
-                  <div className="absolute top-2 right-2 bg-gradient-to-r from-[#3b6fd4] to-[#6c4de6] text-white text-[9px] font-bold px-2 py-0.5 rounded-full z-10">
+                  <div className="absolute top-2 right-2 bg-gradient-to-r from-[#5b6ef5] to-[#6c5ce7] text-white text-[9px] font-bold px-2 py-0.5 rounded-full z-10">
                     {t("passes_popular")}
                   </div>
                 )}
@@ -297,9 +297,9 @@ export default function PassesPage() {
                     const info = METHOD_INFO[m];
                     if (!info) return null;
                     return (
-                      <button key={m} onClick={() => { setPaymentMethod(m); if (m === "BANK_TRANSFER") setStep("bank"); }} className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all ${paymentMethod === m && m !== "BANK_TRANSFER" ? "border-[#3b6fd4]/50 bg-[#3b6fd4]/10" : "border-white/8 bg-white/4 hover:bg-white/7"}`}>
-                        <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${paymentMethod === m ? "border-[#3b6fd4]" : "border-white/20"}`}>
-                          {paymentMethod === m && <div className="w-2 h-2 bg-[#3b6fd4] rounded-full" />}
+                      <button key={m} onClick={() => { setPaymentMethod(m); if (m === "BANK_TRANSFER") setStep("bank"); }} className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all ${paymentMethod === m && m !== "BANK_TRANSFER" ? "border-[#5b6ef5]/50 bg-[#5b6ef5]/10" : "border-white/8 bg-white/4 hover:bg-white/7"}`}>
+                        <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${paymentMethod === m ? "border-[#5b6ef5]" : "border-white/20"}`}>
+                          {paymentMethod === m && <div className="w-2 h-2 bg-[#5b6ef5] rounded-full" />}
                         </div>
                         <span className="flex-shrink-0">{info.icon}</span>
                         <span className="text-sm text-white font-medium flex-1 text-left">{m === "BANK_TRANSFER" ? t("passes_bank_transfer") : info.label}</span>
@@ -312,7 +312,7 @@ export default function PassesPage() {
                   {paymentMethod && paymentMethod !== "BANK_TRANSFER" && (
                     <div className="pt-2 space-y-3">
                       {NEEDS_PHONE.includes(paymentMethod) && (
-                        <input placeholder={t("passes_phone_placeholder")} value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-white/30 text-sm focus:outline-none focus:border-[#3b6fd4]/50" />
+                        <input placeholder={t("passes_phone_placeholder")} value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-white/30 text-sm focus:outline-none focus:border-[#5b6ef5]/50" />
                       )}
                       <Button variant="primary" size="lg" className="w-full" loading={buying} onClick={handleBuy}>
                         {t("passes_confirm")} - {formatCurrency(selectedPass.price)}

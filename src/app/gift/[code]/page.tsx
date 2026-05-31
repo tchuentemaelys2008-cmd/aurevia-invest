@@ -57,7 +57,7 @@ export default function GiftActivatePage() {
           style={{ background: "var(--surface-card)" }}
         >
           <div className="flex items-center justify-center gap-2 mb-6">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#3b6fd4] to-[#6c4de6] flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#5b6ef5] to-[#6c5ce7] flex items-center justify-center">
               <Gift size={18} className="text-white" />
             </div>
             <span className="font-display font-bold text-white text-lg">{t("gift_float_title")}</span>
@@ -70,19 +70,19 @@ export default function GiftActivatePage() {
 
           {state.kind === "loading" && (
             <div className="py-4">
-              <div className="w-14 h-14 mx-auto mb-4 rounded-full border-2 border-[#3b6fd4] border-t-transparent animate-spin" />
+              <div className="w-14 h-14 mx-auto mb-4 rounded-full border-2 border-[#5b6ef5] border-t-transparent animate-spin" />
               <p className="text-white/60 text-sm">{t("gift_submit")}…</p>
             </div>
           )}
 
           {state.kind === "success" && (
             <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} className="py-2">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#3b6fd4]/20 to-[#6c4de6]/20 flex items-center justify-center mx-auto mb-3">
-                <Sparkles size={30} className="text-[#6c4de6]" />
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#5b6ef5]/20 to-[#6c5ce7]/20 flex items-center justify-center mx-auto mb-3">
+                <Sparkles size={30} className="text-[#6c5ce7]" />
               </div>
               <p className="font-display font-bold text-2xl mb-1 text-white">+{formatCurrency(state.value)}</p>
               <p className="text-sm text-white/55 mb-5">{t("gift_success")}</p>
-              <button onClick={() => router.push("/dashboard")} className="w-full bg-gradient-to-r from-[#3b6fd4] to-[#6c4de6] text-white text-sm font-semibold py-3 rounded-xl">
+              <button onClick={() => router.push("/dashboard")} className="w-full bg-gradient-to-r from-[#5b6ef5] to-[#6c5ce7] text-white text-sm font-semibold py-3 rounded-xl">
                 {t("passes_back_dashboard")}
               </button>
             </motion.div>

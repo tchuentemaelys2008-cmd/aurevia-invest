@@ -5,9 +5,9 @@ import { Shield } from "lucide-react";
 interface Log { id: string; adminEmail: string; action: string; target: string | null; createdAt: string; details: Record<string,unknown> | null; }
 
 const ACTION_COLORS: Record<string, string> = {
-  CREATE_MISSION: "#10b981", UPDATE_MISSION: "#3b6fd4", DELETE_MISSION: "#ef4444",
-  CREATE_EVENT: "#6c4de6", RESET_LEADERBOARD: "#f59e0b",
-  SEND_NOTIF_GLOBAL: "#3b6fd4", SEND_NOTIF_TARGETED: "#6c4de6",
+  CREATE_MISSION: "#10b981", UPDATE_MISSION: "#5b6ef5", DELETE_MISSION: "#ef4444",
+  CREATE_EVENT: "#6c5ce7", RESET_LEADERBOARD: "#f59e0b",
+  SEND_NOTIF_GLOBAL: "#5b6ef5", SEND_NOTIF_TARGETED: "#6c5ce7",
 };
 
 export default function AdminLogsPage() {

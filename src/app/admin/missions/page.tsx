@@ -68,21 +68,21 @@ export default function AdminMissionsPage() {
     </div>
   );
 
-  const inputCls = "w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm outline-none focus:border-[#3b6fd4]/60 focus:bg-white/8 transition-colors placeholder:text-white/25";
+  const inputCls = "w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm outline-none focus:border-[#5b6ef5]/60 focus:bg-white/8 transition-colors placeholder:text-white/25";
 
   return (
     <div className="p-4 lg:p-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-[#3b6fd4]/20 rounded-xl flex items-center justify-center">
-            <Target size={18} className="text-[#3b6fd4]" />
+          <div className="w-9 h-9 bg-[#5b6ef5]/20 rounded-xl flex items-center justify-center">
+            <Target size={18} className="text-[#5b6ef5]" />
           </div>
           <div>
             <h1 className="font-display font-bold text-white text-lg">Missions</h1>
             <p className="text-white/40 text-xs">{missions.length} mission{missions.length !== 1 ? "s" : ""} configured</p>
           </div>
         </div>
-        <button onClick={openNew} className="flex items-center gap-2 bg-[#3b6fd4] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:opacity-90 transition-all">
+        <button onClick={openNew} className="flex items-center gap-2 bg-[#5b6ef5] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:opacity-90 transition-all">
           <Plus size={15} /> New mission
         </button>
       </div>
@@ -99,8 +99,8 @@ export default function AdminMissionsPage() {
               {/* Header */}
               <div className="flex items-center justify-between px-6 py-4 border-b border-white/8">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-[#3b6fd4]/20 flex items-center justify-center">
-                    <Trophy size={15} className="text-[#3b6fd4]" />
+                  <div className="w-8 h-8 rounded-xl bg-[#5b6ef5]/20 flex items-center justify-center">
+                    <Trophy size={15} className="text-[#5b6ef5]" />
                   </div>
                   <div>
                     <h2 className="text-sm font-bold text-white">{editing ? "Edit mission" : "New mission"}</h2>
@@ -158,7 +158,7 @@ export default function AdminMissionsPage() {
                     <p className="text-xs text-white/40">Mission visible to users</p>
                   </div>
                   <button onClick={() => setForm(f => ({ ...f, isActive: !f.isActive }))}
-                    className={`w-10 h-6 rounded-full transition-colors relative ${form.isActive ? "bg-[#3b6fd4]" : "bg-white/15"}`}>
+                    className={`w-10 h-6 rounded-full transition-colors relative ${form.isActive ? "bg-[#5b6ef5]" : "bg-white/15"}`}>
                     <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full transition-transform shadow-sm ${form.isActive ? "translate-x-4" : "translate-x-0.5"}`} />
                   </button>
                 </div>
@@ -170,7 +170,7 @@ export default function AdminMissionsPage() {
                   Cancel
                 </button>
                 <button onClick={save} disabled={saving}
-                  className="flex-1 py-2.5 rounded-xl bg-[#3b6fd4] hover:opacity-90 text-white text-sm font-semibold transition-all disabled:opacity-50">
+                  className="flex-1 py-2.5 rounded-xl bg-[#5b6ef5] hover:opacity-90 text-white text-sm font-semibold transition-all disabled:opacity-50">
                   {saving ? "Saving…" : editing ? "Update mission" : "Create mission"}
                 </button>
               </div>
@@ -199,7 +199,7 @@ export default function AdminMissionsPage() {
                 <tr key={m.id} className="hover:bg-white/2 transition-colors">
                   <td className="px-4 py-3 font-medium text-white max-w-[180px] truncate">{m.title}</td>
                   <td className="px-4 py-3">
-                    <span className="text-xs bg-[#3b6fd4]/10 text-[#3b6fd4] px-2 py-0.5 rounded-full capitalize">{m.type}</span>
+                    <span className="text-xs bg-[#5b6ef5]/10 text-[#5b6ef5] px-2 py-0.5 rounded-full capitalize">{m.type}</span>
                   </td>
                   <td className="px-4 py-3 text-right text-white/60">{m.target.toLocaleString()}</td>
                   <td className="px-4 py-3 text-right text-[#f59e0b] font-semibold">{m.reward.toLocaleString()} FCFA</td>
@@ -213,7 +213,7 @@ export default function AdminMissionsPage() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-center gap-2">
-                      <button onClick={() => openEdit(m)} className="w-7 h-7 flex items-center justify-center rounded-lg text-white/30 hover:text-[#3b6fd4] hover:bg-[#3b6fd4]/10 transition-all">
+                      <button onClick={() => openEdit(m)} className="w-7 h-7 flex items-center justify-center rounded-lg text-white/30 hover:text-[#5b6ef5] hover:bg-[#5b6ef5]/10 transition-all">
                         <Pencil size={13} />
                       </button>
                       <button onClick={() => del(m.id)} className="w-7 h-7 flex items-center justify-center rounded-lg text-white/30 hover:text-red-400 hover:bg-red-400/10 transition-all">
