@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { BarChart3, Users, ShoppingBag, ArrowDownCircle, LogOut, Home, Settings, Menu, X, CreditCard, Target, Zap, Sparkles, Trophy, Bell, Shield } from "lucide-react";
+import { BarChart3, Users, ShoppingBag, ArrowDownCircle, LogOut, Home, Settings, Menu, X, CreditCard, Target, Zap, Sparkles, Trophy, Bell, Shield, Gift } from "lucide-react";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import LangToggle from "@/components/ui/LangToggle";
@@ -17,6 +17,7 @@ const adminNav = (lang: "fr" | "en") => [
   { href: "/admin/payments", label: lang === "fr" ? "Paiements" : "Payments", icon: CreditCard },
   { href: "/admin/withdrawals", label: lang === "fr" ? "Retraits" : "Withdrawals", icon: ArrowDownCircle },
   { href: "/admin/missions", label: "Missions", icon: Target },
+  { href: "/admin/gifts", label: lang === "fr" ? "Cadeaux" : "Gifts", icon: Gift },
   { href: "/admin/events", label: lang === "fr" ? "Evenements" : "Events", icon: Zap },
   { href: "/admin/spin", label: "Spin Wheel", icon: Sparkles },
   { href: "/admin/leaderboard-manage", label: lang === "fr" ? "Classement" : "Leaderboard", icon: Trophy },
