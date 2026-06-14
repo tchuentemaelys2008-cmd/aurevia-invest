@@ -12,6 +12,15 @@ const BASE_URL = (() => {
   return CANONICAL_BASE_URL;
 })();
 
+// GeniusPay est derrière Cloudflare, qui bloque les IPs Vercel. Quand
+// PAYMENT_SERVICE_URL est défini (micro-service Railway, IP propre), on lui
+// délègue l'appel au lieu d'appeler GeniusPay directement. Sinon (local /
+// fallback) on tape GeniusPay en direct comme avant.
+const PAYMENT_SERVICE_URL = process.env.PAYMENT_SERVICE_URL?.trim().replace(
+  /\/+$/,
+  ""
+);
+
 // GeniusPay is behind Cloudflare, which blocks Vercel's datacenter IPs with a
 // "Just a moment..." challenge. Routing the request through an outbound proxy
 // with a clean/whitelisted IP gets around it. Set GENIUSPAY_PROXY_URL (or the
@@ -61,7 +70,45 @@ interface CreatePaymentParams {
   metadata?: Record<string, string>;
 }
 
+type GeniusPayData = {
+  id: number;
+  reference: string;
+  amount: number;
+  status: string;
+  payment_url?: string;
+  checkout_url?: string;
+  environment: string;
+};
+
+// Relais via le micro-service Railway. On lui envoie les mêmes paramètres haut
+// niveau ; il construit le corps GeniusPay, ajoute les clés marchandes et
+// appelle GeniusPay depuis une IP non bloquée par Cloudflare.
+async function createViaPaymentService(
+  params: CreatePaymentParams
+): Promise<GeniusPayData> {
+  const res = await axios.post(`${PAYMENT_SERVICE_URL}/create-payment`, params, {
+    timeout: 30000,
+    validateStatus: () => true,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.PAYMENT_SERVICE_TOKEN ?? ""}`,
+    },
+  });
+
+  const json = res.data as { success?: boolean; error?: string; data?: GeniusPayData };
+  if (res.status < 200 || res.status >= 300 || !json?.success || !json.data) {
+    throw new Error(
+      json?.error || `échec de l'initialisation (HTTP ${res.status})`
+    );
+  }
+  return json.data;
+}
+
 export async function createGeniusPayPayment(params: CreatePaymentParams) {
+  if (PAYMENT_SERVICE_URL) {
+    return createViaPaymentService(params);
+  }
+
   const body: Record<string, unknown> = {
     amount: params.amount,
     description: params.description,
@@ -136,15 +183,7 @@ export async function createGeniusPayPayment(params: CreatePaymentParams) {
   if (status < 200 || status >= 300 || !json.success) {
     throw new Error(json.error?.message || `échec de l'initialisation (HTTP ${status})`);
   }
-  return json.data as {
-    id: number;
-    reference: string;
-    amount: number;
-    status: string;
-    payment_url?: string;
-    checkout_url?: string;
-    environment: string;
-  };
+  return json.data as GeniusPayData;
 }
 
 export function verifyGeniusPayWebhook(

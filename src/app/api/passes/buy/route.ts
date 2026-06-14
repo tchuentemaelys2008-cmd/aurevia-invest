@@ -130,10 +130,13 @@ export async function POST(req: NextRequest) {
         paymentUrl = `/payment/simulate?ref=${reference}&method=fapshi&amount=${pass.price}`;
       }
     } else if (data.paymentMethod === "GENIUSPAY" || data.paymentMethod in GENIUSPAY_METHOD_MAP) {
+      // En prod, GeniusPay est joignable soit via le micro-service Railway
+      // (PAYMENT_SERVICE_URL, qui détient les clés), soit en direct si les clés
+      // sont présentes sur Vercel. L'un ou l'autre suffit.
       if (
-        process.env.GENIUSPAY_API_KEY &&
-        process.env.GENIUSPAY_SECRET &&
-        process.env.NODE_ENV === "production"
+        process.env.NODE_ENV === "production" &&
+        (process.env.PAYMENT_SERVICE_URL ||
+          (process.env.GENIUSPAY_API_KEY && process.env.GENIUSPAY_SECRET))
       ) {
         const gpMethod = GENIUSPAY_METHOD_MAP[data.paymentMethod] as GeniusPayMethod | undefined;
         try {
