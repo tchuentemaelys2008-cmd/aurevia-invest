@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Award, Check, ChevronLeft, Clock, CreditCard, Crown, Globe, Shield, Smartphone, Star, TrendingUp, Upload, Waves, X, Zap } from "lucide-react";
+import { Award, Check, ChevronLeft, Clock, CreditCard, Crown, Globe, Landmark, Shield, ShieldCheck, Smartphone, Star, TrendingUp, Upload, X, Zap } from "lucide-react";
 import toast from "react-hot-toast";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
@@ -26,32 +26,16 @@ const colorMap: Record<string, { bg: string; border: string; glow: string }> = {
   "#e6404d": { bg: "from-[#e6404d] to-[#cc2030]", border: "border-[#e6404d]/30", glow: "shadow-[0_0_20px_rgba(230,64,77,0.25)]" },
 };
 
-const COUNTRIES = [
-  { code: "CM", label: "CM", name: "Cameroun", nameEn: "Cameroon", dial: "+237", methods: ["FAPSHI", "GENIUSPAY_ORANGE", "GENIUSPAY_MTN"] },
-  { code: "CI", label: "CI", name: "Cote d'Ivoire", nameEn: "Ivory Coast", dial: "+225", methods: ["GENIUSPAY_ORANGE", "GENIUSPAY_MTN", "GENIUSPAY_WAVE", "GENIUSPAY_MOOV"] },
-  { code: "SN", label: "SN", name: "Senegal", nameEn: "Senegal", dial: "+221", methods: ["GENIUSPAY_ORANGE", "GENIUSPAY_WAVE"] },
-  { code: "ML", label: "ML", name: "Mali", nameEn: "Mali", dial: "+223", methods: ["GENIUSPAY_ORANGE", "GENIUSPAY_MOOV"] },
-  { code: "BF", label: "BF", name: "Burkina Faso", nameEn: "Burkina Faso", dial: "+226", methods: ["GENIUSPAY_ORANGE", "GENIUSPAY_MOOV"] },
-  { code: "TG", label: "TG", name: "Togo", nameEn: "Togo", dial: "+228", methods: ["GENIUSPAY_MOOV"] },
-  { code: "CG", label: "CG", name: "Congo", nameEn: "Congo", dial: "+242", methods: ["GENIUSPAY_MTN"] },
-  { code: "RW", label: "RW", name: "Rwanda", nameEn: "Rwanda", dial: "+250", methods: ["GENIUSPAY_MTN"] },
-  { code: "UG", label: "UG", name: "Uganda", nameEn: "Uganda", dial: "+256", methods: ["GENIUSPAY_MTN"] },
-  { code: "OTHER_AF", label: "AF", name: "Autre Afrique", nameEn: "Other Africa", dial: "", methods: ["GENIUSPAY"] },
-  { code: "EU", label: "EU", name: "Europe / Monde", nameEn: "Europe / World", dial: "", methods: ["BANK_TRANSFER"] },
+// Le client choisit simplement sa région. Le moyen de paiement précis (Orange,
+// MTN, Wave, Moov, carte bancaire via Stripe…) est ensuite choisi sur la page
+// sécurisée GeniusPay. Le Cameroun passe par FAPSHI (Mobile Money local).
+const REGIONS = [
+  { code: "CM", name: "Cameroun", nameEn: "Cameroon", rail: "FAPSHI" as const, icon: Smartphone, descFr: "MTN & Orange Money", descEn: "MTN & Orange Money" },
+  { code: "AFRICA", name: "Afrique", nameEn: "Africa", rail: "GENIUSPAY" as const, icon: Globe, descFr: "Orange, MTN, Wave, Moov, carte", descEn: "Orange, MTN, Wave, Moov, card" },
+  { code: "INTL", name: "International", nameEn: "International", rail: "GENIUSPAY" as const, icon: CreditCard, descFr: "Carte bancaire (Visa, Mastercard)", descEn: "Bank card (Visa, Mastercard)" },
 ];
 
-const METHOD_INFO: Record<string, { label: string; icon: React.ReactNode; badge?: string }> = {
-  FAPSHI: { label: "FAPSHI Mobile Money", icon: <Smartphone size={16} className="text-[#5b6ef5]" />, badge: "CM" },
-  GENIUSPAY_ORANGE: { label: "Orange Money", icon: <Smartphone size={16} className="text-orange-400" />, badge: "GeniusPay" },
-  GENIUSPAY_MTN: { label: "MTN Mobile Money", icon: <Smartphone size={16} className="text-yellow-400" />, badge: "GeniusPay" },
-  GENIUSPAY_WAVE: { label: "Wave", icon: <Waves size={16} className="text-sky-400" />, badge: "GeniusPay" },
-  GENIUSPAY_MOOV: { label: "Moov Money", icon: <Smartphone size={16} className="text-green-400" />, badge: "GeniusPay" },
-  GENIUSPAY: { label: "GeniusPay", icon: <CreditCard size={16} className="text-[#5b6ef5]" />, badge: "GeniusPay" },
-  BANK_TRANSFER: { label: "Bank transfer", icon: <Globe size={16} className="text-purple-400" />, badge: "Europe" },
-};
-
-const NEEDS_PHONE = ["FAPSHI", "GENIUSPAY_ORANGE", "GENIUSPAY_MTN", "GENIUSPAY_WAVE", "GENIUSPAY_MOOV"];
-type Step = "country" | "method" | "bank";
+type Step = "region" | "pay" | "bank";
 
 export default function PassesPage() {
   const router = useRouter();
@@ -60,10 +44,9 @@ export default function PassesPage() {
   const [userPasses, setUserPasses] = useState<UserPass[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedPass, setSelectedPass] = useState<Pass | null>(null);
-  const [step, setStep] = useState<Step>("country");
-  const [selectedCountry, setSelectedCountry] = useState<typeof COUNTRIES[0] | null>(null);
+  const [step, setStep] = useState<Step>("region");
+  const [selectedRegion, setSelectedRegion] = useState<typeof REGIONS[0] | null>(null);
   const [paymentMethod, setPaymentMethod] = useState("");
-  const [phone, setPhone] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [buying, setBuying] = useState(false);
   const [bankSettings, setBankSettings] = useState<Record<string, string>>({});
@@ -106,14 +89,25 @@ export default function PassesPage() {
 
   const openModal = (pass: Pass) => {
     setSelectedPass(pass);
-    setStep("country");
-    setSelectedCountry(null);
+    setStep("region");
+    setSelectedRegion(null);
     setPaymentMethod("");
-    setPhone("");
     setProofFile(null);
     setProofBase64(null);
     setBankDone(false);
     setShowModal(true);
+  };
+
+  const selectRegion = (region: typeof REGIONS[0]) => {
+    setSelectedRegion(region);
+    setPaymentMethod(region.rail);
+    setStep("pay");
+  };
+
+  const chooseBankTransfer = () => {
+    setSelectedRegion(null);
+    setPaymentMethod("BANK_TRANSFER");
+    setStep("bank");
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -142,15 +136,12 @@ export default function PassesPage() {
         return;
       }
 
-      if (NEEDS_PHONE.includes(paymentMethod) && phone.replace(/\D/g, "").length < 8) {
-        toast.error(t("passes_phone_placeholder"));
-        setBuying(false);
-        return;
-      }
+      // GENIUSPAY (générique : la personne choisit son moyen sur la page
+      // GeniusPay) ou FAPSHI (Cameroun). On redirige vers la page de paiement.
       setShowModal(false);
       const res = await fetch("/api/passes/buy", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ passId: selectedPass.id, paymentMethod, phoneNumber: phone.replace(/[^\d+]/g, "") || undefined, country: selectedCountry?.code }),
+        body: JSON.stringify({ passId: selectedPass.id, paymentMethod, country: selectedRegion?.code }),
       });
       const data = await res.json();
       if (!res.ok) { toast.error(data.error || "Erreur"); setShowModal(true); setBuying(false); return; }
@@ -257,13 +248,13 @@ export default function PassesPage() {
           <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md bg-[#0c1428] border border-white/10 rounded-2xl overflow-hidden max-h-[90vh] flex flex-col">
             <div className="flex items-center justify-between px-5 py-4 border-b border-white/8 flex-shrink-0">
               <div className="flex items-center gap-2">
-                {step !== "country" && (
-                  <button onClick={() => setStep(step === "bank" ? "method" : "country")} className="w-7 h-7 rounded-xl bg-white/6 flex items-center justify-center text-white/50 hover:text-white mr-1">
+                {step !== "region" && (
+                  <button onClick={() => setStep("region")} className="w-7 h-7 rounded-xl bg-white/6 flex items-center justify-center text-white/50 hover:text-white mr-1">
                     <ChevronLeft size={15} />
                   </button>
                 )}
                 <span className="font-display font-bold text-white text-sm">
-                  {step === "country" ? t("passes_select_country") : step === "method" ? t("passes_payment") : t("passes_bank_transfer")}
+                  {step === "region" ? (lang === "fr" ? "Choisissez votre région" : "Choose your region") : step === "pay" ? t("passes_payment") : t("passes_bank_transfer")}
                 </span>
               </div>
               <button onClick={() => setShowModal(false)} className="w-7 h-7 rounded-xl bg-white/6 flex items-center justify-center text-white/50 hover:text-white">
@@ -280,45 +271,56 @@ export default function PassesPage() {
             </div>
 
             <div className="overflow-y-auto flex-1">
-              {step === "country" && (
-                <div className="p-4 grid grid-cols-2 gap-2">
-                  {COUNTRIES.map((c) => (
-                    <button key={c.code} onClick={() => { setSelectedCountry(c); setPaymentMethod(""); setPhone(c.dial ? c.dial + " " : ""); setStep("method"); }} className="flex items-center gap-2.5 p-3 rounded-xl border border-white/8 bg-white/4 hover:bg-white/8 transition-colors text-left">
-                      <span className="text-xs font-bold text-white/40 w-6">{c.label}</span>
-                      <span className="text-sm text-white font-medium leading-tight">{lang === "en" ? c.nameEn : c.name}</span>
+              {step === "region" && (
+                <div className="p-4 space-y-2">
+                  {REGIONS.map((r) => (
+                    <button key={r.code} onClick={() => selectRegion(r)} className="w-full flex items-center gap-3 p-3.5 rounded-xl border border-white/8 bg-white/4 hover:bg-[#5b6ef5]/10 hover:border-[#5b6ef5]/30 transition-all text-left">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#5b6ef5] to-[#6c5ce7] flex items-center justify-center text-white flex-shrink-0">
+                        <r.icon size={18} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm text-white font-semibold">{lang === "en" ? r.nameEn : r.name}</p>
+                        <p className="text-xs text-white/45 truncate">{lang === "en" ? r.descEn : r.descFr}</p>
+                      </div>
+                      <span className="text-white/30">›</span>
                     </button>
                   ))}
+
+                  <button onClick={chooseBankTransfer} className="w-full flex items-center gap-2 justify-center pt-3 text-xs text-white/45 hover:text-white transition-colors">
+                    <Landmark size={13} />
+                    {lang === "fr" ? "Payer par virement bancaire (Europe)" : "Pay by bank transfer (Europe)"}
+                  </button>
                 </div>
               )}
 
-              {step === "method" && selectedCountry && (
-                <div className="p-4 space-y-2">
-                  {selectedCountry.methods.map((m) => {
-                    const info = METHOD_INFO[m];
-                    if (!info) return null;
-                    return (
-                      <button key={m} onClick={() => { setPaymentMethod(m); if (m === "BANK_TRANSFER") setStep("bank"); }} className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all ${paymentMethod === m && m !== "BANK_TRANSFER" ? "border-[#5b6ef5]/50 bg-[#5b6ef5]/10" : "border-white/8 bg-white/4 hover:bg-white/7"}`}>
-                        <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${paymentMethod === m ? "border-[#5b6ef5]" : "border-white/20"}`}>
-                          {paymentMethod === m && <div className="w-2 h-2 bg-[#5b6ef5] rounded-full" />}
-                        </div>
-                        <span className="flex-shrink-0">{info.icon}</span>
-                        <span className="text-sm text-white font-medium flex-1 text-left">{m === "BANK_TRANSFER" ? t("passes_bank_transfer") : info.label}</span>
-                        {info.badge && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-white/8 text-white/50">{info.badge}</span>}
-                        {m === "BANK_TRANSFER" && <span className="text-xs text-purple-400">-&gt;</span>}
-                      </button>
-                    );
-                  })}
-
-                  {paymentMethod && paymentMethod !== "BANK_TRANSFER" && (
-                    <div className="pt-2 space-y-3">
-                      {NEEDS_PHONE.includes(paymentMethod) && (
-                        <input placeholder={t("passes_phone_placeholder")} value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-white/30 text-sm focus:outline-none focus:border-[#5b6ef5]/50" />
-                      )}
-                      <Button variant="primary" size="lg" className="w-full" loading={buying} onClick={handleBuy}>
-                        {t("passes_confirm")} - {formatCurrency(selectedPass.price)}
-                      </Button>
+              {step === "pay" && selectedRegion && (
+                <div className="p-4 space-y-4">
+                  <div className="rounded-2xl border border-[#5b6ef5]/25 bg-[#5b6ef5]/8 p-4">
+                    <div className="flex items-center gap-2.5 mb-2">
+                      <ShieldCheck size={18} className="text-[#5b6ef5]" />
+                      <p className="text-sm font-semibold text-white">
+                        {selectedRegion.rail === "FAPSHI"
+                          ? (lang === "fr" ? "Mobile Money — FAPSHI" : "Mobile Money — FAPSHI")
+                          : (lang === "fr" ? "Paiement sécurisé GeniusPay" : "Secure GeniusPay checkout")}
+                      </p>
                     </div>
-                  )}
+                    <p className="text-xs text-white/55 leading-relaxed">
+                      {selectedRegion.rail === "FAPSHI"
+                        ? (lang === "fr"
+                          ? "Paiement MTN Mobile Money ou Orange Money (Cameroun). Vous finaliserez sur la page sécurisée."
+                          : "Pay with MTN Mobile Money or Orange Money (Cameroon). You'll finish on the secure page.")
+                        : (lang === "fr"
+                          ? "Vous choisirez votre moyen de paiement (Orange, MTN, Wave, Moov ou carte bancaire) directement sur la page sécurisée GeniusPay."
+                          : "You'll pick your payment method (Orange, MTN, Wave, Moov or bank card) right on the secure GeniusPay page.")}
+                    </p>
+                  </div>
+
+                  <Button variant="primary" size="lg" className="w-full" loading={buying} onClick={handleBuy}>
+                    {t("passes_confirm")} - {formatCurrency(selectedPass.price)}
+                  </Button>
+                  <p className="text-[11px] text-white/30 text-center flex items-center justify-center gap-1">
+                    <Shield size={11} /> {lang === "fr" ? "Paiement 100% sécurisé · redirection automatique" : "100% secure payment · auto redirect"}
+                  </p>
                 </div>
               )}
 

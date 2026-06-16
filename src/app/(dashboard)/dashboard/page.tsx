@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { TrendingUp, ShoppingBag, CheckSquare, ArrowUpRight, ArrowDownRight, Wallet, Bot, ShieldCheck, Gauge, Flame } from "lucide-react";
+import { TrendingUp, ShoppingBag, CheckSquare, ArrowUpRight, ArrowDownRight, Wallet, Bot, ShieldCheck, Gauge, Flame, Eye, EyeOff, Bell, Plus, Users } from "lucide-react";
 import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer } from "recharts";
 import Card, { StatCard } from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
@@ -37,6 +37,7 @@ export default function DashboardPage() {
   const { t, lang } = useLanguage();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [hideBalance, setHideBalance] = useState(false);
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -95,19 +96,33 @@ export default function DashboardPage() {
               </div>
               <div>
                 <p className="text-xs" style={{ color: "rgba(255,255,255,0.75)" }}>{t("dash_greeting")}</p>
-                <p className="font-display font-bold leading-tight" style={{ color: "#fff" }}>{user.name.split(" ")[0]}</p>
+                <p className="font-display font-bold leading-tight flex items-center gap-1.5" style={{ color: "#fff" }}>
+                  {user.name.split(" ")[0]}
+                  {user.isVerified && <ShieldCheck size={14} style={{ color: "#fff" }} />}
+                </p>
               </div>
             </div>
-            {user.isVerified && (
-              <span className="flex items-center gap-1 text-[11px] font-semibold rounded-full px-2.5 py-1" style={{ background: "rgba(255,255,255,0.18)", color: "#fff" }}>
-                <ShieldCheck size={12} /> {lang === "fr" ? "Vérifié" : "Verified"}
-              </span>
-            )}
+            <Link href="/notifications" aria-label="Notifications">
+              <button className="relative w-10 h-10 rounded-full flex items-center justify-center press" style={{ background: "rgba(255,255,255,0.18)", color: "#fff" }}>
+                <Bell size={17} />
+                <span className="absolute top-2 right-2.5 w-2 h-2 rounded-full" style={{ background: "#ff5c7c", boxShadow: "0 0 0 2px #5b6ef5" }} />
+              </button>
+            </Link>
           </div>
 
           {/* Balance */}
-          <p className="relative text-sm mb-1" style={{ color: "rgba(255,255,255,0.75)" }}>{t("dash_balance")}</p>
-          <p className="relative text-4xl font-display font-bold number-pop" style={{ color: "#fff" }}>{formatCurrency(user.balance)}</p>
+          <div className="relative flex items-center gap-2 mb-1">
+            <p className="text-sm" style={{ color: "rgba(255,255,255,0.75)" }}>{t("dash_balance")}</p>
+            <button onClick={() => setHideBalance((v) => !v)} className="press" aria-label={hideBalance ? "Afficher le solde" : "Masquer le solde"} style={{ color: "rgba(255,255,255,0.7)" }}>
+              {hideBalance ? <EyeOff size={15} /> : <Eye size={15} />}
+            </button>
+          </div>
+          <p className="relative text-4xl font-display font-bold number-pop" style={{ color: "#fff" }}>
+            {hideBalance ? "••••••••" : formatCurrency(user.balance)}
+          </p>
+          <p className="relative text-xs mt-1.5 font-mono-custom tracking-wider" style={{ color: "rgba(255,255,255,0.6)" }}>
+            {lang === "fr" ? "Compte n°" : "Account no"} : •••• •••• {user.referralCode?.slice(-4).toUpperCase() || "0000"}
+          </p>
           <div className="relative flex items-center gap-2 mt-2">
             <span className="flex items-center gap-1 text-xs font-semibold rounded-full px-2 py-0.5" style={{ background: "rgba(255,255,255,0.18)", color: "#fff" }}>
               <TrendingUp size={13} />+{growthPct}%
@@ -148,21 +163,26 @@ export default function DashboardPage() {
         </div>
       </motion.div>
 
-      {/* CTA Buttons */}
-      <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4, delay: 0.15 }}
-        className="grid grid-cols-2 gap-3">
-            <Link href="/passes">
-              <Button variant="primary" size="lg" className="w-full rounded-2xl py-4">
-                <ShoppingBag size={18} />
-                <span>{t("dash_buy_pass")}</span>
-          </Button>
-        </Link>
-        <Link href="/tasks">
-          <Button variant="secondary" size="lg" className="w-full rounded-2xl py-4">
-            <CheckSquare size={18} />
-            <span>{t("dash_daily_task")}</span>
-          </Button>
-        </Link>
+      {/* Quick Actions — image style */}
+      <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4, delay: 0.15 }}>
+        <p className="font-display font-bold text-white mb-3">{lang === "fr" ? "Actions rapides" : "Quick Actions"}</p>
+        <div className="grid grid-cols-4 gap-3">
+          {[
+            { href: "/passes", label: lang === "fr" ? "Investir" : "Invest", icon: Plus },
+            { href: "/tasks", label: lang === "fr" ? "Tâches" : "Tasks", icon: CheckSquare },
+            { href: "/affiliate", label: lang === "fr" ? "Parrainage" : "Refer", icon: Users },
+            { href: "/wallet", label: lang === "fr" ? "Retrait" : "Withdraw", icon: Wallet },
+          ].map((a) => (
+            <Link key={a.href} href={a.href}>
+              <div className="flex flex-col items-center gap-2 rounded-2xl py-4 px-1.5 press card-lift bg-[#5b6ef5]/10 border border-[#5b6ef5]/15">
+                <div className="w-11 h-11 rounded-xl bg-[#5b6ef5]/15 flex items-center justify-center text-[#5b6ef5] flex-shrink-0">
+                  <a.icon size={20} />
+                </div>
+                <span className="text-xs font-semibold text-white text-center leading-tight">{a.label}</span>
+              </div>
+            </Link>
+          ))}
+        </div>
       </motion.div>
 
       {/* Stats row */}
