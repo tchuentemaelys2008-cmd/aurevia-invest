@@ -70,7 +70,7 @@ export default function PurchaseTicker() {
             className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-[9px] font-bold"
             style={{
               color: "#fff",
-              background: p.color || "linear-gradient(135deg,#5b6ef5,#6c5ce7)",
+              background: p.color || "linear-gradient(135deg,#e23744,#b51d2c)",
             }}
           >
             {initials(p.user)}

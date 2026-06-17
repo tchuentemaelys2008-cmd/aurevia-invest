@@ -133,7 +133,7 @@ export default function AdminSettingsPage() {
             value={settings.bank_transfer_note}
             onChange={(e) => setSettings({ ...settings, bank_transfer_note: e.target.value })}
             rows={3}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/30 text-sm focus:outline-none focus:border-[#5b6ef5]/50 resize-none"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/30 text-sm focus:outline-none focus:border-[#e23744]/50 resize-none"
           />
         </div>
       </motion.div>

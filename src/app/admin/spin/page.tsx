@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 interface Seg { id: string; label: string; value: number; type: string; probability: number; color: string; isActive: boolean; }
 
-const EMPTY = { label: "", value: 0, type: "money", probability: 0.1, color: "#5b6ef5", isActive: true };
+const EMPTY = { label: "", value: 0, type: "money", probability: 0.1, color: "#e23744", isActive: true };
 
 export default function AdminSpinPage() {
   const [segs, setSegs] = useState<Seg[]>([]);

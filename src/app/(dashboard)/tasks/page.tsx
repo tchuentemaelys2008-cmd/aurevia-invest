@@ -101,13 +101,13 @@ export default function TasksPage() {
       </motion.div>
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mb-4">
-        <div className="rounded-2xl border border-[#5b6ef5]/20 bg-gradient-to-br from-[#5b6ef5]/10 to-[#6c5ce7]/8 p-4">
+        <div className="rounded-2xl border border-[#e23744]/20 bg-gradient-to-br from-[#e23744]/10 to-[#b51d2c]/8 p-4">
           <div className="flex items-center justify-between mb-3">
             <div>
               <p className="text-white/50 text-xs uppercase tracking-wider mb-0.5">{t("tasks_reward_today")}</p>
               <p className="text-2xl font-display font-bold text-white">{formatCurrency(totalReward)}</p>
             </div>
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#5b6ef5] to-[#6c5ce7] flex items-center justify-center">
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#e23744] to-[#b51d2c] flex items-center justify-center">
               <Gift size={20} className="text-white" />
             </div>
           </div>

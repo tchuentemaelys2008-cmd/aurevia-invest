@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { getAuthUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-export const BADGE_PRICE = 1000;
+const BADGE_PRICE = 1000;
 
 export async function POST() {
   try {

@@ -20,14 +20,14 @@ const typeIcon: Record<string, React.ReactNode> = {
   success: <CheckCircle size={18} className="text-emerald-400" />,
   error: <XCircle size={18} className="text-red-400" />,
   warning: <AlertTriangle size={18} className="text-yellow-400" />,
-  info: <Info size={18} className="text-[#5b6ef5]" />,
+  info: <Info size={18} className="text-[#e23744]" />,
 };
 
 const typeBg: Record<string, string> = {
   success: "bg-emerald-400/10",
   error: "bg-red-400/10",
   warning: "bg-yellow-400/10",
-  info: "bg-[#5b6ef5]/10",
+  info: "bg-[#e23744]/10",
 };
 
 export default function NotificationsPage() {
@@ -91,7 +91,7 @@ export default function NotificationsPage() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <p className="text-sm text-white font-semibold">{n.title}</p>
-                  {!n.isRead && <span className="w-1.5 h-1.5 bg-[#5b6ef5] rounded-full flex-shrink-0" />}
+                  {!n.isRead && <span className="w-1.5 h-1.5 bg-[#e23744] rounded-full flex-shrink-0" />}
                 </div>
                 <p className="text-xs text-white/50 mt-0.5">{n.message}</p>
                 <p className="text-[10px] text-white/25 mt-1">{formatDate(n.createdAt)}</p>

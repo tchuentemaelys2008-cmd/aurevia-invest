@@ -32,8 +32,8 @@ export default function LeaderboardPage() {
 
       {/* My rank banner */}
       {data?.myRank && (
-        <div className="glass-card rounded-2xl p-4 mb-6 flex items-center gap-4 border border-[#5b6ef5]/20">
-          <div className="w-10 h-10 bg-[#5b6ef5]/20 rounded-xl flex items-center justify-center font-bold text-[#5b6ef5]">#{data.myRank.rank}</div>
+        <div className="glass-card rounded-2xl p-4 mb-6 flex items-center gap-4 border border-[#e23744]/20">
+          <div className="w-10 h-10 bg-[#e23744]/20 rounded-xl flex items-center justify-center font-bold text-[#e23744]">#{data.myRank.rank}</div>
           <div className="flex-1">
             <p className="font-semibold text-white text-sm">{t("lb_my_rank")}</p>
             <p className="text-white/40 text-xs">{data.myRank.totalInvested.toLocaleString()} FCFA {t("lb_invested")}</p>
@@ -65,7 +65,7 @@ export default function LeaderboardPage() {
       {/* Full list */}
       <div className="glass-card rounded-2xl overflow-hidden">
         {!data ? (
-          <div className="p-8 text-center"><div className="w-6 h-6 border-2 border-[#5b6ef5] border-t-transparent rounded-full animate-spin mx-auto" /></div>
+          <div className="p-8 text-center"><div className="w-6 h-6 border-2 border-[#e23744] border-t-transparent rounded-full animate-spin mx-auto" /></div>
         ) : (
           <div className="divide-y divide-white/5">
             {data.leaderboard.map((u, i) => (
@@ -77,7 +77,7 @@ export default function LeaderboardPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5">
                     <span className="font-medium text-white text-sm truncate">{u.name}</span>
-                    {u.isVerified && <ShieldCheck size={12} className="text-[#5b6ef5] flex-shrink-0" />}
+                    {u.isVerified && <ShieldCheck size={12} className="text-[#e23744] flex-shrink-0" />}
                     <span className="text-[10px] text-white/30 bg-white/5 px-1.5 py-0.5 rounded-full flex-shrink-0">Niv.{u.level}</span>
                   </div>
                 </div>

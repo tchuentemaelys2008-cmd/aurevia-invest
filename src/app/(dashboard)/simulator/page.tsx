@@ -81,9 +81,9 @@ export default function SimulatorPage() {
       <div className="grid grid-cols-2 gap-4 mb-6">
         {[
           { label: t("sim_daily"), value: `${daily.toLocaleString("fr-FR", { maximumFractionDigits: 0 })} FCFA`, color: "#10b981" },
-          { label: t("sim_monthly"), value: `${(daily * 30).toLocaleString("fr-FR", { maximumFractionDigits: 0 })} FCFA`, color: "#5b6ef5" },
+          { label: t("sim_monthly"), value: `${(daily * 30).toLocaleString("fr-FR", { maximumFractionDigits: 0 })} FCFA`, color: "#e23744" },
           { label: t("sim_total"), value: `${total.toLocaleString("fr-FR", { maximumFractionDigits: 0 })} FCFA`, color: "#f59e0b" },
-          { label: "ROI", value: `+${roi}%`, color: "#6c5ce7" },
+          { label: "ROI", value: `+${roi}%`, color: "#b51d2c" },
         ].map((item, i) => (
           <motion.div key={i} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.05 }}
             className="glass-card rounded-2xl p-4">

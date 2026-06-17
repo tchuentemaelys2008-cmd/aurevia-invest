@@ -5,6 +5,7 @@ import { LifeBuoy, Send, MessageSquare, CheckCircle2 } from "lucide-react";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
+import WhatsAppChannelCard from "@/components/ui/WhatsAppChannelCard";
 import { useLanguage } from "@/lib/i18n";
 import toast from "react-hot-toast";
 
@@ -48,13 +49,17 @@ export default function SupportPage() {
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
         <p className="text-white/40 text-xs mb-0.5">{fr ? "Aide & assistance" : "Help & support"}</p>
         <h1 className="text-2xl font-display font-bold text-white flex items-center gap-2">
-          <LifeBuoy size={22} className="text-[#5b6ef5]" /> {fr ? "Support" : "Support"}
+          <LifeBuoy size={22} className="text-[#e23744]" /> {fr ? "Support" : "Support"}
         </h1>
         <p className="text-sm text-white/50 mt-1">
           {fr
             ? "Ouvrez un ticket : notre équipe d'administration le reçoit immédiatement et vous répond."
             : "Open a ticket: our admin team receives it instantly and gets back to you."}
         </p>
+      </motion.div>
+
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
+        <WhatsAppChannelCard />
       </motion.div>
 
       {done ? (
@@ -84,7 +89,7 @@ export default function SupportPage() {
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#5b6ef5]/50"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#e23744]/50"
               >
                 {categories.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
@@ -108,7 +113,7 @@ export default function SupportPage() {
                 rows={6}
                 maxLength={2000}
                 placeholder={fr ? "Décrivez votre problème ou votre question en détail…" : "Describe your issue or question in detail…"}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#5b6ef5]/50 resize-none"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#e23744]/50 resize-none"
               />
               <p className="text-[11px] text-white/30 mt-1 text-right">{message.length}/2000</p>
             </div>

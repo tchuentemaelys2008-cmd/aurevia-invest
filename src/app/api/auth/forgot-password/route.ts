@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background:#070d1a;font-family:'Segoe UI',Arial,sans-serif;">
   <div style="max-width:520px;margin:40px auto;background:#0c1428;border-radius:16px;border:1px solid rgba(255,255,255,0.08);overflow:hidden;">
-    <div style="background:linear-gradient(135deg,#5b6ef5,#6c5ce7);padding:32px 32px 24px;text-align:center;">
+    <div style="background:linear-gradient(135deg,#e23744,#b51d2c);padding:32px 32px 24px;text-align:center;">
       <div style="display:inline-block;background:rgba(255,255,255,0.15);border-radius:12px;padding:10px 20px;margin-bottom:12px;">
         <span style="color:#fff;font-weight:700;font-size:20px;letter-spacing:0.5px;">Aurevia Invest</span>
       </div>
@@ -67,14 +67,14 @@ export async function POST(req: NextRequest) {
         Ce lien est valable pendant <strong style="color:#cdd6f0;">1 heure</strong>.
       </p>
       <div style="text-align:center;margin:0 0 28px;">
-        <a href="${resetUrl}" style="display:inline-block;background:linear-gradient(135deg,#5b6ef5,#6c5ce7);color:#fff;text-decoration:none;padding:14px 32px;border-radius:12px;font-weight:700;font-size:15px;">
+        <a href="${resetUrl}" style="display:inline-block;background:linear-gradient(135deg,#e23744,#b51d2c);color:#fff;text-decoration:none;padding:14px 32px;border-radius:12px;font-weight:700;font-size:15px;">
           RÃ©initialiser mon mot de passe
         </a>
       </div>
       <p style="color:#8892aa;font-size:12px;margin:0 0 8px;line-height:1.6;">
         Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur&nbsp;:
       </p>
-      <p style="color:#5b6ef5;font-size:12px;word-break:break-all;margin:0 0 28px;">${resetUrl}</p>
+      <p style="color:#e23744;font-size:12px;word-break:break-all;margin:0 0 28px;">${resetUrl}</p>
       <p style="color:#8892aa;font-size:12px;margin:0;line-height:1.6;">
         Si vous n'avez pas demandÃ© cette rÃ©initialisation, ignorez cet email. Votre mot de passe ne sera pas modifiÃ©.
       </p>

@@ -35,7 +35,7 @@ export default function MissionsPage() {
   return (
     <div className="p-4 lg:p-8 max-w-2xl mx-auto">
       <div className="mb-8">
-        <p className="text-xs font-semibold text-[#5b6ef5] uppercase tracking-widest mb-1">{t("missions_kicker")}</p>
+        <p className="text-xs font-semibold text-[#e23744] uppercase tracking-widest mb-1">{t("missions_kicker")}</p>
         <h1 className="text-2xl font-display font-bold text-white">{t("missions_title")}</h1>
         <p className="text-white/40 text-sm mt-1">{t("missions_sub")}</p>
       </div>
@@ -61,7 +61,7 @@ export default function MissionsPage() {
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[10px] font-semibold text-[#5b6ef5] bg-[#5b6ef5]/10 px-2 py-0.5 rounded-full">{typeLabel(m.type)}</span>
+                      <span className="text-[10px] font-semibold text-[#e23744] bg-[#e23744]/10 px-2 py-0.5 rounded-full">{typeLabel(m.type)}</span>
                       {completed && <CheckCircle size={14} className="text-emerald-400" />}
                     </div>
                     <p className="font-semibold text-white text-sm">{name}</p>
@@ -72,7 +72,7 @@ export default function MissionsPage() {
                         <span>{pct}%</span>
                       </div>
                       <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
-                        <div className="h-full bg-gradient-to-r from-[#5b6ef5] to-[#6c5ce7] rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
+                        <div className="h-full bg-gradient-to-r from-[#e23744] to-[#b51d2c] rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
                       </div>
                     </div>
                   </div>
@@ -85,7 +85,7 @@ export default function MissionsPage() {
                       <span className="text-xs font-medium text-emerald-400 bg-emerald-400/10 px-3 py-1.5 rounded-xl">{t("missions_done")}</span>
                     ) : pct >= 100 ? (
                       <button onClick={() => claim(m.id)} disabled={claiming === m.id}
-                        className="text-xs font-semibold bg-gradient-to-r from-[#5b6ef5] to-[#6c5ce7] text-white px-3 py-1.5 rounded-xl hover:opacity-90 transition-all disabled:opacity-50">
+                        className="text-xs font-semibold bg-gradient-to-r from-[#e23744] to-[#b51d2c] text-white px-3 py-1.5 rounded-xl hover:opacity-90 transition-all disabled:opacity-50">
                         {claiming === m.id ? "..." : t("missions_claim")}
                       </button>
                     ) : (

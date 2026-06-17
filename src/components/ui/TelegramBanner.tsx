@@ -21,7 +21,7 @@ export default function TelegramBanner() {
         {/* Header */}
         <div className="relative mb-4 text-center">
           <p
-            className="bg-gradient-to-r from-[#5b6ef5] via-[#7d8ff0] to-[#6c5ce7] bg-clip-text text-3xl font-display font-extrabold text-transparent sm:text-4xl"
+            className="bg-gradient-to-r from-[#e23744] via-[#7d8ff0] to-[#b51d2c] bg-clip-text text-3xl font-display font-extrabold text-transparent sm:text-4xl"
             style={{ letterSpacing: "0.14em" }}
           >
             AUREVIA
@@ -50,7 +50,7 @@ export default function TelegramBanner() {
                 {/* Bottom gradient for depth */}
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-black/0 to-transparent" />
                 {/* Sheen on hover */}
-                <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-gradient-to-tr from-[#5b6ef5]/20 via-transparent to-transparent" />
+                <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-gradient-to-tr from-[#e23744]/20 via-transparent to-transparent" />
               </div>
             ))}
           </div>

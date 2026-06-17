@@ -49,7 +49,7 @@ export default function ResetPasswordPage() {
   return (
     <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
       <div className="text-center mb-8">
-        <div className="w-32 h-32 rounded-2xl mx-auto mb-4 shadow-[0_0_60px_rgba(91,110,245,0.45)] overflow-hidden border border-white/10">
+        <div className="w-32 h-32 rounded-2xl mx-auto mb-4 shadow-[0_0_60px_rgba(226,55,68,0.45)] overflow-hidden border border-white/10">
           <img src="/photo_2026-05-25_14-14-19.jpg" alt="Aurevia Invest" className="w-full h-full object-cover" />
         </div>
         <h1 className="text-2xl font-display font-bold text-white">Nouveau mot de passe</h1>
@@ -64,7 +64,7 @@ export default function ResetPasswordPage() {
             </div>
             <h2 className="text-lg font-display font-bold text-white mb-2">Mot de passe mis Ã  jour !</h2>
             <p className="text-white/50 text-sm mb-6">Vous allez Ãªtre redirigÃ© vers la connexionâ€¦</p>
-            <Link href="/login" className="flex items-center justify-center gap-2 text-sm text-[#5b6ef5] hover:text-blue-300 transition-colors">
+            <Link href="/login" className="flex items-center justify-center gap-2 text-sm text-[#e23744] hover:text-blue-300 transition-colors">
               <ArrowLeft size={14} /> Se connecter maintenant
             </Link>
           </div>
@@ -109,7 +109,7 @@ export default function ResetPasswordPage() {
       </div>
 
       <p className="text-center text-white/40 text-sm mt-5">
-        <Link href="/login" className="flex items-center justify-center gap-1.5 text-[#5b6ef5] hover:text-blue-300 transition-colors">
+        <Link href="/login" className="flex items-center justify-center gap-1.5 text-[#e23744] hover:text-blue-300 transition-colors">
           <ArrowLeft size={14} /> Retour Ã  la connexion
         </Link>
       </p>

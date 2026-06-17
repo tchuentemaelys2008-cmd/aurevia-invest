@@ -24,7 +24,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             type={isPassword ? (showPassword ? "text" : "password") : type}
             className={cn(
               "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/30 text-sm",
-              "focus:outline-none focus:border-[#5b6ef5]/60 focus:bg-white/8 transition-all duration-200",
+              "focus:outline-none focus:border-[#e23744]/60 focus:bg-white/8 transition-all duration-200",
               "hover:border-white/15",
               icon && "pl-10",
               isPassword && "pr-10",

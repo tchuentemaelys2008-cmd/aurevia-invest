@@ -80,7 +80,7 @@ export default function AdminUsersPage() {
       <div className="relative mb-4">
         <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30" />
         <input placeholder="Rechercher..." value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-          className="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-white placeholder:text-white/30 text-sm focus:outline-none focus:border-[#5b6ef5]/50" />
+          className="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-white placeholder:text-white/30 text-sm focus:outline-none focus:border-[#e23744]/50" />
       </div>
 
       {/* Mobile cards */}
@@ -181,7 +181,7 @@ export default function AdminUsersPage() {
             <p className="text-xs text-white/30 mb-4">Actuel : <span className="text-emerald-400">{formatCurrency(editUser.balance)}</span></p>
             <label className="text-xs font-medium text-white/60 mb-1.5 block">Nouveau solde (FCFA)</label>
             <input type="number" value={newBalance} onChange={(e) => setNewBalance(e.target.value)} min="0"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#5b6ef5]/50 mb-4" />
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#e23744]/50 mb-4" />
             <div className="flex gap-2">
               <Button variant="secondary" size="sm" className="flex-1" onClick={() => setEditUser(null)}>Annuler</Button>
               <Button variant="primary" size="sm" className="flex-1" loading={saving} onClick={saveBalance}><Check size={13} /> Sauvegarder</Button>

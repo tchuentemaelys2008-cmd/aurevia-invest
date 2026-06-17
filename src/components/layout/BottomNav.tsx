@@ -56,12 +56,12 @@ export default function BottomNav() {
                 href={href}
                 className={cn(
                   "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200",
-                  active ? "bg-gradient-to-r from-[#5b6ef5]/20 to-[#6c5ce7]/10 text-white border border-[#5b6ef5]/20" : "text-white/50 hover:text-white hover:bg-white/5"
+                  active ? "bg-gradient-to-r from-[#e23744]/20 to-[#b51d2c]/10 text-white border border-[#e23744]/20" : "text-white/50 hover:text-white hover:bg-white/5"
                 )}
               >
-                <Icon size={18} className={active ? "text-[#5b6ef5]" : ""} />
+                <Icon size={18} className={active ? "text-[#e23744]" : ""} />
                 {label}
-                {active && <div className="ml-auto w-1.5 h-1.5 bg-[#5b6ef5] rounded-full" />}
+                {active && <div className="ml-auto w-1.5 h-1.5 bg-[#e23744] rounded-full" />}
               </Link>
             );
           })}
@@ -97,7 +97,7 @@ export default function BottomNav() {
                 href={href}
                 className={cn(
                   "flex flex-col items-center gap-1 px-2 py-2 rounded-xl transition-all duration-200 min-w-0",
-                  active ? "text-[#5b6ef5]" : "text-white/40"
+                  active ? "text-[#e23744]" : "text-white/40"
                 )}
               >
                 <Icon size={20} />

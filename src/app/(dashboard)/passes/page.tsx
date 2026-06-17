@@ -18,9 +18,9 @@ const iconMap: Record<string, React.ReactNode> = {
 };
 
 const colorMap: Record<string, { bg: string; border: string; glow: string }> = {
-  "#5b6ef5": { bg: "from-[#5b6ef5] to-[#2d5bcc]", border: "border-[#5b6ef5]/30", glow: "shadow-[0_0_20px_rgba(91,110,245,0.2)]" },
+  "#e23744": { bg: "from-[#e23744] to-[#b51d2c]", border: "border-[#e23744]/30", glow: "shadow-[0_0_20px_rgba(226,55,68,0.2)]" },
   "#b87333": { bg: "from-[#b87333] to-[#a0621e]", border: "border-[#b87333]/30", glow: "shadow-[0_0_20px_rgba(184,115,51,0.2)]" },
-  "#6c5ce7": { bg: "from-[#6c5ce7] to-[#5538d4]", border: "border-[#6c5ce7]/30", glow: "shadow-[0_0_20px_rgba(108,92,231,0.2)]" },
+  "#b51d2c": { bg: "from-[#b51d2c] to-[#8a1420]", border: "border-[#b51d2c]/30", glow: "shadow-[0_0_20px_rgba(181,29,44,0.2)]" },
   "#e6874d": { bg: "from-[#e6874d] to-[#d4703a]", border: "border-[#e6874d]/30", glow: "shadow-[0_0_20px_rgba(230,135,77,0.2)]" },
   "#e6d44d": { bg: "from-[#e6d44d] to-[#d4c13a]", border: "border-[#e6d44d]/30", glow: "shadow-[0_0_20px_rgba(230,212,77,0.2)]" },
   "#e6404d": { bg: "from-[#e6404d] to-[#cc2030]", border: "border-[#e6404d]/30", glow: "shadow-[0_0_20px_rgba(230,64,77,0.25)]" },
@@ -189,14 +189,14 @@ export default function PassesPage() {
 
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
         {passes.map((pass, i) => {
-          const colors = colorMap[pass.color] || colorMap["#5b6ef5"];
+          const colors = colorMap[pass.color] || colorMap["#e23744"];
           const isOwned = ownedIds.includes(pass.id);
           const isPopular = pass.name.includes("Gold");
           return (
             <motion.div key={pass.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}>
               <div className={`relative rounded-2xl border ${colors.border} ${colors.glow} bg-[#0c1428] h-full card-lift cursor-pointer`}>
                 {isPopular && (
-                  <div className="absolute top-2 right-2 bg-gradient-to-r from-[#5b6ef5] to-[#6c5ce7] text-white text-[9px] font-bold px-2 py-0.5 rounded-full z-10">
+                  <div className="absolute top-2 right-2 bg-gradient-to-r from-[#e23744] to-[#b51d2c] text-white text-[9px] font-bold px-2 py-0.5 rounded-full z-10">
                     {t("passes_popular")}
                   </div>
                 )}
@@ -314,8 +314,8 @@ export default function PassesPage() {
                     </div>
                   ) : null}
                   {REGIONS.map((r) => (
-                    <button key={r.code} onClick={() => selectRegion(r)} className="w-full flex items-center gap-3 p-3.5 rounded-xl border border-white/8 bg-white/4 hover:bg-[#5b6ef5]/10 hover:border-[#5b6ef5]/30 transition-all text-left">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#5b6ef5] to-[#6c5ce7] flex items-center justify-center text-white flex-shrink-0">
+                    <button key={r.code} onClick={() => selectRegion(r)} className="w-full flex items-center gap-3 p-3.5 rounded-xl border border-white/8 bg-white/4 hover:bg-[#e23744]/10 hover:border-[#e23744]/30 transition-all text-left">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#e23744] to-[#b51d2c] flex items-center justify-center text-white flex-shrink-0">
                         <r.icon size={18} />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -335,9 +335,9 @@ export default function PassesPage() {
 
               {step === "pay" && selectedRegion && (
                 <div className="p-4 space-y-4">
-                  <div className="rounded-2xl border border-[#5b6ef5]/25 bg-[#5b6ef5]/8 p-4">
+                  <div className="rounded-2xl border border-[#e23744]/25 bg-[#e23744]/8 p-4">
                     <div className="flex items-center gap-2.5 mb-2">
-                      <ShieldCheck size={18} className="text-[#5b6ef5]" />
+                      <ShieldCheck size={18} className="text-[#e23744]" />
                       <p className="text-sm font-semibold text-white">
                         {selectedRegion.rail === "FAPSHI"
                           ? (lang === "fr" ? "Mobile Money — FAPSHI" : "Mobile Money — FAPSHI")

@@ -92,24 +92,24 @@ export default function AffiliatePage() {
     <div className="max-w-xl mx-auto px-4 pt-8 pb-24">
       {/* Header */}
       <motion.div initial="hidden" animate="show" custom={0} variants={fadeUp} className="mb-6">
-        <p className="text-[#5b6ef5] text-xs font-semibold uppercase tracking-widest mb-1">{t("affiliate_kicker")}</p>
+        <p className="text-[#e23744] text-xs font-semibold uppercase tracking-widest mb-1">{t("affiliate_kicker")}</p>
         <h1 className="text-2xl font-display font-bold" style={{ color: "var(--control-text)" }}>{t("affiliate_title")}</h1>
         <p className="text-sm mt-1" style={{ color: "var(--control-text)", opacity: 0.45 }}>{t("affiliate_sub")}</p>
       </motion.div>
 
       {/* Commission hero */}
       <motion.div initial="hidden" animate="show" custom={1} variants={fadeUp} className="mb-5">
-        <div className="relative rounded-2xl overflow-hidden p-5" style={{ background: "linear-gradient(135deg, rgba(91,110,245,0.15), rgba(108,92,231,0.12))", border: "1px solid rgba(91,110,245,0.2)" }}>
+        <div className="relative rounded-2xl overflow-hidden p-5" style={{ background: "linear-gradient(135deg, rgba(226,55,68,0.15), rgba(181,29,44,0.12))", border: "1px solid rgba(226,55,68,0.2)" }}>
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#5b6ef5] to-[#6c5ce7] flex items-center justify-center flex-shrink-0 shadow-lg shadow-[#5b6ef5]/30">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#e23744] to-[#b51d2c] flex items-center justify-center flex-shrink-0 shadow-lg shadow-[#e23744]/30">
               <span className="text-white font-display font-bold text-2xl">5%</span>
             </div>
             <div>
               <p className="font-display font-bold text-lg" style={{ color: "var(--control-text)" }}>{t("affiliate_commission_title")}</p>
               <p className="text-sm" style={{ color: "var(--control-text)", opacity: 0.55 }}>{t("affiliate_commission_sub")}</p>
               <div className="flex items-center gap-1.5 mt-1.5">
-                <Zap size={12} className="text-[#5b6ef5]" />
-                <span className="text-xs text-[#5b6ef5] font-semibold">{lang === "fr" ? "Crédité instantanément" : "Instantly credited"}</span>
+                <Zap size={12} className="text-[#e23744]" />
+                <span className="text-xs text-[#e23744] font-semibold">{lang === "fr" ? "Crédité instantanément" : "Instantly credited"}</span>
               </div>
             </div>
           </div>
@@ -129,7 +129,7 @@ export default function AffiliatePage() {
           <p className="text-xs uppercase tracking-wider mb-3 font-semibold" style={{ color: "var(--control-text)", opacity: 0.4 }}>{t("affiliate_link")}</p>
           <div className="flex items-center gap-2 p-3 rounded-xl mb-3" style={{ background: "var(--control-bg)", border: "1px solid var(--control-border)" }}>
             <span className="text-xs flex-1 truncate font-mono-custom" style={{ color: "var(--control-text)", opacity: 0.7 }}>{data.referralLink}</span>
-            <button type="button" onClick={copyLink} className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#5b6ef5]/20 flex items-center justify-center text-[#5b6ef5] hover:bg-[#5b6ef5]/30 transition-colors touch-manipulation">
+            <button type="button" onClick={copyLink} className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#e23744]/20 flex items-center justify-center text-[#e23744] hover:bg-[#e23744]/30 transition-colors touch-manipulation">
               <Copy size={14} />
             </button>
           </div>

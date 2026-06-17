@@ -35,8 +35,8 @@ export default function EventBanner() {
     return () => clearInterval(id);
   }, [event?.endsAt]);
 
-  const typeColor: Record<string, string> = { double_earnings: "#10b981", discount: "#f59e0b", bonus: "#6c5ce7", xp_boost: "#5b6ef5" };
-  const color = event ? (typeColor[event.type] || "#5b6ef5") : "#5b6ef5";
+  const typeColor: Record<string, string> = { double_earnings: "#10b981", discount: "#f59e0b", bonus: "#b51d2c", xp_boost: "#e23744" };
+  const color = event ? (typeColor[event.type] || "#e23744") : "#e23744";
 
   return (
     <AnimatePresence>
