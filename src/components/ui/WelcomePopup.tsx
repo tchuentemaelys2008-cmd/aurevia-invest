@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ExternalLink } from "lucide-react";
 import { useLanguage } from "@/lib/i18n";
+import { WHATSAPP_CHANNEL } from "@/lib/socials";
 
 interface SocialLinks { whatsapp_link?: string; telegram_link?: string; whatsapp_group_link?: string; }
 
@@ -27,22 +28,14 @@ export default function WelcomePopup() {
     const shown = sessionStorage.getItem("aurevia-welcome-shown");
     if (shown) return;
 
+    // The WhatsApp channel is always available, so the popup always shows once
+    // per session after login. We still pull optional community links from
+    // settings to display alongside.
     fetch("/api/settings/public")
       .then(r => r.json())
-      .then(d => {
-        const s: SocialLinks = d.settings || {};
-        if (s.whatsapp_link || s.telegram_link || s.whatsapp_group_link) {
-          setLinks(s);
-          setTimeout(() => setOpen(true), 1200);
-        } else {
-          // No links configured — mark shown so we don't retry every visit
-          sessionStorage.setItem("aurevia-welcome-shown", "1");
-        }
-      })
-      .catch(() => {
-        // On error mark shown to avoid retrying on every navigation
-        sessionStorage.setItem("aurevia-welcome-shown", "1");
-      });
+      .then(d => setLinks(d.settings || {}))
+      .catch(() => {})
+      .finally(() => setTimeout(() => setOpen(true), 1200));
   }, []);
 
   const dismiss = () => {
@@ -95,6 +88,27 @@ export default function WelcomePopup() {
           </div>
 
           <div className="relative space-y-3">
+            {/* WhatsApp channel — always shown, primary CTA */}
+            <button
+              type="button"
+              onClick={() => joinAndDismiss(WHATSAPP_CHANNEL)}
+              className="w-full flex items-center gap-3 p-4 rounded-2xl transition-all touch-manipulation"
+              style={{ background: "rgba(37,211,102,0.12)", border: "1px solid rgba(37,211,102,0.3)" }}
+            >
+              <div className="w-10 h-10 rounded-xl bg-[#25D366] flex items-center justify-center flex-shrink-0 text-white">
+                <WhatsAppIcon />
+              </div>
+              <div className="flex-1 text-left">
+                <p className="font-semibold text-sm text-[#25D366]">
+                  {lang === "fr" ? "Chaîne WhatsApp" : "WhatsApp channel"}
+                </p>
+                <p className="text-xs" style={{ color: "var(--control-text)", opacity: 0.5 }}>
+                  {lang === "fr" ? "Suivez les actus & preuves de paiement" : "Follow news & payment proofs"}
+                </p>
+              </div>
+              <ExternalLink size={15} className="text-[#25D366] flex-shrink-0" />
+            </button>
+
             {telegramLink && (
               <button
                 type="button"
