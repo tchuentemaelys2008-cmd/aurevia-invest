@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Award, Check, ChevronLeft, Clock, CreditCard, Crown, Globe, Landmark, Shield, ShieldCheck, Smartphone, Star, TrendingUp, Upload, X, Zap } from "lucide-react";
+import { Award, Check, ChevronLeft, Clock, CreditCard, Crown, Globe, Landmark, Shield, ShieldCheck, Smartphone, Star, TrendingUp, Upload, Wallet, X, Zap } from "lucide-react";
 import toast from "react-hot-toast";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
@@ -50,6 +50,7 @@ export default function PassesPage() {
   const [showModal, setShowModal] = useState(false);
   const [buying, setBuying] = useState(false);
   const [bankSettings, setBankSettings] = useState<Record<string, string>>({});
+  const [balance, setBalance] = useState(0);
   const [proofFile, setProofFile] = useState<File | null>(null);
   const [proofBase64, setProofBase64] = useState<string | null>(null);
   const [bankDone, setBankDone] = useState(false);
@@ -59,10 +60,12 @@ export default function PassesPage() {
     Promise.all([
       fetch("/api/passes").then((r) => r.json()),
       fetch("/api/admin/settings").then((r) => r.json()).catch(() => ({ settings: {} })),
-    ]).then(([passData, settingsData]) => {
+      fetch("/api/wallet").then((r) => r.json()).catch(() => ({})),
+    ]).then(([passData, settingsData, walletData]) => {
       setPasses(passData.passes || []);
       setUserPasses(passData.userPasses || []);
       setBankSettings(settingsData.settings || {});
+      setBalance(walletData?.wallet?.balance || 0);
       setLoading(false);
     });
   }, []);
@@ -120,11 +123,12 @@ export default function PassesPage() {
     reader.readAsDataURL(file);
   };
 
-  const handleBuy = async () => {
+  const handleBuy = async (methodOverride?: string) => {
     if (!selectedPass) return;
+    const method = methodOverride || paymentMethod;
     setBuying(true);
     try {
-      if (paymentMethod === "BANK_TRANSFER") {
+      if (method === "BANK_TRANSFER") {
         if (!proofBase64) { toast.error(t("passes_upload_proof")); setBuying(false); return; }
         const res = await fetch("/api/payments/bank-transfer", {
           method: "POST", headers: { "Content-Type": "application/json" },
@@ -136,15 +140,27 @@ export default function PassesPage() {
         return;
       }
 
-      // GENIUSPAY (générique : la personne choisit son moyen sur la page
-      // GeniusPay) ou FAPSHI (Cameroun). On redirige vers la page de paiement.
+      // BALANCE (paiement direct depuis le solde), GENIUSPAY (le client choisit
+      // son moyen sur la page GeniusPay) ou FAPSHI (Cameroun).
       setShowModal(false);
       const res = await fetch("/api/passes/buy", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ passId: selectedPass.id, paymentMethod, country: selectedRegion?.code }),
+        body: JSON.stringify({ passId: selectedPass.id, paymentMethod: method, country: selectedRegion?.code }),
       });
       const data = await res.json();
-      if (!res.ok) { toast.error(data.error || "Erreur"); setShowModal(true); setBuying(false); return; }
+      if (!res.ok) {
+        if (data.needTopUp) {
+          toast.error(lang === "fr" ? "Solde insuffisant — rechargez votre compte." : "Insufficient balance — top up first.");
+          router.push("/deposit");
+          return;
+        }
+        toast.error(data.error || "Erreur"); setShowModal(true); setBuying(false); return;
+      }
+      if (data.paidWithBalance) {
+        toast.success(lang === "fr" ? "Pass activé avec votre solde !" : "Pass activated with your balance!");
+        router.push("/dashboard");
+        return;
+      }
       if (!data.paymentUrl) { toast.error("Aucune URL de paiement reçue"); setShowModal(true); setBuying(false); return; }
       toast.success("Redirection...");
       if (data.paymentUrl.startsWith("http")) window.location.href = data.paymentUrl;
@@ -273,6 +289,30 @@ export default function PassesPage() {
             <div className="overflow-y-auto flex-1">
               {step === "region" && (
                 <div className="p-4 space-y-2">
+                  {balance >= selectedPass.price ? (
+                    <>
+                      <button onClick={() => handleBuy("BALANCE")} disabled={buying} className="w-full flex items-center gap-3 p-3.5 rounded-xl border border-emerald-400/30 bg-emerald-400/10 hover:bg-emerald-400/15 transition-all text-left">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-white flex-shrink-0">
+                          <Wallet size={18} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm text-white font-semibold">{lang === "fr" ? "Payer avec mon solde" : "Pay with my balance"}</p>
+                          <p className="text-xs text-emerald-400 truncate">{lang === "fr" ? "Solde" : "Balance"}: {formatCurrency(balance)} · {lang === "fr" ? "activation immédiate" : "instant activation"}</p>
+                        </div>
+                        <span className="text-emerald-400">›</span>
+                      </button>
+                      <div className="flex items-center gap-2 py-1">
+                        <div className="flex-1 h-px bg-white/8" />
+                        <span className="text-[11px] text-white/30">{lang === "fr" ? "ou payer autrement" : "or pay another way"}</span>
+                        <div className="flex-1 h-px bg-white/8" />
+                      </div>
+                    </>
+                  ) : balance > 0 ? (
+                    <div className="rounded-xl border border-white/8 bg-white/4 px-3 py-2 mb-1 flex items-center justify-between">
+                      <span className="text-xs text-white/50">{lang === "fr" ? "Solde" : "Balance"}: {formatCurrency(balance)}</span>
+                      <span className="text-[11px] text-white/35">{lang === "fr" ? "insuffisant pour ce pass" : "not enough for this pass"}</span>
+                    </div>
+                  ) : null}
                   {REGIONS.map((r) => (
                     <button key={r.code} onClick={() => selectRegion(r)} className="w-full flex items-center gap-3 p-3.5 rounded-xl border border-white/8 bg-white/4 hover:bg-[#5b6ef5]/10 hover:border-[#5b6ef5]/30 transition-all text-left">
                       <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#5b6ef5] to-[#6c5ce7] flex items-center justify-center text-white flex-shrink-0">
@@ -315,7 +355,7 @@ export default function PassesPage() {
                     </p>
                   </div>
 
-                  <Button variant="primary" size="lg" className="w-full" loading={buying} onClick={handleBuy}>
+                  <Button variant="primary" size="lg" className="w-full" loading={buying} onClick={() => handleBuy()}>
                     {t("passes_confirm")} - {formatCurrency(selectedPass.price)}
                   </Button>
                   <p className="text-[11px] text-white/30 text-center flex items-center justify-center gap-1">
@@ -355,7 +395,7 @@ export default function PassesPage() {
                     {proofBase64 && <img src={proofBase64} alt="preview" className="mt-2 rounded-xl max-h-32 object-cover w-full" />}
                   </div>
 
-                  <Button variant="primary" size="lg" className="w-full" loading={buying} onClick={handleBuy} disabled={!proofFile}>
+                  <Button variant="primary" size="lg" className="w-full" loading={buying} onClick={() => handleBuy()} disabled={!proofFile}>
                     {t("passes_transfer_done")}
                   </Button>
                   <p className="text-xs text-white/30 text-center">{t("passes_activation_delay")}</p>

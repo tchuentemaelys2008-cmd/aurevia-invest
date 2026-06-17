@@ -1,7 +1,8 @@
-﻿export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { applyDepositSuccess, payReferralCommission } from "@/lib/payments-helpers";
 
 /**
  * FAPSHI Webhook Handler
@@ -13,6 +14,7 @@ export async function POST(req: NextRequest) {
     // Verify webhook signature (FAPSHI sends a signature header)
     const signature = req.headers.get("x-fapshi-signature");
     // TODO: validate signature against FAPSHI_WEBHOOK_SECRET env var
+    void signature;
 
     const body = await req.json();
     const { transId, status, externalId } = body;
@@ -25,6 +27,14 @@ export async function POST(req: NextRequest) {
     if (!payment) return NextResponse.json({ error: "Payment not found" }, { status: 404 });
 
     if (status === "SUCCESSFUL") {
+      if (payment.status === "SUCCESS") return NextResponse.json({ received: true });
+
+      // Balance top-up (deposit): credit the balance, no pass to activate.
+      if (payment.passId === "DEPOSIT") {
+        await applyDepositSuccess(reference);
+        return NextResponse.json({ received: true });
+      }
+
       // Activate payment and pass
       await prisma.payment.update({ where: { reference }, data: { status: "SUCCESS", metadata: { transId } } });
       const userPass = await prisma.userPass.findFirst({ where: { paymentRef: reference } });
@@ -46,16 +56,10 @@ export async function POST(req: NextRequest) {
           data: { userId: payment.userId, type: "PASS_PURCHASE", amount: -payment.amount, description: "Achat Pass FAPSHI - " + reference, status: "SUCCESS", reference },
         });
         await prisma.notification.create({
-          data: { userId: payment.userId, title: "Paiement confirmÃ© !", message: `Votre pass a Ã©tÃ© activÃ© via FAPSHI.`, type: "success" },
+          data: { userId: payment.userId, title: "Paiement confirmé !", message: `Votre pass a été activé via FAPSHI.`, type: "success" },
         });
 
-        const user = await prisma.user.findUnique({ where: { id: payment.userId }, select: { referredById: true } });
-        if (user?.referredById) {
-          const commission = parseFloat((payment.amount * 0.10).toFixed(2));
-          await prisma.user.update({ where: { id: user.referredById }, data: { balance: { increment: commission }, totalEarnings: { increment: commission } } });
-          await prisma.transaction.create({ data: { userId: user.referredById, type: "REFERRAL_BONUS", amount: commission, description: "Commission parrainage 10% â€” FAPSHI", status: "SUCCESS" } });
-          await prisma.notification.create({ data: { userId: user.referredById, title: "Commission de parrainage !", message: `Vous avez reÃ§u ${commission} FCFA (10%) grÃ¢ce Ã  votre filleul.`, type: "success" } });
-        }
+        await payReferralCommission(payment.userId, payment.amount);
       }
     } else if (status === "FAILED" || status === "CANCELLED") {
       await prisma.payment.update({ where: { reference }, data: { status: "FAILED" } });

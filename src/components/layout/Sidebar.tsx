@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import {
   Home, ShoppingBag, CheckSquare, Target, Trophy, Users, Share2,
   Wallet, Settings, LayoutDashboard, HelpCircle, X, LogOut,
-  TrendingUp, Menu, Bell, History, LifeBuoy, Info,
+  TrendingUp, Menu, Bell, History, LifeBuoy, Info, BadgeCheck,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import LangToggle from "@/components/ui/LangToggle";
@@ -32,6 +32,7 @@ function SidebarContent({ onClose, isAdmin }: { onClose?: () => void; isAdmin: b
   const { t, lang } = useLanguage();
   const items = NAV_ITEMS(t);
   const extraItems = [
+    { href: "/verification", label: lang === "fr" ? "Vérification" : "Verification", icon: BadgeCheck },
     { href: "/history", label: lang === "fr" ? "Historique" : "History", icon: History },
     { href: "/support", label: lang === "fr" ? "Support" : "Support", icon: LifeBuoy },
     { href: "/about", label: lang === "fr" ? "À propos" : "About", icon: Info },

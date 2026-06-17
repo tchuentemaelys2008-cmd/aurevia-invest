@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { TrendingUp, ShoppingBag, CheckSquare, ArrowUpRight, ArrowDownRight, Wallet, Bot, ShieldCheck, Gauge, Flame, Eye, EyeOff, Bell, Plus, Users, History } from "lucide-react";
+import { TrendingUp, ShoppingBag, CheckSquare, ArrowUpRight, ArrowDownRight, Wallet, Bot, ShieldCheck, Gauge, Flame, Eye, EyeOff, Bell, Plus, Users, History, BadgeCheck } from "lucide-react";
 import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer } from "recharts";
 import Card, { StatCard } from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
@@ -149,7 +149,7 @@ export default function DashboardPage() {
 
           {/* Action buttons inside the card */}
           <div className="relative grid grid-cols-2 gap-3">
-            <Link href="/passes">
+            <Link href="/deposit">
               <button className="w-full flex items-center justify-center gap-2 rounded-2xl py-3 text-sm font-semibold press" style={{ background: "#fff", color: "#5b6ef5" }}>
                 <ArrowDownRight size={16} /> {t("dash_deposit")}
               </button>
@@ -184,6 +184,27 @@ export default function DashboardPage() {
           ))}
         </div>
       </motion.div>
+
+      {/* Verification CTA (non-verified users) */}
+      {!user.isVerified && (
+        <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4, delay: 0.18 }}>
+          <Link href="/verification">
+            <div className="relative overflow-hidden rounded-2xl p-4 flex items-center gap-3 card-lift"
+              style={{ background: "linear-gradient(135deg, rgba(91,110,245,0.18), rgba(108,92,231,0.12))", border: "1px solid rgba(91,110,245,0.25)" }}>
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#5b6ef5] to-[#6c5ce7] flex items-center justify-center text-white flex-shrink-0">
+                <BadgeCheck size={20} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-white text-sm">{lang === "fr" ? "Devenez vérifié" : "Get verified"}</p>
+                <p className="text-xs text-white/55">
+                  {lang === "fr" ? "Retraits + rapides · +5% parrainage · +10% gains · 1000 FCFA" : "Faster withdrawals · +5% referral · +10% earnings · 1000 FCFA"}
+                </p>
+              </div>
+              <span className="text-[#5b6ef5] flex-shrink-0">›</span>
+            </div>
+          </Link>
+        </motion.div>
+      )}
 
       {/* Stats row */}
       <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4, delay: 0.2 }}

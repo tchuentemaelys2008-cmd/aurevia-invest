@@ -1,8 +1,9 @@
-﻿export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { verifyGeniusPayWebhook } from "@/lib/geniuspay";
+import { applyDepositSuccess, payReferralCommission } from "@/lib/payments-helpers";
 
 export async function POST(req: NextRequest) {
   try {
@@ -36,6 +37,12 @@ export async function POST(req: NextRequest) {
 
     if (event === "payment.success" || txData.status === "completed") {
       if (payment.status === "SUCCESS") return NextResponse.json({ received: true });
+
+      // Balance top-up (deposit): credit the balance, no pass to activate.
+      if (payment.passId === "DEPOSIT") {
+        await applyDepositSuccess(reference);
+        return NextResponse.json({ received: true });
+      }
 
       await prisma.payment.update({
         where: { reference },
@@ -74,7 +81,7 @@ export async function POST(req: NextRequest) {
             userId: payment.userId,
             type: "PASS_PURCHASE",
             amount: -payment.amount,
-            description: `Achat Pass GeniusPay â€” ${reference}`,
+            description: `Achat Pass GeniusPay — ${reference}`,
             status: "SUCCESS",
             reference,
           },
@@ -83,19 +90,13 @@ export async function POST(req: NextRequest) {
         await prisma.notification.create({
           data: {
             userId: payment.userId,
-            title: "Paiement confirmÃ© !",
-            message: "Votre pass a Ã©tÃ© activÃ© via GeniusPay.",
+            title: "Paiement confirmé !",
+            message: "Votre pass a été activé via GeniusPay.",
             type: "success",
           },
         });
 
-        const user = await prisma.user.findUnique({ where: { id: payment.userId }, select: { referredById: true } });
-        if (user?.referredById) {
-          const commission = parseFloat((payment.amount * 0.10).toFixed(2));
-          await prisma.user.update({ where: { id: user.referredById }, data: { balance: { increment: commission }, totalEarnings: { increment: commission } } });
-          await prisma.transaction.create({ data: { userId: user.referredById, type: "REFERRAL_BONUS", amount: commission, description: "Commission parrainage 10% â€” GeniusPay", status: "SUCCESS" } });
-          await prisma.notification.create({ data: { userId: user.referredById, title: "Commission de parrainage !", message: `Vous avez reÃ§u ${commission} FCFA (10%) grÃ¢ce Ã  votre filleul.`, type: "success" } });
-        }
+        await payReferralCommission(payment.userId, payment.amount);
       }
     } else if (
       event === "payment.failed" ||

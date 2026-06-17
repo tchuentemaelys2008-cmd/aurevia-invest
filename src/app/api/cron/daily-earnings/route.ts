@@ -8,10 +8,12 @@ export async function POST(req: NextRequest) {
   }
   try {
     const now = new Date();
-    const activePasses = await prisma.userPass.findMany({ where: { status: "ACTIVE", endDate: { gte: now } }, include: { pass: true } });
+    const activePasses = await prisma.userPass.findMany({ where: { status: "ACTIVE", endDate: { gte: now } }, include: { pass: true, user: { select: { isVerified: true } } } });
     let processed = 0;
     for (const up of activePasses) {
-      const earning = parseFloat(((up.pass.price * up.pass.dailyReturn) / 100).toFixed(2));
+      // Verified users get a +10% bonus on daily pass earnings (verification perk).
+      const base = (up.pass.price * up.pass.dailyReturn) / 100;
+      const earning = parseFloat((base * (up.user.isVerified ? 1.1 : 1)).toFixed(2));
       await prisma.$transaction([
         prisma.user.update({ where: { id: up.userId }, data: { balance: { increment: earning }, totalEarnings: { increment: earning } } }),
         prisma.transaction.create({ data: { userId: up.userId, type: "DAILY_EARNING", amount: earning, description: "Revenu journalier - " + up.pass.name, status: "SUCCESS" } }),

@@ -123,6 +123,8 @@ enum TransactionType {
   AFFILIATE_COMMISSION
   WITHDRAWAL
   REFERRAL_BONUS
+  DEPOSIT
+  VERIFICATION
 }
 
 enum TransactionStatus {
