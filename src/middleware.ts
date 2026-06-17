@@ -5,8 +5,11 @@ const PUBLIC_PATHS = ["/login", "/register", "/forgot-password", "/reset-passwor
 const ADMIN_PATHS = ["/admin"];
 const ADMIN_ROLES = ["ADMIN", "SUPER_ADMIN", "MODERATOR"];
 
+// In production JWT_SECRET MUST be set; the dev-only fallback keeps local dev
+// working without exposing a forgeable default in production (fails closed).
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "aurevia-super-secret-jwt-key-2024"
+  process.env.JWT_SECRET ||
+    (process.env.NODE_ENV !== "production" ? "aurevia-dev-only-secret-change-me" : "")
 );
 
 export async function middleware(req: NextRequest) {

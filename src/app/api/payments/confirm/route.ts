@@ -6,6 +6,14 @@ import { applyDepositSuccess, payReferralCommission } from "@/lib/payments-helpe
 
 export async function POST(req: NextRequest) {
   try {
+    // SECURITY: this endpoint marks a payment SUCCESS without any real payment
+    // check — it exists only for the local sandbox/simulate flow. In production
+    // payments are confirmed exclusively by verified provider webhooks, so a
+    // client must never be able to call this (it would grant free passes/credit).
+    if (process.env.NODE_ENV === "production") {
+      return NextResponse.json({ error: "Not available" }, { status: 403 });
+    }
+
     const { reference } = await req.json();
     if (!reference) return NextResponse.json({ error: "Reference requise" }, { status: 400 });
     const payment = await prisma.payment.findUnique({ where: { reference } });

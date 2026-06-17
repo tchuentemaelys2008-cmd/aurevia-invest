@@ -2,7 +2,11 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 
-const JWT_SECRET = process.env.JWT_SECRET || "aurevia-super-secret-jwt-key-2024";
+// In production JWT_SECRET MUST be set. The dev-only fallback is never used in
+// production, so a leaked default can't be used to forge tokens against prod.
+const JWT_SECRET =
+  process.env.JWT_SECRET ||
+  (process.env.NODE_ENV !== "production" ? "aurevia-dev-only-secret-change-me" : "");
 
 export interface JWTPayload {
   userId: string;

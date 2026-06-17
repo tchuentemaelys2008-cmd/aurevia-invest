@@ -4,6 +4,22 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { applyDepositSuccess, payReferralCommission } from "@/lib/payments-helpers";
 
+// Fapshi webhooks arrive unauthenticated, so we never trust the body alone: we
+// re-check the transaction straight from Fapshi before crediting anything.
+// Fails closed — if we can't confirm, we don't credit.
+async function fapshiVerify(transId: string): Promise<{ status?: string; amount?: number } | null> {
+  if (!transId || !process.env.FAPSHI_USER || !process.env.FAPSHI_KEY || !process.env.FAPSHI_BASE_URL) return null;
+  try {
+    const res = await fetch(`${process.env.FAPSHI_BASE_URL}/payment-status/${transId}`, {
+      headers: { apiuser: process.env.FAPSHI_USER, apikey: process.env.FAPSHI_KEY },
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
 /**
  * FAPSHI Webhook Handler
  * Called by FAPSHI when payment status changes
@@ -28,6 +44,16 @@ export async function POST(req: NextRequest) {
 
     if (status === "SUCCESSFUL") {
       if (payment.status === "SUCCESS") return NextResponse.json({ received: true });
+
+      // SECURITY: confirm the transaction with Fapshi directly before crediting
+      // (the webhook body is forgeable). Fails closed in production.
+      if (process.env.NODE_ENV === "production") {
+        const verified = await fapshiVerify(transId);
+        if (!verified || verified.status !== "SUCCESSFUL" || (typeof verified.amount === "number" && verified.amount < payment.amount)) {
+          console.error("FAPSHI webhook rejected: verification failed", { transId, reference });
+          return NextResponse.json({ error: "Verification failed" }, { status: 400 });
+        }
+      }
 
       // Balance top-up (deposit): credit the balance, no pass to activate.
       if (payment.passId === "DEPOSIT") {
