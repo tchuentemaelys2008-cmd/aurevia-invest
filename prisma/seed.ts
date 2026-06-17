@@ -28,11 +28,11 @@ async function main() {
   }
 
   const tasks = [
-    { id: "task-login", title: "Se connecter", description: "Connectez-vous a votre compte", reward: 0.05, type: "LOGIN" },
-    { id: "task-visit", title: "Visiter la page des passes", description: "Visitez la page des passes", reward: 0.05, type: "VISIT_PASSES" },
-    { id: "task-share", title: "Partager avec 3 amis", description: "Partagez votre lien avec 3 amis", reward: 0.05, type: "SHARE" },
-    { id: "task-social", title: "Suivre nos reseaux sociaux", description: "Suivez-nous sur les reseaux sociaux", reward: 0.05, type: "SOCIAL" },
-    { id: "task-invite", title: "Inviter 1 ami", description: "Invitez un ami a rejoindre", reward: 0.10, type: "INVITE" },
+    { id: "task-login", title: "Se connecter", description: "Connectez-vous a votre compte", reward: 25, type: "LOGIN" },
+    { id: "task-visit", title: "Visiter la page des passes", description: "Visitez la page des passes", reward: 25, type: "VISIT_PASSES" },
+    { id: "task-share", title: "Partager avec 3 amis", description: "Partagez votre lien avec 3 amis", reward: 25, type: "SHARE" },
+    { id: "task-social", title: "Suivre nos reseaux sociaux", description: "Suivez-nous sur les reseaux sociaux", reward: 25, type: "SOCIAL" },
+    { id: "task-invite", title: "Inviter 1 ami", description: "Invitez un ami a rejoindre", reward: 25, type: "INVITE" },
   ];
 
   for (const task of tasks) {

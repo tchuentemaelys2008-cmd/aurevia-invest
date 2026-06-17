@@ -1,29 +1,40 @@
-﻿export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic";
 
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+// Large pool of realistic names (FR / West & Central Africa) so the live ticker
+// shows plenty of variety instead of repeating the same few.
 const displayNames = [
-  "Camille Durand",
-  "Noah Kouassi",
-  "Aminata Sow",
-  "Hugo Morel",
-  "Sarah Nguessan",
-  "Ibrahim Diallo",
-  "Lea Martin",
-  "Yannick Fofana",
-  "Mariam Traore",
-  "Lucas Bernard",
-  "Nadia Mensah",
-  "Arnaud Mbarga",
+  "Camille Durand", "Noah Kouassi", "Aminata Sow", "Hugo Morel", "Sarah Nguessan",
+  "Ibrahim Diallo", "Lea Martin", "Yannick Fofana", "Mariam Traore", "Lucas Bernard",
+  "Nadia Mensah", "Arnaud Mbarga", "Fatou Ndiaye", "Kevin Tchoua", "Awa Camara",
+  "Eric Mvondo", "Salimata Kone", "Olivier Bamba", "Rokhaya Fall", "Cedric Essomba",
+  "Bintou Cisse", "Patrick Owona", "Adjoa Mensah", "Moussa Keita", "Chloe Lefevre",
+  "Serge Atangana", "Aissatou Barry", "Thomas Nkolo", "Mariama Balde", "Franck Ngassa",
+  "Ramatoulaye Ba", "Dimitri Effa", "Khadija Toure", "Steve Manga", "Oumou Sangare",
+  "Romeo Biya", "Coumba Gueye", "Wilfried Yao", "Sokhna Diop", "Junior Ondoua",
+  "Maeva Abena", "Ismael Konate", "Grace Ngo", "Boubacar Sylla", "Linda Etoa",
+  "Hamed Ouattara", "Prisca Mballa", "Seydou Cisse", "Vanessa Ekani", "Abdoulaye Sy",
 ];
 
-const fallback = [
-  { id: "live-1", user: "Camille Durand", pass: "Aurevia Gold", amount: 50000, createdAt: new Date().toISOString() },
-  { id: "live-2", user: "Noah Kouassi", pass: "Aurevia Silver", amount: 25000, createdAt: new Date().toISOString() },
-  { id: "live-3", user: "Aminata Sow", pass: "Aurevia VIP", amount: 100000, createdAt: new Date().toISOString() },
-  { id: "live-4", user: "Hugo Morel", pass: "Aurevia Boost", amount: 8000, createdAt: new Date().toISOString() },
-];
+const passPool = ["Aurevia Gold", "Aurevia Silver", "Aurevia VIP", "Aurevia Boost", "Aurevia Platinum", "Aurevia Bronze", "Aurevia Plus", "Aurevia Starter"];
+const amountPool = [4000, 5000, 8000, 10000, 15000, 25000, 50000, 75000, 100000];
+const colorPool = ["#5b6ef5", "#6c5ce7", "#e6874d", "#e6d44d", "#e6404d", "#b87333"];
+
+// Build a varied synthetic feed used when there are no real purchases yet.
+function buildFallback() {
+  const shuffled = [...displayNames].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, 14).map((name, i) => ({
+    id: `live-${i}`,
+    user: name,
+    verified: Math.random() > 0.55,
+    pass: passPool[Math.floor(Math.random() * passPool.length)],
+    amount: amountPool[Math.floor(Math.random() * amountPool.length)],
+    color: colorPool[Math.floor(Math.random() * colorPool.length)],
+    createdAt: new Date(Date.now() - i * 60000).toISOString(),
+  }));
+}
 
 function cleanDisplayName(name: string, index: number) {
   const looksFake = /test|demo|user|admin|123|xxx|fake/i.test(name) || name.trim().length < 3;
@@ -35,7 +46,7 @@ export async function GET() {
     const purchases = await prisma.userPass.findMany({
       where: { status: { in: ["ACTIVE", "PENDING"] } },
       orderBy: { createdAt: "desc" },
-      take: 12,
+      take: 14,
       include: {
         user: { select: { name: true, isVerified: true } },
         pass: { select: { name: true, price: true, color: true } },
@@ -52,8 +63,10 @@ export async function GET() {
       createdAt: purchase.createdAt,
     }));
 
-    return NextResponse.json({ purchases: data.length ? data : fallback });
+    // Always blend in synthetic entries so the feed never looks empty or repetitive.
+    const merged = [...data, ...buildFallback()].slice(0, 16);
+    return NextResponse.json({ purchases: merged });
   } catch {
-    return NextResponse.json({ purchases: fallback });
+    return NextResponse.json({ purchases: buildFallback() });
   }
 }

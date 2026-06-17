@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { TrendingUp, ShoppingBag, CheckSquare, ArrowUpRight, ArrowDownRight, Wallet, Bot, ShieldCheck, Gauge, Flame, Eye, EyeOff, Bell, Plus, Users } from "lucide-react";
+import { TrendingUp, ShoppingBag, CheckSquare, ArrowUpRight, ArrowDownRight, Wallet, Bot, ShieldCheck, Gauge, Flame, Eye, EyeOff, Bell, Plus, Users, History } from "lucide-react";
 import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer } from "recharts";
 import Card, { StatCard } from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
@@ -171,7 +171,7 @@ export default function DashboardPage() {
             { href: "/passes", label: lang === "fr" ? "Investir" : "Invest", icon: Plus },
             { href: "/tasks", label: lang === "fr" ? "Tâches" : "Tasks", icon: CheckSquare },
             { href: "/affiliate", label: lang === "fr" ? "Parrainage" : "Refer", icon: Users },
-            { href: "/wallet", label: lang === "fr" ? "Retrait" : "Withdraw", icon: Wallet },
+            { href: "/history", label: lang === "fr" ? "Historique" : "History", icon: History },
           ].map((a) => (
             <Link key={a.href} href={a.href}>
               <div className="flex flex-col items-center gap-2 rounded-2xl py-4 px-1.5 press card-lift bg-[#5b6ef5]/10 border border-[#5b6ef5]/15">

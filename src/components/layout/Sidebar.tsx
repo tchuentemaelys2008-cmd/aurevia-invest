@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import {
   Home, ShoppingBag, CheckSquare, Target, Trophy, Users, Share2,
   Wallet, Settings, LayoutDashboard, HelpCircle, X, LogOut,
-  Sparkles, TrendingUp, Menu, Bell,
+  TrendingUp, Menu, Bell, History, LifeBuoy, Info,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import LangToggle from "@/components/ui/LangToggle";
@@ -29,8 +29,13 @@ const NAV_ITEMS = (t: (k: TKey) => string) => [
 function SidebarContent({ onClose, isAdmin }: { onClose?: () => void; isAdmin: boolean }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const items = NAV_ITEMS(t);
+  const extraItems = [
+    { href: "/history", label: lang === "fr" ? "Historique" : "History", icon: History },
+    { href: "/support", label: lang === "fr" ? "Support" : "Support", icon: LifeBuoy },
+    { href: "/about", label: lang === "fr" ? "À propos" : "About", icon: Info },
+  ];
 
   const logout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
@@ -43,8 +48,8 @@ function SidebarContent({ onClose, isAdmin }: { onClose?: () => void; isAdmin: b
       {/* Header */}
       <div className="p-5 border-b border-white/5 flex items-center justify-between flex-shrink-0">
         <Link href="/dashboard" onClick={onClose} className="flex items-center gap-3">
-          <img src="/photo_2026-05-25_14-14-19.jpg" alt="Aurevia" className="w-11 h-11 rounded-xl object-cover border border-white/10" />
-          <span className="font-display font-bold text-white text-lg">Aurevia</span>
+          <img src="/photo_2026-05-25_14-14-19.jpg" alt="Aurevia" className="w-14 h-14 rounded-xl object-cover border border-white/10" />
+          <span className="font-display font-bold text-white text-xl">Aurevia</span>
         </Link>
         <div className="flex items-center gap-2">
           {onClose && (
@@ -81,6 +86,23 @@ function SidebarContent({ onClose, isAdmin }: { onClose?: () => void; isAdmin: b
 
       {/* Footer */}
       <div className="p-3 border-t border-white/5 space-y-0.5 flex-shrink-0">
+        {extraItems.map(({ href, label, icon: Icon }) => {
+          const active = pathname === href || pathname.startsWith(href + "/");
+          return (
+            <Link
+              key={href}
+              href={href}
+              onClick={onClose}
+              className={cn(
+                "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all",
+                active ? "bg-gradient-to-r from-[#5b6ef5]/20 to-[#6c5ce7]/10 text-white border border-[#5b6ef5]/20" : "text-white/50 hover:text-white hover:bg-white/5"
+              )}
+            >
+              <Icon size={17} className={active ? "text-[#5b6ef5]" : ""} />
+              {label}
+            </Link>
+          );
+        })}
         {isAdmin && (
           <Link
             href="/admin/dashboard"
@@ -137,8 +159,8 @@ export default function Sidebar() {
           <Menu size={22} />
         </button>
         <Link href="/dashboard" className="flex items-center gap-2.5 flex-1">
-          <img src="/photo_2026-05-25_14-14-19.jpg" alt="Aurevia" className="w-7 h-7 rounded-lg object-cover border border-white/10" />
-          <span className="font-display font-bold text-white text-base">Aurevia</span>
+          <img src="/photo_2026-05-25_14-14-19.jpg" alt="Aurevia" className="w-10 h-10 rounded-lg object-cover border border-white/10" />
+          <span className="font-display font-bold text-white text-lg">Aurevia</span>
         </Link>
         <Link href="/notifications" className="ui-action-button w-8 h-8 rounded-lg flex items-center justify-center transition-all" aria-label="Notifications">
           <Bell size={15} />
