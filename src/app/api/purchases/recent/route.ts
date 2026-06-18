@@ -21,12 +21,18 @@ const displayNames = [
   "Sandra Eyenga", "Souleymane Toure", "Henriette Fotso", "Alassane Coulibaly", "Pamela Ngono",
   "Cheikh Mbaye", "Brice Talla", "Djeneba Sangare", "Landry Onana", "Aminatou Garba",
   "Pascal Mengue", "Habiba Diop", "Ulrich Fokou", "Mariam Cisse", "Donald Eteki",
-  "Nafissatou Sy", "Christelle Abomo", "Yacouba Konate", "Gaelle Manga", "Idrissa Diallo",
+  "Nafissatou Sy", "Aurelie Etoga", "Yacouba Konate", "Gaelle Manga", "Idrissa Diallo",
   "Brenda Atangana", "Modou Faye", "Larissa Ngo", "Boubacar Traore", "Joelle Mbida",
   "Samuel Owono", "Fatoumata Camara", "Rodrigue Essono", "Hawa Sylla", "Patrice Mbarga",
   "Adama Sow", "Solange Eyenga", "Issa Ouedraogo", "Nadege Fouda", "Karim Bamba",
   "Vivien Tchoumi", "Awa Diallo", "Emmanuel Nkodo", "Zara Hamadou", "Franck Belinga",
   "Ousmane Diop", "Clarisse Ngono", "Aboubakar Sangare", "Michelle Eboa", "Tidiane Ba",
+  "Ali Maiga", "Sophie Ngamaleu", "Bakary Toure", "Estelle Mballa", "Demba Niang",
+  "Rachel Onguene", "Souleyman Diarra", "Aurore Tagne", "Lamine Sarr", "Diane Mefor",
+  "Adama Diakhate", "Pauline Ekambi", "Sekou Conde", "Nathalie Bekolo", "Madi Cisse",
+  "Sandrine Ngo Bell", "Oumar Ndoye", "Flore Manga", "Hassan Bello", "Carmen Edzoa",
+  "Boubou Sangare", "Yvette Mendomo", "Iliasse Toure", "Bella Nkoa", "Modeste Owona",
+  "Djibril Kane", "Henriette Ze", "Mahamat Saleh", "Olga Fouda", "Yao Konan",
 ];
 
 const passPool = ["Aurevia Gold", "Aurevia Silver", "Aurevia VIP", "Aurevia Boost", "Aurevia Platinum", "Aurevia Bronze", "Aurevia Plus", "Aurevia Starter"];
@@ -48,7 +54,8 @@ function buildFallback() {
 }
 
 function cleanDisplayName(name: string, index: number) {
-  const looksFake = /test|demo|user|admin|123|xxx|fake/i.test(name) || name.trim().length < 3;
+  // Also mask any "Chris"-like name on the live ticker (replaced by a pool name).
+  const looksFake = /test|demo|user|admin|123|xxx|fake|chris/i.test(name) || name.trim().length < 3;
   return looksFake ? displayNames[index % displayNames.length] : name.trim();
 }
 
