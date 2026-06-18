@@ -3,6 +3,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { comparePassword, signToken } from "@/lib/auth";
+import { rateLimit } from "@/lib/admin";
 import { z } from "zod";
 
 const schema = z.object({
@@ -12,6 +13,10 @@ const schema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
+    // Throttle credential stuffing / brute force (per IP).
+    const limited = rateLimit(req, "login", 10, 60_000);
+    if (limited) return limited;
+
     const body = await req.json();
     const data = schema.parse(body);
     const user = await prisma.user.findUnique({ where: { email: data.email } });

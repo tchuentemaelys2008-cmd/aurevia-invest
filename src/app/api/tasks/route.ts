@@ -3,6 +3,7 @@
 import { NextResponse } from "next/server";
 import { getAuthUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { DAILY_TASK_REWARD } from "@/lib/config";
 
 export async function GET() {
   try {
@@ -25,7 +26,10 @@ export async function GET() {
     const completedTaskIds = completedToday.map((ut) => ut.taskId);
     const totalTodayReward = completedToday.reduce((sum, ut) => sum + ut.reward, 0);
 
-    return NextResponse.json({ tasks: allTasks, completedTaskIds, totalTodayReward });
+    // Reward is fixed in code (DAILY_TASK_REWARD) regardless of the stored value.
+    const tasks = allTasks.map((t) => ({ ...t, reward: DAILY_TASK_REWARD }));
+
+    return NextResponse.json({ tasks, completedTaskIds, totalTodayReward });
   } catch {
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }

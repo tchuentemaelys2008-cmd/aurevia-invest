@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
+import { prisma } from "@/lib/prisma";
 
 // In production JWT_SECRET MUST be set. The dev-only fallback is never used in
 // production, so a leaked default can't be used to forge tokens against prod.
@@ -38,5 +39,19 @@ export async function getAuthUser(): Promise<JWTPayload | null> {
   const cookieStore = await cookies();
   const token = cookieStore.get("auth-token")?.value;
   if (!token) return null;
-  return verifyToken(token);
+  const payload = verifyToken(token);
+  if (!payload) return null;
+
+  // Re-check account status in DB so suspended/banned users lose access
+  // immediately (not only when their 7-day token expires). Fails closed.
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: payload.userId },
+      select: { isActive: true, isSuspended: true },
+    });
+    if (!user || !user.isActive || user.isSuspended) return null;
+  } catch {
+    return null;
+  }
+  return payload;
 }

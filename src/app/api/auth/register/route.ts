@@ -3,6 +3,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { hashPassword, signToken } from "@/lib/auth";
+import { rateLimit } from "@/lib/admin";
 import { z } from "zod";
 import { nanoid } from "nanoid";
 
@@ -16,6 +17,10 @@ const schema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
+    // Throttle mass account creation (per IP).
+    const limited = rateLimit(req, "register", 6, 60_000);
+    if (limited) return limited;
+
     const body = await req.json();
     const data = schema.parse(body);
 

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Search, UserCheck, UserX, Edit2, X, Check, BadgeCheck, PauseCircle } from "lucide-react";
+import { Search, UserCheck, UserX, Edit2, X, Check, BadgeCheck, PauseCircle, Rocket } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import toast from "react-hot-toast";
@@ -22,6 +22,10 @@ export default function AdminUsersPage() {
   const [editUser, setEditUser] = useState<User | null>(null);
   const [newBalance, setNewBalance] = useState("");
   const [saving, setSaving] = useState(false);
+  const [passList, setPassList] = useState<{ id: string; name: string; price: number }[]>([]);
+  const [activateUser, setActivateUser] = useState<User | null>(null);
+  const [selectedPassId, setSelectedPassId] = useState("");
+  const [activating, setActivating] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -33,6 +37,25 @@ export default function AdminUsersPage() {
   }, [page, search]);
 
   useEffect(() => { load(); }, [load]);
+
+  useEffect(() => {
+    fetch("/api/passes").then((r) => r.json()).then((d) => setPassList(d.passes || [])).catch(() => {});
+  }, []);
+
+  const activatePass = async () => {
+    if (!activateUser || !selectedPassId) { toast.error("Choisissez un pass"); return; }
+    setActivating(true);
+    const res = await fetch("/api/admin/activate-pass", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: activateUser.id, passId: selectedPassId }),
+    });
+    if (res.ok) {
+      toast.success(`Pass activé pour ${activateUser.name}`);
+      setActivateUser(null); setSelectedPassId("");
+      load();
+    } else { const d = await res.json().catch(() => ({})); toast.error(d.error || "Erreur"); }
+    setActivating(false);
+  };
 
   const toggleUser = async (userId: string, isActive: boolean) => {
     setToggling(userId);
@@ -105,6 +128,8 @@ export default function AdminUsersPage() {
                 <div className="flex gap-1.5">
                   <button onClick={() => { setEditUser(u); setNewBalance(String(u.balance)); }}
                     className="w-8 h-8 rounded-xl bg-blue-400/10 flex items-center justify-center text-blue-400 hover:bg-blue-400/20"><Edit2 size={13} /></button>
+                  <button onClick={() => { setActivateUser(u); setSelectedPassId(""); }} title="Activer un pass"
+                    className="w-8 h-8 rounded-xl bg-[#e23744]/10 flex items-center justify-center text-[#e23744] hover:bg-[#e23744]/20"><Rocket size={13} /></button>
                   <button onClick={() => patchUser(u.id, { isVerified: !u.isVerified }, u.isVerified ? "Badge retire" : "Compte verifie")}
                     className="w-8 h-8 rounded-xl bg-emerald-400/10 flex items-center justify-center text-emerald-400 hover:bg-emerald-400/20"><BadgeCheck size={13} /></button>
                   <button onClick={() => patchUser(u.id, { isSuspended: !u.isSuspended }, u.isSuspended ? "Compte reactive" : "Compte suspendu")}
@@ -144,6 +169,8 @@ export default function AdminUsersPage() {
                     <div className="flex gap-1.5">
                       <button onClick={() => { setEditUser(u); setNewBalance(String(u.balance)); }}
                         className="w-7 h-7 rounded-lg bg-blue-400/10 flex items-center justify-center text-blue-400 hover:bg-blue-400/20"><Edit2 size={12} /></button>
+                      <button onClick={() => { setActivateUser(u); setSelectedPassId(""); }} title="Activer un pass"
+                        className="w-7 h-7 rounded-lg bg-[#e23744]/10 flex items-center justify-center text-[#e23744] hover:bg-[#e23744]/20"><Rocket size={12} /></button>
                       <button onClick={() => patchUser(u.id, { isVerified: !u.isVerified }, u.isVerified ? "Badge retire" : "Compte verifie")}
                         className="w-7 h-7 rounded-lg bg-emerald-400/10 flex items-center justify-center text-emerald-400 hover:bg-emerald-400/20"><BadgeCheck size={12} /></button>
                       <button onClick={() => patchUser(u.id, { isSuspended: !u.isSuspended }, u.isSuspended ? "Compte reactive" : "Compte suspendu")}
@@ -185,6 +212,31 @@ export default function AdminUsersPage() {
             <div className="flex gap-2">
               <Button variant="secondary" size="sm" className="flex-1" onClick={() => setEditUser(null)}>Annuler</Button>
               <Button variant="primary" size="sm" className="flex-1" loading={saving} onClick={saveBalance}><Check size={13} /> Sauvegarder</Button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {activateUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+            className="w-full max-w-sm bg-[#0c1428] border border-white/10 rounded-2xl p-5">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-display font-bold text-white text-sm flex items-center gap-2"><Rocket size={15} className="text-[#e23744]" /> Activer un pass</h3>
+              <button onClick={() => setActivateUser(null)} className="w-7 h-7 rounded-xl bg-white/6 flex items-center justify-center text-white/50"><X size={14} /></button>
+            </div>
+            <p className="text-sm text-white/70 mb-0.5">{activateUser.name}</p>
+            <p className="text-xs text-white/30 mb-4">{activateUser.email}</p>
+            <label className="text-xs font-medium text-white/60 mb-1.5 block">Choisir un pass</label>
+            <select value={selectedPassId} onChange={(e) => setSelectedPassId(e.target.value)}
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#e23744]/50 mb-2">
+              <option value="">— Sélectionner —</option>
+              {passList.map((p) => <option key={p.id} value={p.id}>{p.name} · {formatCurrency(p.price)}</option>)}
+            </select>
+            <p className="text-[11px] text-white/30 mb-4">Le pass sera activé immédiatement (sans débiter l&apos;utilisateur).</p>
+            <div className="flex gap-2">
+              <Button variant="secondary" size="sm" className="flex-1" onClick={() => setActivateUser(null)}>Annuler</Button>
+              <Button variant="primary" size="sm" className="flex-1" loading={activating} onClick={activatePass}><Rocket size={13} /> Activer</Button>
             </div>
           </motion.div>
         </div>

@@ -116,7 +116,7 @@ export default function PassesPage() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 3 * 1024 * 1024) { toast.error("Image trop grande (max 3 Mo)"); return; }
+    if (file.size > 2 * 1024 * 1024) { toast.error("Image trop grande (max 2 Mo)"); return; }
     setProofFile(file);
     const reader = new FileReader();
     reader.onload = (ev) => setProofBase64(ev.target?.result as string);

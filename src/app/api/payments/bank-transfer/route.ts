@@ -13,6 +13,12 @@ export async function POST(req: NextRequest) {
     const { passId, proofBase64, proofName } = await req.json();
     if (!passId || !proofBase64) return NextResponse.json({ error: "DonnÃ©es manquantes" }, { status: 400 });
 
+    // Cap proof size server-side (~2 MB binary ≈ 2.8 MB base64) so a forged
+    // request can't bloat the DB or exhaust memory. The client also limits this.
+    if (typeof proofBase64 !== "string" || proofBase64.length > 2_800_000) {
+      return NextResponse.json({ error: "Preuve trop volumineuse (max 2 Mo)" }, { status: 413 });
+    }
+
     const pass = await prisma.pass.findUnique({ where: { id: passId } });
     if (!pass) return NextResponse.json({ error: "Pass introuvable" }, { status: 404 });
 
