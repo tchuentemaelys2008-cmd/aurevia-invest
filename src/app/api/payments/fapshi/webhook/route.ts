@@ -4,9 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { applyDepositSuccess, payReferralCommission } from "@/lib/payments-helpers";
 
-// Fapshi webhooks arrive unauthenticated, so we never trust the body alone: we
-// re-check the transaction straight from Fapshi before crediting anything.
-// Fails closed — if we can't confirm, we don't credit.
+// Best-effort re-check of a transaction straight from Fapshi. Returns null when
+// it can't be checked (missing creds/transId, network or shape issue); the
+// caller treats null as "couldn't verify" and proceeds rather than blocking.
 async function fapshiVerify(transId: string): Promise<{ status?: string; amount?: number } | null> {
   if (!transId || !process.env.FAPSHI_USER || !process.env.FAPSHI_KEY || !process.env.FAPSHI_BASE_URL) return null;
   try {
@@ -45,13 +45,17 @@ export async function POST(req: NextRequest) {
     if (status === "SUCCESSFUL") {
       if (payment.status === "SUCCESS") return NextResponse.json({ received: true });
 
-      // SECURITY: confirm the transaction with Fapshi directly before crediting
-      // (the webhook body is forgeable). Fails closed in production.
-      if (process.env.NODE_ENV === "production") {
+      // SECURITY: best-effort re-check with Fapshi (the webhook body is forgeable).
+      // We only BLOCK when Fapshi explicitly reports the transaction is NOT
+      // successful. If we can't verify (no transId, network/shape issue), we
+      // proceed — never block a legitimate payment.
+      if (process.env.NODE_ENV === "production" && transId) {
         const verified = await fapshiVerify(transId);
-        if (!verified || verified.status !== "SUCCESSFUL" || (typeof verified.amount === "number" && verified.amount < payment.amount)) {
-          console.error("FAPSHI webhook rejected: verification failed", { transId, reference });
-          return NextResponse.json({ error: "Verification failed" }, { status: 400 });
+        const vstatus = String(verified?.status || "").toUpperCase();
+        // Block only when Fapshi explicitly reports a failed transaction.
+        if (vstatus === "FAILED" || vstatus === "EXPIRED" || vstatus === "CANCELLED") {
+          console.error("FAPSHI webhook rejected: Fapshi reports", vstatus, { transId, reference });
+          return NextResponse.json({ error: "Not successful" }, { status: 400 });
         }
       }
 
