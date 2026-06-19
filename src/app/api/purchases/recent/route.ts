@@ -42,7 +42,7 @@ const colorPool = ["#e23744", "#b51d2c", "#e6874d", "#e6d44d", "#e6404d", "#b873
 // Build a varied synthetic feed used when there are no real purchases yet.
 function buildFallback() {
   const shuffled = [...displayNames].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, 14).map((name, i) => ({
+  return shuffled.slice(0, 36).map((name, i) => ({
     id: `live-${i}`,
     user: name,
     verified: Math.random() > 0.55,
@@ -82,7 +82,7 @@ export async function GET() {
     }));
 
     // Always blend in synthetic entries so the feed never looks empty or repetitive.
-    const merged = [...data, ...buildFallback()].slice(0, 16);
+    const merged = [...data, ...buildFallback()].slice(0, 40);
     return NextResponse.json({ purchases: merged });
   } catch {
     return NextResponse.json({ purchases: buildFallback() });

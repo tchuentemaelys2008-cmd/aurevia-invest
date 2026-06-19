@@ -12,7 +12,7 @@ import { useLanguage } from "@/lib/i18n";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -30,7 +30,8 @@ export default function LoginPage() {
       });
       const data = await res.json();
       if (!res.ok) { toast.error(data.error || "Erreur de connexion"); setLoading(false); return; }
-      toast.success(t("auth_login_title") + " !");
+      const firstName = data.user?.name ? data.user.name.split(" ")[0] : "";
+      toast.success((lang === "fr" ? "Bon retour" : "Welcome back") + (firstName ? `, ${firstName}` : "") + " 👋");
       router.push("/dashboard");
     } catch {
       toast.error("Erreur de connexion");

@@ -81,6 +81,15 @@ export async function GET(req: NextRequest) {
           isVerified: Boolean(profile.email_verified),
         },
       });
+      // Message de bienvenue (notification persistante).
+      await prisma.notification.create({
+        data: {
+          userId: user.id,
+          title: "Bienvenue sur Aurevia Invest 🎉",
+          message: `Bonjour ${user.name} ! Votre compte est créé. Achetez un pass pour démarrer vos revenus quotidiens, et rejoignez notre chaîne WhatsApp pour les actus. Bonne route avec Aurevia 🚀`,
+          type: "success",
+        },
+      }).catch(() => {});
     }
 
     if (!user.isActive || user.isSuspended) return fail("account_disabled");

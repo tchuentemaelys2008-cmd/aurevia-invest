@@ -47,7 +47,17 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // La commission parrainage (10%) sera versÃ©e au moment de l'achat du pass
+    // La commission parrainage sera versÃ©e au moment de l'achat du pass
+
+    // Message de bienvenue (notification persistante, visible dans la cloche).
+    await prisma.notification.create({
+      data: {
+        userId: user.id,
+        title: "Bienvenue sur Aurevia Invest 🎉",
+        message: `Bonjour ${user.name} ! Votre compte est créé. Achetez un pass pour démarrer vos revenus quotidiens, et rejoignez notre chaîne WhatsApp pour les actus. Bonne route avec Aurevia 🚀`,
+        type: "success",
+      },
+    }).catch(() => {});
 
     const token = signToken({ userId: user.id, email: user.email, role: user.role });
     const response = NextResponse.json({ success: true, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
