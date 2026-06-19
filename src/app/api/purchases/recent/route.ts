@@ -1,10 +1,9 @@
 export const dynamic = "force-dynamic";
 
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 
-// Large pool of realistic names (FR / West & Central Africa) so the live ticker
-// shows plenty of variety instead of repeating the same few.
+// The live ticker is purely cosmetic: it shows ALL the names written below
+// (not real database purchases), each paired with a random pass/amount.
 const displayNames = [
   "Camille Durand", "Noah Kouassi", "Aminata Sow", "Hugo Morel", "Sarah Nguessan",
   "Ibrahim Diallo", "Lea Martin", "Yannick Fofana", "Mariam Traore", "Lucas Bernard",
@@ -39,10 +38,11 @@ const passPool = ["Aurevia Gold", "Aurevia Silver", "Aurevia VIP", "Aurevia Boos
 const amountPool = [4000, 5000, 8000, 10000, 15000, 25000, 50000, 75000, 100000];
 const colorPool = ["#e23744", "#b51d2c", "#e6874d", "#e6d44d", "#e6404d", "#b87333"];
 
-// Build a varied synthetic feed used when there are no real purchases yet.
-function buildFallback() {
+export async function GET() {
+  // Show every name in the list above, in a random order, each with a random
+  // pass/amount. No database access.
   const shuffled = [...displayNames].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, 36).map((name, i) => ({
+  const purchases = shuffled.map((name, i) => ({
     id: `live-${i}`,
     user: name,
     verified: Math.random() > 0.55,
@@ -51,40 +51,6 @@ function buildFallback() {
     color: colorPool[Math.floor(Math.random() * colorPool.length)],
     createdAt: new Date(Date.now() - i * 60000).toISOString(),
   }));
-}
 
-function cleanDisplayName(name: string, index: number) {
-  // Also mask any "Chris"-like name on the live ticker (replaced by a pool name).
-  const looksFake = /test|demo|user|admin|123|xxx|fake|chris/i.test(name) || name.trim().length < 3;
-  return looksFake ? displayNames[index % displayNames.length] : name.trim();
-}
-
-export async function GET() {
-  try {
-    const purchases = await prisma.userPass.findMany({
-      where: { status: { in: ["ACTIVE", "PENDING"] } },
-      orderBy: { createdAt: "desc" },
-      take: 14,
-      include: {
-        user: { select: { name: true, isVerified: true } },
-        pass: { select: { name: true, price: true, color: true } },
-      },
-    });
-
-    const data = purchases.map((purchase, index) => ({
-      id: purchase.id,
-      user: cleanDisplayName(purchase.user.name, index),
-      verified: purchase.user.isVerified,
-      pass: purchase.pass.name,
-      amount: purchase.amountPaid || purchase.pass.price,
-      color: purchase.pass.color,
-      createdAt: purchase.createdAt,
-    }));
-
-    // Always blend in synthetic entries so the feed never looks empty or repetitive.
-    const merged = [...data, ...buildFallback()].slice(0, 40);
-    return NextResponse.json({ purchases: merged });
-  } catch {
-    return NextResponse.json({ purchases: buildFallback() });
-  }
+  return NextResponse.json({ purchases });
 }
