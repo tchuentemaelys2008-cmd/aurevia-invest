@@ -221,15 +221,14 @@ export default function PassesPage() {
                       <span className="text-white/60">{t("passes_total_gain")} {formatCurrency(pass.price * pass.dailyReturn * pass.duration / 100)}</span>
                     </div>
                   </div>
-                  {isOwned ? (
-                    <div className="w-full py-2 rounded-xl bg-emerald-400/10 border border-emerald-400/20 text-emerald-400 text-xs font-semibold text-center">
-                      <Check size={11} className="inline mr-1" />{t("passes_active")}
+                  {isOwned && (
+                    <div className="mb-2 flex items-center justify-center gap-1 text-[11px] font-semibold text-emerald-400">
+                      <Check size={11} /> {t("passes_active")}
                     </div>
-                  ) : (
-                    <Button variant="primary" className="w-full !py-2 text-xs" onClick={() => openModal(pass)}>
-                      {t("passes_buy")}
-                    </Button>
                   )}
+                  <Button variant="primary" className="w-full !py-2 text-xs" onClick={() => openModal(pass)}>
+                    {t("passes_buy")}
+                  </Button>
                 </div>
               </div>
             </motion.div>

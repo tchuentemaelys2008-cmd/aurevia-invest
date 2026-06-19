@@ -17,8 +17,8 @@ export async function GET(req: NextRequest) {
     const search = searchParams.get("search") || "";
 
     const where = search
-      ? { OR: [{ name: { contains: search, mode: "insensitive" as const } }, { email: { contains: search, mode: "insensitive" as const } }], role: "USER" as const }
-      : { role: "USER" as const };
+      ? { OR: [{ name: { contains: search, mode: "insensitive" as const } }, { email: { contains: search, mode: "insensitive" as const } }] }
+      : {};
 
     const [users, total] = await Promise.all([
       prisma.user.findMany({
@@ -28,6 +28,7 @@ export async function GET(req: NextRequest) {
         orderBy: { createdAt: "desc" },
         select: {
           id: true,
+          role: true,
           name: true,
           email: true,
           phone: true,
@@ -74,6 +75,27 @@ export async function PATCH(req: NextRequest) {
     if (typeof body.isVerified === "boolean" && body.userId) {
       await prisma.user.update({ where: { id: body.userId }, data: { isVerified: body.isVerified } });
       await logAdminAction(auth, body.isVerified ? "USER_VERIFY" : "USER_UNVERIFY", body.userId, { isVerified: body.isVerified }, req);
+      return NextResponse.json({ success: true });
+    }
+
+    if (typeof body.role === "string" && body.userId) {
+      // Changing roles is reserved to ADMIN / SUPER_ADMIN (not MODERATOR).
+      if (!["ADMIN", "SUPER_ADMIN"].includes(auth.role)) {
+        return NextResponse.json({ error: "Réservé aux administrateurs" }, { status: 403 });
+      }
+      if (!["USER", "ADMIN"].includes(body.role)) {
+        return NextResponse.json({ error: "Rôle invalide" }, { status: 400 });
+      }
+      if (body.userId === auth.userId) {
+        return NextResponse.json({ error: "Vous ne pouvez pas changer votre propre rôle" }, { status: 400 });
+      }
+      const target = await prisma.user.findUnique({ where: { id: body.userId }, select: { role: true } });
+      if (!target) return NextResponse.json({ error: "Utilisateur introuvable" }, { status: 404 });
+      if (target.role === "SUPER_ADMIN") {
+        return NextResponse.json({ error: "Impossible de modifier un super admin" }, { status: 403 });
+      }
+      await prisma.user.update({ where: { id: body.userId }, data: { role: body.role } });
+      await logAdminAction(auth, body.role === "ADMIN" ? "USER_PROMOTE_ADMIN" : "USER_DEMOTE", body.userId, { role: body.role }, req);
       return NextResponse.json({ success: true });
     }
 

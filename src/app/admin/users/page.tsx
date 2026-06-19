@@ -1,13 +1,13 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Search, UserCheck, UserX, Edit2, X, Check, BadgeCheck, PauseCircle, Rocket } from "lucide-react";
+import { Search, UserCheck, UserX, Edit2, X, Check, BadgeCheck, PauseCircle, Rocket, Shield } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import toast from "react-hot-toast";
 
 interface User {
-  id: string; name: string; email: string; phone?: string;
+  id: string; name: string; email: string; phone?: string; role: string;
   balance: number; totalInvested: number; totalEarnings: number;
   isActive: boolean; isSuspended: boolean; isVerified: boolean; lastActive?: string; createdAt: string;
 }
@@ -68,7 +68,7 @@ export default function AdminUsersPage() {
     setToggling(null);
   };
 
-  const patchUser = async (userId: string, patch: Partial<Pick<User, "isSuspended" | "isVerified">>, label: string) => {
+  const patchUser = async (userId: string, patch: Partial<Pick<User, "isSuspended" | "isVerified" | "role">>, label: string) => {
     const res = await fetch("/api/admin/users", {
       method: "PATCH", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userId, ...patch }),
@@ -113,7 +113,7 @@ export default function AdminUsersPage() {
             <div key={u.id} className="bg-[#0c1428] rounded-2xl border border-white/8 p-4">
               <div className="flex items-start justify-between mb-2">
                 <div>
-                  <p className="text-sm text-white font-semibold">{u.name}</p>
+                  <p className="text-sm text-white font-semibold flex items-center gap-1.5">{u.name}{u.role !== "USER" && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-purple-400/15 text-purple-300">{u.role === "SUPER_ADMIN" ? "SUPER" : "ADMIN"}</span>}</p>
                   <p className="text-xs text-white/40">{u.email}</p>
                 </div>
                 <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${u.isSuspended || !u.isActive ? "text-red-400 bg-red-400/10" : "text-emerald-400 bg-emerald-400/10"}`}>
@@ -130,6 +130,11 @@ export default function AdminUsersPage() {
                     className="w-8 h-8 rounded-xl bg-blue-400/10 flex items-center justify-center text-blue-400 hover:bg-blue-400/20"><Edit2 size={13} /></button>
                   <button onClick={() => { setActivateUser(u); setSelectedPassId(""); }} title="Activer un pass"
                     className="w-8 h-8 rounded-xl bg-[#e23744]/10 flex items-center justify-center text-[#e23744] hover:bg-[#e23744]/20"><Rocket size={13} /></button>
+                  {u.role !== "SUPER_ADMIN" && (
+                    <button onClick={() => patchUser(u.id, { role: u.role === "ADMIN" ? "USER" : "ADMIN" }, u.role === "ADMIN" ? "Admin retire" : "Promu admin")}
+                      title={u.role === "ADMIN" ? "Retirer admin" : "Rendre admin"}
+                      className={`w-8 h-8 rounded-xl flex items-center justify-center hover:bg-purple-400/25 ${u.role === "ADMIN" ? "bg-purple-400/20 text-purple-300" : "bg-purple-400/10 text-purple-400"}`}><Shield size={13} /></button>
+                  )}
                   <button onClick={() => patchUser(u.id, { isVerified: !u.isVerified }, u.isVerified ? "Badge retire" : "Compte verifie")}
                     className="w-8 h-8 rounded-xl bg-emerald-400/10 flex items-center justify-center text-emerald-400 hover:bg-emerald-400/20"><BadgeCheck size={13} /></button>
                   <button onClick={() => patchUser(u.id, { isSuspended: !u.isSuspended }, u.isSuspended ? "Compte reactive" : "Compte suspendu")}
@@ -156,7 +161,7 @@ export default function AdminUsersPage() {
             <tbody className="divide-y divide-white/5">
               {users.map((u) => (
                 <tr key={u.id} className="hover:bg-white/2">
-                  <td className="px-4 py-2.5"><p className="text-sm text-white font-medium flex items-center gap-1.5">{u.name}{u.isVerified && <BadgeCheck size={13} className="text-emerald-400" />}</p><p className="text-xs text-white/40">{u.email}</p></td>
+                  <td className="px-4 py-2.5"><p className="text-sm text-white font-medium flex items-center gap-1.5">{u.name}{u.isVerified && <BadgeCheck size={13} className="text-emerald-400" />}{u.role !== "USER" && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-purple-400/15 text-purple-300">{u.role === "SUPER_ADMIN" ? "SUPER" : "ADMIN"}</span>}</p><p className="text-xs text-white/40">{u.email}</p></td>
                   <td className="px-4 py-2.5 text-sm text-emerald-400 font-semibold">{formatCurrency(u.balance)}</td>
                   <td className="px-4 py-2.5 text-sm text-white/60">{formatCurrency(u.totalInvested)}</td>
                   <td className="px-4 py-2.5 text-xs text-white/30">{u.lastActive ? formatDate(u.lastActive) : formatDate(u.createdAt)}</td>
@@ -171,6 +176,11 @@ export default function AdminUsersPage() {
                         className="w-7 h-7 rounded-lg bg-blue-400/10 flex items-center justify-center text-blue-400 hover:bg-blue-400/20"><Edit2 size={12} /></button>
                       <button onClick={() => { setActivateUser(u); setSelectedPassId(""); }} title="Activer un pass"
                         className="w-7 h-7 rounded-lg bg-[#e23744]/10 flex items-center justify-center text-[#e23744] hover:bg-[#e23744]/20"><Rocket size={12} /></button>
+                      {u.role !== "SUPER_ADMIN" && (
+                        <button onClick={() => patchUser(u.id, { role: u.role === "ADMIN" ? "USER" : "ADMIN" }, u.role === "ADMIN" ? "Admin retire" : "Promu admin")}
+                          title={u.role === "ADMIN" ? "Retirer admin" : "Rendre admin"}
+                          className={`w-7 h-7 rounded-lg flex items-center justify-center hover:bg-purple-400/25 ${u.role === "ADMIN" ? "bg-purple-400/20 text-purple-300" : "bg-purple-400/10 text-purple-400"}`}><Shield size={12} /></button>
+                      )}
                       <button onClick={() => patchUser(u.id, { isVerified: !u.isVerified }, u.isVerified ? "Badge retire" : "Compte verifie")}
                         className="w-7 h-7 rounded-lg bg-emerald-400/10 flex items-center justify-center text-emerald-400 hover:bg-emerald-400/20"><BadgeCheck size={12} /></button>
                       <button onClick={() => patchUser(u.id, { isSuspended: !u.isSuspended }, u.isSuspended ? "Compte reactive" : "Compte suspendu")}
