@@ -24,7 +24,7 @@ export async function GET() {
       }),
     ]);
 
-    const referralLink = `${process.env.NEXT_PUBLIC_URL || "https://aurevia-invest.com"}/register?ref=${user.referralCode}`;
+    const referralLink = `${process.env.NEXT_PUBLIC_URL || "https://aurevia-invest.online"}/register?ref=${user.referralCode}`;
 
     return NextResponse.json({
       referralCode: user.referralCode,

@@ -11,7 +11,7 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_URL || "https://aurevia-invest.vercel.app";
+const siteUrl = process.env.NEXT_PUBLIC_URL || "https://aurevia-invest.online";
 const siteName = "Aurevia Invest";
 const siteTagline = "Investissez en Afrique, récoltez chaque jour";
 const description =
