@@ -19,6 +19,16 @@ const description =
 const ogDescription =
   "Investissez en Afrique et gagnez chaque jour. Revenus quotidiens en FCFA, retrait Mobile Money, programme de parrainage. Rejoignez Aurevia Invest maintenant !";
 const logoUrl = "/photo_2026-05-25_14-14-19.jpg";
+// Static OG card (1080x720, ~68KB JPEG) — reliably rendered by WhatsApp,
+// Facebook, Telegram, X/Twitter and LinkedIn crawlers, unlike a dynamically
+// generated edge image which they frequently fail to fetch in time.
+const ogImage = {
+  url: "/og-image.jpg",
+  width: 1080,
+  height: 720,
+  alt: `${siteName} — ${siteTagline}`,
+  type: "image/jpeg",
+} as const;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -72,13 +82,13 @@ export const metadata: Metadata = {
     siteName,
     title: `${siteName} — Make Money & Dream Big`,
     description: ogDescription,
-    // og:image is provided by the generated app/opengraph-image.tsx card.
+    images: [ogImage],
   },
   twitter: {
     card: "summary_large_image",
     title: `${siteName} — Make Money & Dream Big`,
     description: ogDescription,
-    // twitter image falls back to the generated opengraph-image card.
+    images: [ogImage.url],
   },
   robots: {
     index: true,
