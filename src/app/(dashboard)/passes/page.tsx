@@ -18,9 +18,9 @@ const iconMap: Record<string, React.ReactNode> = {
 };
 
 const colorMap: Record<string, { bg: string; border: string; glow: string }> = {
-  "#3b6fd4": { bg: "from-[#3b6fd4] to-[#2d5bcc]", border: "border-[#3b6fd4]/30", glow: "shadow-[0_0_20px_rgba(226,55,68,0.2)]" },
+  "#3b6fd4": { bg: "from-[#3b6fd4] to-[#2d5bcc]", border: "border-[#3b6fd4]/30", glow: "shadow-[0_0_20px_rgba(59,111,212,0.2)]" },
   "#b87333": { bg: "from-[#b87333] to-[#a0621e]", border: "border-[#b87333]/30", glow: "shadow-[0_0_20px_rgba(184,115,51,0.2)]" },
-  "#2d5bcc": { bg: "from-[#2d5bcc] to-[#8a1420]", border: "border-[#2d5bcc]/30", glow: "shadow-[0_0_20px_rgba(181,29,44,0.2)]" },
+  "#2d5bcc": { bg: "from-[#2d5bcc] to-[#1e3a8a]", border: "border-[#2d5bcc]/30", glow: "shadow-[0_0_20px_rgba(45,91,204,0.2)]" },
   "#e6874d": { bg: "from-[#e6874d] to-[#d4703a]", border: "border-[#e6874d]/30", glow: "shadow-[0_0_20px_rgba(230,135,77,0.2)]" },
   "#e6d44d": { bg: "from-[#e6d44d] to-[#d4c13a]", border: "border-[#e6d44d]/30", glow: "shadow-[0_0_20px_rgba(230,212,77,0.2)]" },
   "#e6404d": { bg: "from-[#e6404d] to-[#cc2030]", border: "border-[#e6404d]/30", glow: "shadow-[0_0_20px_rgba(230,64,77,0.25)]" },

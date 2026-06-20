@@ -47,7 +47,7 @@ export default function AboutPage() {
       {/* Hero */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
         <div className="relative rounded-3xl overflow-hidden p-7"
-          style={{ background: "linear-gradient(145deg, #3b6fd4 0%, #2d5bcc 58%, #8a1420 100%)", color: "#fff", boxShadow: "0 18px 40px rgba(226,55,68,0.35)" }}>
+          style={{ background: "linear-gradient(145deg, #3b6fd4 0%, #2d5bcc 58%, #1e3a8a 100%)", color: "#fff", boxShadow: "0 18px 40px rgba(59,111,212,0.35)" }}>
           <div className="absolute -top-12 -right-10 w-44 h-44 rounded-full pointer-events-none" style={{ background: "rgba(255,255,255,0.14)", filter: "blur(40px)" }} />
           <div className="flex items-center gap-3 mb-4">
             <img src="/photo_2026-05-25_14-14-19.jpg" alt="Aurevia" className="w-14 h-14 rounded-2xl object-cover border border-white/20" />

@@ -79,7 +79,7 @@ export default function LandingClient() {
         </div>
 
         <motion.div initial="hidden" animate="show" custom={0} variants={fade} className="relative">
-          <div className="w-36 h-36 rounded-3xl mx-auto mb-6 shadow-[0_0_80px_rgba(226,55,68,0.4)] overflow-hidden border-2 border-white/10">
+          <div className="w-36 h-36 rounded-3xl mx-auto mb-6 shadow-[0_0_80px_rgba(59,111,212,0.4)] overflow-hidden border-2 border-white/10">
             <img src="/photo_2026-05-25_14-14-19.jpg" alt="Aurevia Invest" className="w-full h-full object-cover" />
           </div>
         </motion.div>

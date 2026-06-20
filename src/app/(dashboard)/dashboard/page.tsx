@@ -83,7 +83,7 @@ export default function DashboardPage() {
       {/* Balance Hero Card — indigo, image-style (theme-proof colors via inline styles) */}
       <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4, delay: 0.05 }}>
         <div className="relative rounded-3xl overflow-hidden p-6"
-          style={{ background: "linear-gradient(145deg, #3b6fd4 0%, #2d5bcc 58%, #8a1420 100%)", color: "#fff", boxShadow: "0 18px 40px rgba(226,55,68,0.35)" }}>
+          style={{ background: "linear-gradient(145deg, #3b6fd4 0%, #2d5bcc 58%, #1e3a8a 100%)", color: "#fff", boxShadow: "0 18px 40px rgba(59,111,212,0.35)" }}>
           {/* Soft ambient glows */}
           <div className="absolute -top-12 -right-10 w-44 h-44 rounded-full pointer-events-none" style={{ background: "rgba(255,255,255,0.14)", filter: "blur(40px)" }} />
           <div className="absolute -bottom-16 -left-8 w-44 h-44 rounded-full pointer-events-none" style={{ background: "rgba(255,255,255,0.10)", filter: "blur(40px)" }} />
@@ -184,7 +184,7 @@ export default function DashboardPage() {
         <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4, delay: 0.18 }}>
           <Link href="/verification">
             <div className="relative overflow-hidden rounded-2xl p-4 flex items-center gap-3 card-lift"
-              style={{ background: "linear-gradient(135deg, rgba(226,55,68,0.18), rgba(181,29,44,0.12))", border: "1px solid rgba(226,55,68,0.25)" }}>
+              style={{ background: "linear-gradient(135deg, rgba(59,111,212,0.18), rgba(45,91,204,0.12))", border: "1px solid rgba(59,111,212,0.25)" }}>
               <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#3b6fd4] to-[#2d5bcc] flex items-center justify-center text-white flex-shrink-0">
                 <BadgeCheck size={20} />
               </div>
