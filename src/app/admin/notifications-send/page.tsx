@@ -23,17 +23,17 @@ export default function AdminNotificationsPage() {
   return (
     <div className="p-6 max-w-xl">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-9 h-9 bg-[#e23744]/20 rounded-xl flex items-center justify-center"><Bell size={18} className="text-[#e23744]" /></div>
+        <div className="w-9 h-9 bg-[#3b6fd4]/20 rounded-xl flex items-center justify-center"><Bell size={18} className="text-[#3b6fd4]" /></div>
         <div><h1 className="font-display font-bold text-white text-lg">Notifications</h1><p className="text-white/40 text-xs">Envoyer des notifications</p></div>
       </div>
 
       <div className="bg-[#0c1428] border border-white/10 rounded-2xl p-5 space-y-5">
         {/* Mode toggle */}
         <div className="flex rounded-xl overflow-hidden border border-white/10">
-          <button onClick={() => setMode("global")} className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-semibold transition-all ${mode === "global" ? "bg-[#e23744] text-white" : "text-white/40 hover:text-white"}`}>
+          <button onClick={() => setMode("global")} className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-semibold transition-all ${mode === "global" ? "bg-[#3b6fd4] text-white" : "text-white/40 hover:text-white"}`}>
             <Globe size={15} /> Global
           </button>
-          <button onClick={() => setMode("targeted")} className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-semibold transition-all ${mode === "targeted" ? "bg-[#e23744] text-white" : "text-white/40 hover:text-white"}`}>
+          <button onClick={() => setMode("targeted")} className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-semibold transition-all ${mode === "targeted" ? "bg-[#3b6fd4] text-white" : "text-white/40 hover:text-white"}`}>
             <User size={15} /> Ciblé
           </button>
         </div>
@@ -42,19 +42,19 @@ export default function AdminNotificationsPage() {
           <div>
             <label className="text-xs text-white/40 mb-1 block">ID Utilisateur</label>
             <input value={form.targetUserId} onChange={e => set("targetUserId", e.target.value)} placeholder="cuid de l'utilisateur"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm outline-none focus:border-[#e23744]/50" />
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm outline-none focus:border-[#3b6fd4]/50" />
           </div>
         )}
 
         <div>
           <label className="text-xs text-white/40 mb-1 block">Titre</label>
           <input value={form.title} onChange={e => set("title", e.target.value)} placeholder="Titre de la notification"
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm outline-none focus:border-[#e23744]/50" />
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm outline-none focus:border-[#3b6fd4]/50" />
         </div>
         <div>
           <label className="text-xs text-white/40 mb-1 block">Message</label>
           <textarea value={form.message} onChange={e => set("message", e.target.value)} rows={3} placeholder="Contenu du message"
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm outline-none focus:border-[#e23744]/50 resize-none" />
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm outline-none focus:border-[#3b6fd4]/50 resize-none" />
         </div>
         <div>
           <label className="text-xs text-white/40 mb-1 block">Type</label>
@@ -62,7 +62,7 @@ export default function AdminNotificationsPage() {
             <option value="info">Info</option><option value="success">Succès</option><option value="warning">Avertissement</option><option value="error">Erreur</option>
           </select>
         </div>
-        <button onClick={send} disabled={sending} className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-[#e23744] to-[#b51d2c] text-white font-semibold py-3 rounded-xl hover:opacity-90 disabled:opacity-50 transition-all">
+        <button onClick={send} disabled={sending} className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-[#3b6fd4] to-[#2d5bcc] text-white font-semibold py-3 rounded-xl hover:opacity-90 disabled:opacity-50 transition-all">
           <Send size={16} /> {sending ? "Envoi..." : (mode === "global" ? "Envoyer à tous" : "Envoyer")}
         </button>
       </div>

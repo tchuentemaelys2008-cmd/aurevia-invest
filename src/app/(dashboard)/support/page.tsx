@@ -49,7 +49,7 @@ export default function SupportPage() {
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
         <p className="text-white/40 text-xs mb-0.5">{fr ? "Aide & assistance" : "Help & support"}</p>
         <h1 className="text-2xl font-display font-bold text-white flex items-center gap-2">
-          <LifeBuoy size={22} className="text-[#e23744]" /> {fr ? "Support" : "Support"}
+          <LifeBuoy size={22} className="text-[#3b6fd4]" /> {fr ? "Support" : "Support"}
         </h1>
         <p className="text-sm text-white/50 mt-1">
           {fr
@@ -89,7 +89,7 @@ export default function SupportPage() {
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#e23744]/50"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#3b6fd4]/50"
               >
                 {categories.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
@@ -113,7 +113,7 @@ export default function SupportPage() {
                 rows={6}
                 maxLength={2000}
                 placeholder={fr ? "Décrivez votre problème ou votre question en détail…" : "Describe your issue or question in detail…"}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#e23744]/50 resize-none"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#3b6fd4]/50 resize-none"
               />
               <p className="text-[11px] text-white/30 mt-1 text-right">{message.length}/2000</p>
             </div>

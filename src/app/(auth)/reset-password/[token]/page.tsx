@@ -64,7 +64,7 @@ export default function ResetPasswordPage() {
             </div>
             <h2 className="text-lg font-display font-bold text-white mb-2">Mot de passe mis Ã  jour !</h2>
             <p className="text-white/50 text-sm mb-6">Vous allez Ãªtre redirigÃ© vers la connexionâ€¦</p>
-            <Link href="/login" className="flex items-center justify-center gap-2 text-sm text-[#e23744] hover:text-blue-300 transition-colors">
+            <Link href="/login" className="flex items-center justify-center gap-2 text-sm text-[#3b6fd4] hover:text-blue-300 transition-colors">
               <ArrowLeft size={14} /> Se connecter maintenant
             </Link>
           </div>
@@ -109,7 +109,7 @@ export default function ResetPasswordPage() {
       </div>
 
       <p className="text-center text-white/40 text-sm mt-5">
-        <Link href="/login" className="flex items-center justify-center gap-1.5 text-[#e23744] hover:text-blue-300 transition-colors">
+        <Link href="/login" className="flex items-center justify-center gap-1.5 text-[#3b6fd4] hover:text-blue-300 transition-colors">
           <ArrowLeft size={14} /> Retour Ã  la connexion
         </Link>
       </p>

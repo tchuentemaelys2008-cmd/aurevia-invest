@@ -83,7 +83,7 @@ export default function DashboardPage() {
       {/* Balance Hero Card — indigo, image-style (theme-proof colors via inline styles) */}
       <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4, delay: 0.05 }}>
         <div className="relative rounded-3xl overflow-hidden p-6"
-          style={{ background: "linear-gradient(145deg, #e23744 0%, #b51d2c 58%, #8a1420 100%)", color: "#fff", boxShadow: "0 18px 40px rgba(226,55,68,0.35)" }}>
+          style={{ background: "linear-gradient(145deg, #3b6fd4 0%, #2d5bcc 58%, #8a1420 100%)", color: "#fff", boxShadow: "0 18px 40px rgba(226,55,68,0.35)" }}>
           {/* Soft ambient glows */}
           <div className="absolute -top-12 -right-10 w-44 h-44 rounded-full pointer-events-none" style={{ background: "rgba(255,255,255,0.14)", filter: "blur(40px)" }} />
           <div className="absolute -bottom-16 -left-8 w-44 h-44 rounded-full pointer-events-none" style={{ background: "rgba(255,255,255,0.10)", filter: "blur(40px)" }} />
@@ -144,7 +144,7 @@ export default function DashboardPage() {
           {/* Action buttons inside the card */}
           <div className="relative grid grid-cols-2 gap-3">
             <Link href="/deposit">
-              <button className="w-full flex items-center justify-center gap-2 rounded-2xl py-3 text-sm font-semibold press" style={{ background: "#fff", color: "#e23744" }}>
+              <button className="w-full flex items-center justify-center gap-2 rounded-2xl py-3 text-sm font-semibold press" style={{ background: "#fff", color: "#3b6fd4" }}>
                 <ArrowDownRight size={16} /> {t("dash_deposit")}
               </button>
             </Link>
@@ -168,8 +168,8 @@ export default function DashboardPage() {
             { href: "/history", label: lang === "fr" ? "Historique" : "History", icon: History },
           ].map((a) => (
             <Link key={a.href} href={a.href}>
-              <div className="flex flex-col items-center gap-2 rounded-2xl py-4 px-1.5 press card-lift bg-[#e23744]/10 border border-[#e23744]/15">
-                <div className="w-11 h-11 rounded-xl bg-[#e23744]/15 flex items-center justify-center text-[#e23744] flex-shrink-0">
+              <div className="flex flex-col items-center gap-2 rounded-2xl py-4 px-1.5 press card-lift bg-[#3b6fd4]/10 border border-[#3b6fd4]/15">
+                <div className="w-11 h-11 rounded-xl bg-[#3b6fd4]/15 flex items-center justify-center text-[#3b6fd4] flex-shrink-0">
                   <a.icon size={20} />
                 </div>
                 <span className="text-xs font-semibold text-white text-center leading-tight">{a.label}</span>
@@ -185,7 +185,7 @@ export default function DashboardPage() {
           <Link href="/verification">
             <div className="relative overflow-hidden rounded-2xl p-4 flex items-center gap-3 card-lift"
               style={{ background: "linear-gradient(135deg, rgba(226,55,68,0.18), rgba(181,29,44,0.12))", border: "1px solid rgba(226,55,68,0.25)" }}>
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#e23744] to-[#b51d2c] flex items-center justify-center text-white flex-shrink-0">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#3b6fd4] to-[#2d5bcc] flex items-center justify-center text-white flex-shrink-0">
                 <BadgeCheck size={20} />
               </div>
               <div className="flex-1 min-w-0">
@@ -194,7 +194,7 @@ export default function DashboardPage() {
                   {lang === "fr" ? "Retraits + rapides · +5% parrainage · +10% gains · 1000 FCFA" : "Faster withdrawals · +5% referral · +10% earnings · 1000 FCFA"}
                 </p>
               </div>
-              <span className="text-[#e23744] flex-shrink-0">›</span>
+              <span className="text-[#3b6fd4] flex-shrink-0">›</span>
             </div>
           </Link>
         </motion.div>
@@ -215,7 +215,7 @@ export default function DashboardPage() {
             <span>{lang === "fr" ? "Niveau" : "Level"} {user.level}</span>
           </div>
           <div className="h-2 rounded-full bg-white/8 overflow-hidden">
-            <div className="h-full rounded-full bg-gradient-to-r from-[#e23744] to-emerald-400" style={{ width: `${xpProgress}%` }} />
+            <div className="h-full rounded-full bg-gradient-to-r from-[#3b6fd4] to-emerald-400" style={{ width: `${xpProgress}%` }} />
           </div>
           <p className="mt-2 text-xs text-white/35">{xpProgress}% XP</p>
           {user.level >= 3 && (
@@ -226,7 +226,7 @@ export default function DashboardPage() {
                 </span>
               )}
               {user.level >= 5 && (
-                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#b51d2c]/10 text-[#b51d2c] border border-[#b51d2c]/20 flex items-center gap-0.5">
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#2d5bcc]/10 text-[#2d5bcc] border border-[#2d5bcc]/20 flex items-center gap-0.5">
                   <Bot size={8} /> IA Advisor
                 </span>
               )}
@@ -271,7 +271,7 @@ export default function DashboardPage() {
       <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4, delay: 0.25 }}>
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-display font-bold text-white">{t("dash_my_passes")}</h2>
-          <Link href="/passes" className="text-xs text-[#e23744] hover:text-blue-300 transition-colors">{t("dash_see_all")}</Link>
+          <Link href="/passes" className="text-xs text-[#3b6fd4] hover:text-blue-300 transition-colors">{t("dash_see_all")}</Link>
         </div>
         {activePasses.length === 0 ? (
           <Card className="text-center py-8">
@@ -287,7 +287,7 @@ export default function DashboardPage() {
           <div className="space-y-2">
             {activePasses.map((up) => (
               <Card key={up.id} className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#e23744] to-[#b51d2c] flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#3b6fd4] to-[#2d5bcc] flex items-center justify-center flex-shrink-0">
                   <ShoppingBag size={16} className="text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -312,7 +312,7 @@ export default function DashboardPage() {
       <motion.div variants={fade} initial="hidden" animate="show" transition={{ duration: 0.4, delay: 0.3 }}>
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-display font-bold text-white">{t("dash_activity")}</h2>
-          <Link href="/wallet" className="text-xs text-[#e23744] hover:text-blue-300 transition-colors">{t("dash_see_all")}</Link>
+          <Link href="/wallet" className="text-xs text-[#3b6fd4] hover:text-blue-300 transition-colors">{t("dash_see_all")}</Link>
         </div>
         <Card className="divide-y divide-white/5">
           {recentTransactions.length === 0 ? (

@@ -18,7 +18,7 @@ const stats = [
 
 const features = [
   {
-    icon: <ShoppingBag size={20} className="text-[#e23744]" />,
+    icon: <ShoppingBag size={20} className="text-[#3b6fd4]" />,
     title_fr: "Achète un Pass", title_en: "Buy a Pass",
     desc_fr: "Investis à partir de 2 000 FCFA et génère un revenu journalier pendant 90 jours.",
     desc_en: "Invest from 2,000 FCFA and earn daily revenue for 90 days.",
@@ -36,7 +36,7 @@ const features = [
     desc_en: "Withdraw via Orange Money, MTN, Wave or bank transfer. Available across Africa.",
   },
   {
-    icon: <Users size={20} className="text-[#b51d2c]" />,
+    icon: <Users size={20} className="text-[#2d5bcc]" />,
     title_fr: "Parrainage 5%", title_en: "5% Referral",
     desc_fr: "Partage ton lien. Tu gagnes 5% sur chaque investissement de tes filleuls.",
     desc_en: "Share your link. Earn 5% on every investment by your referrals.",
@@ -74,8 +74,8 @@ export default function LandingClient() {
       <section className="flex-1 flex flex-col items-center justify-center pt-24 pb-16 px-4 text-center relative overflow-hidden">
         {/* BG gradient blobs */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-[#e23744]/8 blur-[120px]" />
-          <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-full bg-[#b51d2c]/6 blur-[100px]" />
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-[#3b6fd4]/8 blur-[120px]" />
+          <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-full bg-[#2d5bcc]/6 blur-[100px]" />
         </div>
 
         <motion.div initial="hidden" animate="show" custom={0} variants={fade} className="relative">
@@ -85,7 +85,7 @@ export default function LandingClient() {
         </motion.div>
 
         <motion.div initial="hidden" animate="show" custom={1} variants={fade}>
-          <div className="inline-flex items-center gap-2 bg-[#e23744]/10 border border-[#e23744]/20 text-[#e23744] text-xs font-semibold px-3 py-1.5 rounded-full mb-4">
+          <div className="inline-flex items-center gap-2 bg-[#3b6fd4]/10 border border-[#3b6fd4]/20 text-[#3b6fd4] text-xs font-semibold px-3 py-1.5 rounded-full mb-4">
             <Star size={11} fill="currentColor" />
             {lang === "fr" ? "Plateforme d'investissement africaine #1" : "Africa's #1 Investment Platform"}
           </div>
@@ -96,7 +96,7 @@ export default function LandingClient() {
           style={{ color: "var(--control-text)" }}>
           {lang === "fr" ? "Investis, Gagne," : "Invest, Earn,"}
           <br />
-          <span className="bg-gradient-to-r from-[#e23744] to-[#b51d2c] bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-[#3b6fd4] to-[#2d5bcc] bg-clip-text text-transparent">
             {lang === "fr" ? "Réalise tes rêves" : "Dream Big"}
           </span>
         </motion.h1>
@@ -110,7 +110,7 @@ export default function LandingClient() {
         </motion.p>
 
         <motion.div initial="hidden" animate="show" custom={4} variants={fade} className="flex flex-col sm:flex-row gap-3 w-full max-w-xs sm:max-w-sm">
-          <Link href="/register" className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-[#e23744] to-[#b51d2c] text-white font-semibold py-3.5 px-6 rounded-2xl hover:opacity-90 transition-all touch-manipulation shadow-lg shadow-[#e23744]/25">
+          <Link href="/register" className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-[#3b6fd4] to-[#2d5bcc] text-white font-semibold py-3.5 px-6 rounded-2xl hover:opacity-90 transition-all touch-manipulation shadow-lg shadow-[#3b6fd4]/25">
             {lang === "fr" ? "S'inscrire" : "Sign up"} <ArrowRight size={16} />
           </Link>
           <Link href="/login" className="flex-1 flex items-center justify-center gap-2 font-semibold py-3.5 px-6 rounded-2xl transition-all touch-manipulation"
@@ -127,7 +127,7 @@ export default function LandingClient() {
           {stats.map((s, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
               className="text-center p-4 rounded-2xl" style={{ background: "var(--surface-card)", border: "1px solid var(--control-border)" }}>
-              <p className="text-xl font-display font-bold text-[#e23744]">{s.value}</p>
+              <p className="text-xl font-display font-bold text-[#3b6fd4]">{s.value}</p>
               <p className="text-xs mt-1" style={{ color: "var(--control-text)", opacity: 0.5 }}>{lang === "fr" ? s.label_fr : s.label_en}</p>
             </motion.div>
           ))}
@@ -160,7 +160,7 @@ export default function LandingClient() {
       {/* CTA bottom */}
       <section className="px-4 pb-12 max-w-sm mx-auto w-full text-center">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          <Link href="/register" className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-[#e23744] to-[#b51d2c] text-white font-semibold py-4 px-6 rounded-2xl hover:opacity-90 transition-all touch-manipulation shadow-lg shadow-[#e23744]/25">
+          <Link href="/register" className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-[#3b6fd4] to-[#2d5bcc] text-white font-semibold py-4 px-6 rounded-2xl hover:opacity-90 transition-all touch-manipulation shadow-lg shadow-[#3b6fd4]/25">
             <Zap size={16} />
             {lang === "fr" ? "Commencer maintenant" : "Start now"}
             <ChevronRight size={16} />

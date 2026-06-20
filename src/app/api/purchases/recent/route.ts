@@ -36,7 +36,7 @@ const displayNames = [
 
 const passPool = ["Aurevia Gold", "Aurevia Silver", "Aurevia VIP", "Aurevia Boost", "Aurevia Platinum", "Aurevia Bronze", "Aurevia Plus", "Aurevia Starter"];
 const amountPool = [4000, 5000, 8000, 10000, 15000, 25000, 50000, 75000, 100000];
-const colorPool = ["#e23744", "#b51d2c", "#e6874d", "#e6d44d", "#e6404d", "#b87333"];
+const colorPool = ["#3b6fd4", "#2d5bcc", "#e6874d", "#e6d44d", "#e6404d", "#b87333"];
 
 export async function GET() {
   // Show every name in the list above, in a random order, each with a random

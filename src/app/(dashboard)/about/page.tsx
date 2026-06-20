@@ -47,7 +47,7 @@ export default function AboutPage() {
       {/* Hero */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
         <div className="relative rounded-3xl overflow-hidden p-7"
-          style={{ background: "linear-gradient(145deg, #e23744 0%, #b51d2c 58%, #8a1420 100%)", color: "#fff", boxShadow: "0 18px 40px rgba(226,55,68,0.35)" }}>
+          style={{ background: "linear-gradient(145deg, #3b6fd4 0%, #2d5bcc 58%, #8a1420 100%)", color: "#fff", boxShadow: "0 18px 40px rgba(226,55,68,0.35)" }}>
           <div className="absolute -top-12 -right-10 w-44 h-44 rounded-full pointer-events-none" style={{ background: "rgba(255,255,255,0.14)", filter: "blur(40px)" }} />
           <div className="flex items-center gap-3 mb-4">
             <img src="/photo_2026-05-25_14-14-19.jpg" alt="Aurevia" className="w-14 h-14 rounded-2xl object-cover border border-white/20" />
@@ -69,7 +69,7 @@ export default function AboutPage() {
         className="grid sm:grid-cols-2 gap-3">
         {values.map((v) => (
           <Card key={v.title} className="space-y-2">
-            <div className="w-10 h-10 rounded-xl bg-[#e23744]/15 flex items-center justify-center text-[#e23744]">
+            <div className="w-10 h-10 rounded-xl bg-[#3b6fd4]/15 flex items-center justify-center text-[#3b6fd4]">
               <v.icon size={20} />
             </div>
             <p className="font-display font-bold text-white">{v.title}</p>
@@ -82,7 +82,7 @@ export default function AboutPage() {
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
         <Card className="space-y-3">
           <div className="flex items-center gap-2 text-white">
-            <HeartHandshake size={18} className="text-[#e23744]" />
+            <HeartHandshake size={18} className="text-[#3b6fd4]" />
             <h2 className="font-display font-bold">{fr ? "Notre mission" : "Our mission"}</h2>
           </div>
           <p className="text-sm text-white/60 leading-relaxed">
@@ -96,7 +96,7 @@ export default function AboutPage() {
               { icon: Lock, label: fr ? "Paiements sécurisés" : "Secure payments" },
             ].map((b) => (
               <span key={b.label} className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-3 py-1.5 bg-white/5 text-white/70 border border-white/10">
-                <b.icon size={13} className="text-[#e23744]" /> {b.label}
+                <b.icon size={13} className="text-[#3b6fd4]" /> {b.label}
               </span>
             ))}
           </div>

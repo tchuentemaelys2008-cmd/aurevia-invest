@@ -54,7 +54,7 @@ export default function DepositPage() {
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
         <p className="text-white/40 text-xs mb-0.5">{fr ? "Recharger" : "Top up"}</p>
         <h1 className="text-2xl font-display font-bold text-white flex items-center gap-2">
-          <Wallet size={22} className="text-[#e23744]" /> {fr ? "Dépôt" : "Deposit"}
+          <Wallet size={22} className="text-[#3b6fd4]" /> {fr ? "Dépôt" : "Deposit"}
         </h1>
         <p className="text-sm text-white/50 mt-1">
           {fr ? "Ajoutez de l'argent à votre solde pour acheter vos pass en un clic." : "Add money to your balance to buy passes in one click."}
@@ -71,12 +71,12 @@ export default function DepositPage() {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="5000"
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-2xl font-display font-bold text-white placeholder:text-white/25 focus:outline-none focus:border-[#e23744]/50"
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-2xl font-display font-bold text-white placeholder:text-white/25 focus:outline-none focus:border-[#3b6fd4]/50"
           />
           <div className="flex flex-wrap gap-2">
             {QUICK.map((q) => (
               <button key={q} onClick={() => setAmount(String(q))}
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${amt === q ? "bg-[#e23744] text-white border-[#e23744]" : "bg-white/5 text-white/60 border-white/10 hover:border-[#e23744]/40"}`}>
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${amt === q ? "bg-[#3b6fd4] text-white border-[#3b6fd4]" : "bg-white/5 text-white/60 border-white/10 hover:border-[#3b6fd4]/40"}`}>
                 +{formatCurrency(q)}
               </button>
             ))}
@@ -90,16 +90,16 @@ export default function DepositPage() {
         <div className="space-y-2">
           {REGIONS.map((r) => (
             <button key={r.code} onClick={() => setRegion(r)}
-              className={`w-full flex items-center gap-3 p-3.5 rounded-xl border transition-all text-left ${region?.code === r.code ? "border-[#e23744]/50 bg-[#e23744]/10" : "border-white/8 bg-white/4 hover:bg-white/7"}`}>
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#e23744] to-[#b51d2c] flex items-center justify-center text-white flex-shrink-0">
+              className={`w-full flex items-center gap-3 p-3.5 rounded-xl border transition-all text-left ${region?.code === r.code ? "border-[#3b6fd4]/50 bg-[#3b6fd4]/10" : "border-white/8 bg-white/4 hover:bg-white/7"}`}>
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#3b6fd4] to-[#2d5bcc] flex items-center justify-center text-white flex-shrink-0">
                 <r.icon size={18} />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm text-white font-semibold">{fr ? r.name : r.nameEn}</p>
                 <p className="text-xs text-white/45 truncate">{fr ? r.descFr : r.descEn}</p>
               </div>
-              <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${region?.code === r.code ? "border-[#e23744]" : "border-white/20"}`}>
-                {region?.code === r.code && <div className="w-2 h-2 bg-[#e23744] rounded-full" />}
+              <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${region?.code === r.code ? "border-[#3b6fd4]" : "border-white/20"}`}>
+                {region?.code === r.code && <div className="w-2 h-2 bg-[#3b6fd4] rounded-full" />}
               </div>
             </button>
           ))}
