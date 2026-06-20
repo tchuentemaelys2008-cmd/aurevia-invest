@@ -22,6 +22,17 @@ const PERIOD_OPTIONS = [
   { value: "weekly", label: "Weekly" },
 ];
 
+// Field doit être défini HORS du composant, sinon il est recréé à chaque
+// frappe et l'input perd le focus (saisie "lettre par lettre").
+const Field = ({ label, children }: { label: string; children: React.ReactNode }) => (
+  <div>
+    <label className="text-xs font-semibold text-white/40 mb-1.5 block uppercase tracking-wider">{label}</label>
+    {children}
+  </div>
+);
+
+const inputCls = "w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm outline-none focus:border-[#3b6fd4]/60 focus:bg-white/8 transition-colors placeholder:text-white/25";
+
 export default function AdminMissionsPage() {
   const [missions, setMissions] = useState<Mission[]>([]);
   const [form, setForm] = useState(EMPTY);
@@ -52,23 +63,15 @@ export default function AdminMissionsPage() {
 
   const del = async (id: string) => {
     if (!confirm("Delete this mission?")) return;
-    await fetch(`/api/admin/missions/${id}`, { method: "DELETE" });
-    toast.success("Deleted"); load();
+    const res = await fetch(`/api/admin/missions/${id}`, { method: "DELETE" });
+    if (res.ok) { toast.success("Deleted"); load(); }
+    else toast.error("Error deleting mission");
   };
 
   const toggle = async (m: Mission) => {
     await fetch(`/api/admin/missions/${m.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ isActive: !m.isActive }) });
     load();
   };
-
-  const Field = ({ label, children }: { label: string; children: React.ReactNode }) => (
-    <div>
-      <label className="text-xs font-semibold text-white/40 mb-1.5 block uppercase tracking-wider">{label}</label>
-      {children}
-    </div>
-  );
-
-  const inputCls = "w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm outline-none focus:border-[#3b6fd4]/60 focus:bg-white/8 transition-colors placeholder:text-white/25";
 
   return (
     <div className="p-4 lg:p-6">
