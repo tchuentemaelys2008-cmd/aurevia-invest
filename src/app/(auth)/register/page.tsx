@@ -86,12 +86,12 @@ function RegisterForm() {
 
             <label className="flex items-start gap-3 cursor-pointer">
               <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)}
-                className="mt-0.5 w-4 h-4 rounded accent-[#e23744]" />
+                className="mt-0.5 w-4 h-4 rounded accent-[#3b6fd4]" />
               <span className="text-xs text-white/50">
                 {t("auth_terms")}{" "}
-                <Link href="/terms" className="text-[#e23744] hover:underline">{t("auth_terms_link")}</Link>{" "}
+                <Link href="/terms" className="text-[#3b6fd4] hover:underline">{t("auth_terms_link")}</Link>{" "}
                 {t("auth_and")}{" "}
-                <Link href="/privacy" className="text-[#e23744] hover:underline">{t("auth_privacy")}</Link>
+                <Link href="/privacy" className="text-[#3b6fd4] hover:underline">{t("auth_privacy")}</Link>
               </span>
             </label>
 
@@ -105,7 +105,7 @@ function RegisterForm() {
 
         <p className="text-center text-white/40 text-sm mt-5">
           {t("auth_have_account")}{" "}
-          <Link href="/login" className="text-[#e23744] hover:text-blue-300 font-semibold transition-colors">
+          <Link href="/login" className="text-[#3b6fd4] hover:text-blue-300 font-semibold transition-colors">
             {t("auth_login_link")}
           </Link>
         </p>

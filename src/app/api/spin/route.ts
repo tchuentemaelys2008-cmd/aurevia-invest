@@ -6,8 +6,8 @@ import { getAuthUser } from "@/lib/auth";
 import { Prisma } from "@prisma/client";
 
 const DEFAULT_SEGMENTS = [
-  { label: "50 FCFA",   value: 50,   type: "money",      probability: 0.25, color: "#e23744" },
-  { label: "100 FCFA",  value: 100,  type: "money",      probability: 0.20, color: "#b51d2c" },
+  { label: "50 FCFA",   value: 50,   type: "money",      probability: 0.25, color: "#3b6fd4" },
+  { label: "100 FCFA",  value: 100,  type: "money",      probability: 0.20, color: "#2d5bcc" },
   { label: "200 FCFA",  value: 200,  type: "money",      probability: 0.15, color: "#10b981" },
   { label: "500 FCFA",  value: 500,  type: "money",      probability: 0.10, color: "#f59e0b" },
   { label: "1000 FCFA", value: 1000, type: "money",      probability: 0.05, color: "#ef4444" },

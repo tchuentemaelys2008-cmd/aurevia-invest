@@ -56,7 +56,7 @@ export default function ForgotPasswordPage() {
             <p className="text-white/50 text-sm mb-6">
               {email}
             </p>
-            <Link href="/login" className="flex items-center justify-center gap-2 text-sm text-[#e23744] hover:text-blue-300 transition-colors">
+            <Link href="/login" className="flex items-center justify-center gap-2 text-sm text-[#3b6fd4] hover:text-blue-300 transition-colors">
               <ArrowLeft size={14} /> {t("auth_forgot_back")}
             </Link>
           </div>
@@ -76,7 +76,7 @@ export default function ForgotPasswordPage() {
       </div>
 
       <p className="text-center text-white/40 text-sm mt-5">
-        <Link href="/login" className="flex items-center justify-center gap-1.5 text-[#e23744] hover:text-blue-300 transition-colors">
+        <Link href="/login" className="flex items-center justify-center gap-1.5 text-[#3b6fd4] hover:text-blue-300 transition-colors">
           <ArrowLeft size={14} /> {t("auth_forgot_back")}
         </Link>
       </p>

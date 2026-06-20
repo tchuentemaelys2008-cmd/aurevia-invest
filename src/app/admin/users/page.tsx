@@ -103,7 +103,7 @@ export default function AdminUsersPage() {
       <div className="relative mb-4">
         <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30" />
         <input placeholder="Rechercher..." value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-          className="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-white placeholder:text-white/30 text-sm focus:outline-none focus:border-[#e23744]/50" />
+          className="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-white placeholder:text-white/30 text-sm focus:outline-none focus:border-[#3b6fd4]/50" />
       </div>
 
       {/* Mobile cards */}
@@ -129,7 +129,7 @@ export default function AdminUsersPage() {
                   <button onClick={() => { setEditUser(u); setNewBalance(String(u.balance)); }}
                     className="w-8 h-8 rounded-xl bg-blue-400/10 flex items-center justify-center text-blue-400 hover:bg-blue-400/20"><Edit2 size={13} /></button>
                   <button onClick={() => { setActivateUser(u); setSelectedPassId(""); }} title="Activer un pass"
-                    className="w-8 h-8 rounded-xl bg-[#e23744]/10 flex items-center justify-center text-[#e23744] hover:bg-[#e23744]/20"><Rocket size={13} /></button>
+                    className="w-8 h-8 rounded-xl bg-[#3b6fd4]/10 flex items-center justify-center text-[#3b6fd4] hover:bg-[#3b6fd4]/20"><Rocket size={13} /></button>
                   {u.role !== "SUPER_ADMIN" && (
                     <button onClick={() => patchUser(u.id, { role: u.role === "ADMIN" ? "USER" : "ADMIN" }, u.role === "ADMIN" ? "Admin retire" : "Promu admin")}
                       title={u.role === "ADMIN" ? "Retirer admin" : "Rendre admin"}
@@ -175,7 +175,7 @@ export default function AdminUsersPage() {
                       <button onClick={() => { setEditUser(u); setNewBalance(String(u.balance)); }}
                         className="w-7 h-7 rounded-lg bg-blue-400/10 flex items-center justify-center text-blue-400 hover:bg-blue-400/20"><Edit2 size={12} /></button>
                       <button onClick={() => { setActivateUser(u); setSelectedPassId(""); }} title="Activer un pass"
-                        className="w-7 h-7 rounded-lg bg-[#e23744]/10 flex items-center justify-center text-[#e23744] hover:bg-[#e23744]/20"><Rocket size={12} /></button>
+                        className="w-7 h-7 rounded-lg bg-[#3b6fd4]/10 flex items-center justify-center text-[#3b6fd4] hover:bg-[#3b6fd4]/20"><Rocket size={12} /></button>
                       {u.role !== "SUPER_ADMIN" && (
                         <button onClick={() => patchUser(u.id, { role: u.role === "ADMIN" ? "USER" : "ADMIN" }, u.role === "ADMIN" ? "Admin retire" : "Promu admin")}
                           title={u.role === "ADMIN" ? "Retirer admin" : "Rendre admin"}
@@ -218,7 +218,7 @@ export default function AdminUsersPage() {
             <p className="text-xs text-white/30 mb-4">Actuel : <span className="text-emerald-400">{formatCurrency(editUser.balance)}</span></p>
             <label className="text-xs font-medium text-white/60 mb-1.5 block">Nouveau solde (FCFA)</label>
             <input type="number" value={newBalance} onChange={(e) => setNewBalance(e.target.value)} min="0"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#e23744]/50 mb-4" />
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#3b6fd4]/50 mb-4" />
             <div className="flex gap-2">
               <Button variant="secondary" size="sm" className="flex-1" onClick={() => setEditUser(null)}>Annuler</Button>
               <Button variant="primary" size="sm" className="flex-1" loading={saving} onClick={saveBalance}><Check size={13} /> Sauvegarder</Button>
@@ -232,14 +232,14 @@ export default function AdminUsersPage() {
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
             className="w-full max-w-sm bg-[#0c1428] border border-white/10 rounded-2xl p-5">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-display font-bold text-white text-sm flex items-center gap-2"><Rocket size={15} className="text-[#e23744]" /> Activer un pass</h3>
+              <h3 className="font-display font-bold text-white text-sm flex items-center gap-2"><Rocket size={15} className="text-[#3b6fd4]" /> Activer un pass</h3>
               <button onClick={() => setActivateUser(null)} className="w-7 h-7 rounded-xl bg-white/6 flex items-center justify-center text-white/50"><X size={14} /></button>
             </div>
             <p className="text-sm text-white/70 mb-0.5">{activateUser.name}</p>
             <p className="text-xs text-white/30 mb-4">{activateUser.email}</p>
             <label className="text-xs font-medium text-white/60 mb-1.5 block">Choisir un pass</label>
             <select value={selectedPassId} onChange={(e) => setSelectedPassId(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#e23744]/50 mb-2">
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#3b6fd4]/50 mb-2">
               <option value="">— Sélectionner —</option>
               {passList.map((p) => <option key={p.id} value={p.id}>{p.name} · {formatCurrency(p.price)}</option>)}
             </select>

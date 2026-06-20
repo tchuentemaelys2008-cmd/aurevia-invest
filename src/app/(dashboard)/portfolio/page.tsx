@@ -100,7 +100,7 @@ export default function PortfolioPage() {
                     </div>
                   </div>
                   <div className="h-1.5 rounded-full bg-white/8 overflow-hidden">
-                    <div className="h-full rounded-full bg-gradient-to-r from-[#e23744] to-[#b51d2c] transition-all duration-500"
+                    <div className="h-full rounded-full bg-gradient-to-r from-[#3b6fd4] to-[#2d5bcc] transition-all duration-500"
                       style={{ width: `${progress}%` }} />
                   </div>
                   <div className="flex justify-between text-[10px] text-white/30 mt-1">

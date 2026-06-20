@@ -71,7 +71,7 @@ export default function VerificationPage() {
       {/* Hero */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
         <div className="relative rounded-3xl overflow-hidden p-7 text-center"
-          style={{ background: "linear-gradient(145deg, #e23744 0%, #b51d2c 58%, #8a1420 100%)", color: "#fff", boxShadow: "0 18px 40px rgba(226,55,68,0.35)" }}>
+          style={{ background: "linear-gradient(145deg, #3b6fd4 0%, #2d5bcc 58%, #8a1420 100%)", color: "#fff", boxShadow: "0 18px 40px rgba(226,55,68,0.35)" }}>
           <div className="absolute -top-12 -right-10 w-44 h-44 rounded-full pointer-events-none" style={{ background: "rgba(255,255,255,0.14)", filter: "blur(40px)" }} />
           <div className="relative w-16 h-16 mx-auto rounded-2xl bg-white/20 flex items-center justify-center mb-3">
             <BadgeCheck size={34} style={{ color: "#fff" }} />
@@ -91,7 +91,7 @@ export default function VerificationPage() {
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="grid sm:grid-cols-2 gap-3">
         {perks.map((p) => (
           <Card key={p.title} className="flex gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#e23744]/15 flex items-center justify-center text-[#e23744] flex-shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-[#3b6fd4]/15 flex items-center justify-center text-[#3b6fd4] flex-shrink-0">
               <p.icon size={18} />
             </div>
             <div>
