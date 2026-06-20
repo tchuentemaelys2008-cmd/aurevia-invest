@@ -25,8 +25,8 @@ export default function OpengraphImage() {
         }}
       >
         {/* Ambient glows */}
-        <div style={{ position: "absolute", top: -160, left: 360, width: 520, height: 520, borderRadius: 520, background: "rgba(226,55,68,0.35)", filter: "blur(60px)" }} />
-        <div style={{ position: "absolute", bottom: -180, right: 280, width: 460, height: 460, borderRadius: 460, background: "rgba(181,29,44,0.30)", filter: "blur(60px)" }} />
+        <div style={{ position: "absolute", top: -160, left: 360, width: 520, height: 520, borderRadius: 520, background: "rgba(59,111,212,0.35)", filter: "blur(60px)" }} />
+        <div style={{ position: "absolute", bottom: -180, right: 280, width: 460, height: 460, borderRadius: 460, background: "rgba(45,91,204,0.30)", filter: "blur(60px)" }} />
 
         {/* Logo mark */}
         <div
@@ -40,7 +40,7 @@ export default function OpengraphImage() {
             background: "linear-gradient(135deg,#3b6fd4,#2d5bcc)",
             fontSize: 96,
             fontWeight: 800,
-            boxShadow: "0 20px 60px rgba(226,55,68,0.5)",
+            boxShadow: "0 20px 60px rgba(59,111,212,0.5)",
           }}
         >
           A
@@ -64,7 +64,7 @@ export default function OpengraphImage() {
                 color: "#cfe0ff",
                 padding: "12px 26px",
                 borderRadius: 999,
-                background: "rgba(226,55,68,0.16)",
+                background: "rgba(59,111,212,0.16)",
                 border: "1px solid rgba(120,160,255,0.35)",
               }}
             >

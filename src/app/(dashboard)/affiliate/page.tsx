@@ -99,7 +99,7 @@ export default function AffiliatePage() {
 
       {/* Commission hero */}
       <motion.div initial="hidden" animate="show" custom={1} variants={fadeUp} className="mb-5">
-        <div className="relative rounded-2xl overflow-hidden p-5" style={{ background: "linear-gradient(135deg, rgba(226,55,68,0.15), rgba(181,29,44,0.12))", border: "1px solid rgba(226,55,68,0.2)" }}>
+        <div className="relative rounded-2xl overflow-hidden p-5" style={{ background: "linear-gradient(135deg, rgba(59,111,212,0.15), rgba(45,91,204,0.12))", border: "1px solid rgba(59,111,212,0.2)" }}>
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#3b6fd4] to-[#2d5bcc] flex items-center justify-center flex-shrink-0 shadow-lg shadow-[#3b6fd4]/30">
               <span className="text-white font-display font-bold text-2xl">5%</span>

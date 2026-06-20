@@ -55,7 +55,7 @@ export default function GiftButton() {
         type="button"
         onClick={() => setOpen(true)}
         className="fixed bottom-24 right-4 z-40 w-14 h-14 rounded-2xl shadow-lg flex items-center justify-center touch-manipulation lg:bottom-8"
-        style={{ background: "linear-gradient(135deg, #3b6fd4, #2d5bcc)", boxShadow: "0 0 24px rgba(181,29,44,0.5)" }}
+        style={{ background: "linear-gradient(135deg, #3b6fd4, #2d5bcc)", boxShadow: "0 0 24px rgba(45,91,204,0.5)" }}
         animate={{ y: [0, -6, 0] }}
         transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
         aria-label={t("gift_float_title")}
