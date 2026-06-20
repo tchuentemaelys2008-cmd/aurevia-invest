@@ -55,7 +55,7 @@ export default function GiftButton() {
         type="button"
         onClick={() => setOpen(true)}
         className="fixed bottom-24 right-4 z-40 w-14 h-14 rounded-2xl shadow-lg flex items-center justify-center touch-manipulation lg:bottom-8"
-        style={{ background: "linear-gradient(135deg, #e23744, #b51d2c)", boxShadow: "0 0 24px rgba(181,29,44,0.5)" }}
+        style={{ background: "linear-gradient(135deg, #3b6fd4, #2d5bcc)", boxShadow: "0 0 24px rgba(181,29,44,0.5)" }}
         animate={{ y: [0, -6, 0] }}
         transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
         aria-label={t("gift_float_title")}
@@ -76,7 +76,7 @@ export default function GiftButton() {
             >
               <div className="flex items-center justify-between mb-5">
                 <div className="flex items-center gap-2">
-                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#e23744] to-[#b51d2c] flex items-center justify-center">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#3b6fd4] to-[#2d5bcc] flex items-center justify-center">
                     <Gift size={18} className="text-white" />
                   </div>
                   <h3 className="font-display font-bold" style={{ color: "var(--control-text)" }}>{t("gift_float_title")}</h3>
@@ -88,8 +88,8 @@ export default function GiftButton() {
 
               {won !== null ? (
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center py-4">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#e23744]/20 to-[#b51d2c]/20 flex items-center justify-center mx-auto mb-3">
-                    <Sparkles size={28} className="text-[#b51d2c]" />
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#3b6fd4]/20 to-[#2d5bcc]/20 flex items-center justify-center mx-auto mb-3">
+                    <Sparkles size={28} className="text-[#2d5bcc]" />
                   </div>
                   <p className="font-display font-bold text-xl mb-1" style={{ color: "var(--control-text)" }}>
                     +{formatCurrency(won)}
@@ -98,7 +98,7 @@ export default function GiftButton() {
                   <button
                     type="button"
                     onClick={handleClose}
-                    className="mt-4 w-full bg-gradient-to-r from-[#e23744] to-[#b51d2c] text-white text-sm font-semibold py-3 rounded-xl touch-manipulation"
+                    className="mt-4 w-full bg-gradient-to-r from-[#3b6fd4] to-[#2d5bcc] text-white text-sm font-semibold py-3 rounded-xl touch-manipulation"
                   >
                     OK
                   </button>
@@ -123,7 +123,7 @@ export default function GiftButton() {
                     type="button"
                     onClick={handleRedeem}
                     disabled={loading || !code.trim()}
-                    className="w-full bg-gradient-to-r from-[#e23744] to-[#b51d2c] text-white text-sm font-semibold py-3 rounded-xl hover:opacity-90 disabled:opacity-50 transition-all touch-manipulation"
+                    className="w-full bg-gradient-to-r from-[#3b6fd4] to-[#2d5bcc] text-white text-sm font-semibold py-3 rounded-xl hover:opacity-90 disabled:opacity-50 transition-all touch-manipulation"
                   >
                     {loading ? "..." : t("gift_submit")}
                   </button>

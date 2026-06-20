@@ -69,7 +69,7 @@ export default function LoginPage() {
               value={password} onChange={(e) => setPassword(e.target.value)}
               icon={<Lock size={15} />} error={errors.password} required />
             <div className="text-right">
-              <Link href="/forgot-password" className="text-sm text-[#e23744] hover:text-blue-300 transition-colors">
+              <Link href="/forgot-password" className="text-sm text-[#3b6fd4] hover:text-blue-300 transition-colors">
                 {t("auth_forgot")}
               </Link>
             </div>
@@ -83,7 +83,7 @@ export default function LoginPage() {
 
         <p className="text-center text-white/40 text-sm mt-5">
           {t("auth_no_account")}{" "}
-          <Link href="/register" className="text-[#e23744] hover:text-blue-300 font-semibold transition-colors">
+          <Link href="/register" className="text-[#3b6fd4] hover:text-blue-300 font-semibold transition-colors">
             {t("auth_signup")}
           </Link>
         </p>

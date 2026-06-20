@@ -117,7 +117,7 @@ export default function TeamPage() {
   };
 
   const levelBadge = (level: number) => {
-    if (level >= 5) return { label: "IA Advisor", icon: <Bot size={11} />, color: "text-[#b51d2c] bg-[#b51d2c]/10 border-[#b51d2c]/20" };
+    if (level >= 5) return { label: "IA Advisor", icon: <Bot size={11} />, color: "text-[#2d5bcc] bg-[#2d5bcc]/10 border-[#2d5bcc]/20" };
     if (level >= 3) return { label: "Auto Money", icon: <Flame size={11} />, color: "text-orange-400 bg-orange-400/10 border-orange-400/20" };
     return null;
   };
@@ -126,13 +126,13 @@ export default function TeamPage() {
     <div className="p-4 lg:p-8 max-w-2xl mx-auto">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <p className="text-xs font-semibold text-[#e23744] uppercase tracking-widest mb-1">{t("team_kicker")}</p>
+          <p className="text-xs font-semibold text-[#3b6fd4] uppercase tracking-widest mb-1">{t("team_kicker")}</p>
           <h1 className="text-2xl font-display font-bold" style={{ color: "var(--control-text)" }}>{t("team_title")}</h1>
           <p className="text-sm mt-1" style={{ color: "var(--control-text)", opacity: 0.45 }}>{t("team_sub")}</p>
         </div>
         {!myMemberTeamId && !ledTeamId && (
           <button type="button" onClick={() => setShowCreate(v => !v)}
-            className="flex items-center gap-2 bg-gradient-to-r from-[#e23744] to-[#b51d2c] text-white text-sm font-semibold px-4 py-2.5 rounded-xl hover:opacity-90 transition-all touch-manipulation">
+            className="flex items-center gap-2 bg-gradient-to-r from-[#3b6fd4] to-[#2d5bcc] text-white text-sm font-semibold px-4 py-2.5 rounded-xl hover:opacity-90 transition-all touch-manipulation">
             <Plus size={16} /> {t("team_create_btn")}
           </button>
         )}
@@ -157,7 +157,7 @@ export default function TeamPage() {
               {lang === "fr" ? "Achetez un pass actif avant d'envoyer une demande." : "Buy an active pass before sending a join request."}
             </p>
           </div>
-          <a href="/passes" className="ml-auto flex-shrink-0 flex items-center gap-1 text-xs font-semibold text-[#e23744] bg-[#e23744]/10 px-3 py-1.5 rounded-xl">
+          <a href="/passes" className="ml-auto flex-shrink-0 flex items-center gap-1 text-xs font-semibold text-[#3b6fd4] bg-[#3b6fd4]/10 px-3 py-1.5 rounded-xl">
             <ShoppingBag size={12} />{lang === "fr" ? "Passes" : "Passes"}
           </a>
         </motion.div>
@@ -169,10 +169,10 @@ export default function TeamPage() {
             <p className="font-semibold text-sm mb-3" style={{ color: "var(--control-text)" }}>{t("team_create_title")}</p>
             <div className="flex gap-3">
               <input value={newName} onChange={e => setNewName(e.target.value)} placeholder={t("team_name_placeholder")}
-                className="flex-1 bg-white/5 border border-[var(--control-border)] rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#e23744]/50"
+                className="flex-1 bg-white/5 border border-[var(--control-border)] rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#3b6fd4]/50"
                 style={{ color: "var(--control-text)" }} />
               <button type="button" onClick={create} disabled={creating || !newName.trim()}
-                className="bg-[#e23744] text-white text-sm font-semibold px-4 py-2.5 rounded-xl hover:opacity-90 disabled:opacity-50 transition-all touch-manipulation">
+                className="bg-[#3b6fd4] text-white text-sm font-semibold px-4 py-2.5 rounded-xl hover:opacity-90 disabled:opacity-50 transition-all touch-manipulation">
                 {creating ? "..." : t("team_confirm")}
               </button>
             </div>
@@ -183,7 +183,7 @@ export default function TeamPage() {
       {/* Pending requests for leader */}
       {pendingRequests.length > 0 && (
         <div className="mb-6">
-          <p className="text-xs font-semibold text-[#e23744] uppercase tracking-widest mb-3">{t("team_requests_title")} ({pendingRequests.length})</p>
+          <p className="text-xs font-semibold text-[#3b6fd4] uppercase tracking-widest mb-3">{t("team_requests_title")} ({pendingRequests.length})</p>
           <div className="space-y-2">
             {pendingRequests.map((req) => (
               <motion.div key={req.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} className="glass-card rounded-2xl p-4">
@@ -230,15 +230,15 @@ export default function TeamPage() {
 
             return (
               <motion.div key={team.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
-                className={`glass-card rounded-2xl p-5 flex items-center gap-4 ${isMyMemberTeam ? "ring-1 ring-[#e23744]/30" : ""}`}>
-                <div className="w-10 h-10 bg-gradient-to-br from-[#e23744]/20 to-[#b51d2c]/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Users size={18} className="text-[#e23744]" />
+                className={`glass-card rounded-2xl p-5 flex items-center gap-4 ${isMyMemberTeam ? "ring-1 ring-[#3b6fd4]/30" : ""}`}>
+                <div className="w-10 h-10 bg-gradient-to-br from-[#3b6fd4]/20 to-[#2d5bcc]/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <Users size={18} className="text-[#3b6fd4]" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <p className="font-semibold text-sm truncate" style={{ color: "var(--control-text)" }}>{team.name}</p>
                     {isMyLedTeam && (
-                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#e23744]/15 text-[#e23744] border border-[#e23744]/20 flex items-center gap-0.5">
+                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#3b6fd4]/15 text-[#3b6fd4] border border-[#3b6fd4]/20 flex items-center gap-0.5">
                         <Crown size={8} />{lang === "fr" ? "Votre équipe" : "Your team"}
                       </span>
                     )}
@@ -261,7 +261,7 @@ export default function TeamPage() {
                 </div>
                 {canRequest && (
                   <button type="button" onClick={() => setRequestTeam(team)}
-                    className="flex items-center gap-1.5 text-xs font-semibold text-[#e23744] bg-[#e23744]/10 hover:bg-[#e23744]/20 border border-[#e23744]/20 px-3 py-2 rounded-xl transition-all touch-manipulation">
+                    className="flex items-center gap-1.5 text-xs font-semibold text-[#3b6fd4] bg-[#3b6fd4]/10 hover:bg-[#3b6fd4]/20 border border-[#3b6fd4]/20 px-3 py-2 rounded-xl transition-all touch-manipulation">
                     <MessageSquare size={13} />{t("team_request_btn")}
                   </button>
                 )}
@@ -293,7 +293,7 @@ export default function TeamPage() {
                   <label className="text-xs font-semibold mb-1 block" style={{ color: "var(--control-text)", opacity: 0.6 }}>{t("team_request_message")}</label>
                   <textarea value={reqMessage} onChange={e => setReqMessage(e.target.value)} rows={3}
                     placeholder={lang === "fr" ? "Bonjour, je souhaite rejoindre..." : "Hello, I'd like to join..."}
-                    className="w-full rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#e23744]/50 resize-none"
+                    className="w-full rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#3b6fd4]/50 resize-none"
                     style={{ background: "var(--control-bg)", border: "1px solid var(--control-border)", color: "var(--control-text)" }} />
                 </div>
                 <div>
@@ -305,7 +305,7 @@ export default function TeamPage() {
                   </div>
                 </div>
                 <button type="button" onClick={sendRequest} disabled={sendingReq || !reqMessage.trim() || !reqPhone.trim()}
-                  className="w-full bg-gradient-to-r from-[#e23744] to-[#b51d2c] text-white text-sm font-semibold py-3 rounded-xl hover:opacity-90 disabled:opacity-50 transition-all touch-manipulation">
+                  className="w-full bg-gradient-to-r from-[#3b6fd4] to-[#2d5bcc] text-white text-sm font-semibold py-3 rounded-xl hover:opacity-90 disabled:opacity-50 transition-all touch-manipulation">
                   {sendingReq ? "..." : t("team_request_submit")}
                 </button>
               </div>

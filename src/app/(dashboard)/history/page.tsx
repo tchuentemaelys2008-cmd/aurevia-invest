@@ -95,13 +95,13 @@ export default function HistoryPage() {
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-5">
         <p className="text-white/40 text-xs mb-0.5">{fr ? "Mouvements" : "Movements"}</p>
         <h1 className="text-2xl font-display font-bold text-white flex items-center gap-2">
-          <HistoryIcon size={22} className="text-[#e23744]" /> {fr ? "Historique" : "History"}
+          <HistoryIcon size={22} className="text-[#3b6fd4]" /> {fr ? "Historique" : "History"}
         </h1>
       </motion.div>
 
       {/* Tabs */}
       <div className="flex gap-2 mb-4">
-        <button onClick={() => setTab("all")} className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-all ${tab === "all" ? "bg-[#e23744] text-white" : "bg-white/5 text-white/50"}`}>
+        <button onClick={() => setTab("all")} className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-all ${tab === "all" ? "bg-[#3b6fd4] text-white" : "bg-white/5 text-white/50"}`}>
           {fr ? "Tout" : "All"}
         </button>
         <button onClick={() => setTab("pending")} className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-all flex items-center justify-center gap-1.5 ${tab === "pending" ? "bg-yellow-400 text-black" : "bg-white/5 text-white/50"}`}>

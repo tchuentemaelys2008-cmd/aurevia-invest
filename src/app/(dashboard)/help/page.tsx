@@ -47,7 +47,7 @@ export default function HelpPage() {
   return (
     <div className="max-w-2xl mx-auto px-4 pt-8 pb-6">
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-        <p className="text-[#e23744] text-xs font-semibold uppercase tracking-widest mb-1">{t("help_kicker")}</p>
+        <p className="text-[#3b6fd4] text-xs font-semibold uppercase tracking-widest mb-1">{t("help_kicker")}</p>
         <h1 className="text-2xl font-display font-bold" style={{ color: "var(--control-text)" }}>{t("help_title")}</h1>
         <p className="text-sm mt-1" style={{ color: "var(--control-text)", opacity: 0.5 }}>{t("help_intro")}</p>
       </motion.div>
@@ -61,7 +61,7 @@ export default function HelpPage() {
         {helpCards.map(({ icon: Icon, title, text }, index) => (
           <motion.div key={title} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.04 }}>
             <Card className="flex gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#e23744]/15 text-[#e23744] flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-[#3b6fd4]/15 text-[#3b6fd4] flex items-center justify-center flex-shrink-0">
                 <Icon size={18} />
               </div>
               <div>
