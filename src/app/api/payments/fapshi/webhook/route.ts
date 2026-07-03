@@ -4,13 +4,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { applyDepositSuccess, payReferralCommission } from "@/lib/payments-helpers";
 
-// Best-effort re-check of a transaction straight from Fapshi. Returns null when
-// it can't be checked (missing creds/transId, network or shape issue); the
-// caller treats null as "couldn't verify" and proceeds rather than blocking.
-async function fapshiVerify(transId: string): Promise<{ status?: string; amount?: number } | null> {
+// Re-check of a transaction straight from Fapshi. Returns null when it can't
+// be checked (missing creds/transId, network or shape issue).
+async function fapshiVerify(transId: string): Promise<{ status?: string; amount?: number; externalId?: string } | null> {
   if (!transId || !process.env.FAPSHI_USER || !process.env.FAPSHI_KEY || !process.env.FAPSHI_BASE_URL) return null;
   try {
-    const res = await fetch(`${process.env.FAPSHI_BASE_URL}/payment-status/${transId}`, {
+    const res = await fetch(`${process.env.FAPSHI_BASE_URL}/payment-status/${encodeURIComponent(transId)}`, {
       headers: { apiuser: process.env.FAPSHI_USER, apikey: process.env.FAPSHI_KEY },
     });
     if (!res.ok) return null;
@@ -45,17 +44,31 @@ export async function POST(req: NextRequest) {
     if (status === "SUCCESSFUL") {
       if (payment.status === "SUCCESS") return NextResponse.json({ received: true });
 
-      // SECURITY: best-effort re-check with Fapshi (the webhook body is forgeable).
-      // We only BLOCK when Fapshi explicitly reports the transaction is NOT
-      // successful. If we can't verify (no transId, network/shape issue), we
-      // proceed — never block a legitimate payment.
-      if (process.env.NODE_ENV === "production" && transId) {
+      // SECURITY: the webhook body is unauthenticated and therefore forgeable.
+      // In production we FAIL CLOSED: the transaction must be re-checked
+      // server-to-server with Fapshi and confirmed SUCCESSFUL with the right
+      // amount before we credit anything. A 502 makes Fapshi retry later, so a
+      // transient network error never loses a legitimate payment — it only
+      // delays it. Without this, anyone could POST {status:"SUCCESSFUL",
+      // externalId:"<their ref>"} and get a free pass or deposit.
+      if (process.env.NODE_ENV === "production") {
+        if (!transId) {
+          console.error("FAPSHI webhook rejected: missing transId", { reference });
+          return NextResponse.json({ error: "Missing transId" }, { status: 400 });
+        }
         const verified = await fapshiVerify(transId);
-        const vstatus = String(verified?.status || "").toUpperCase();
-        // Block only when Fapshi explicitly reports a failed transaction.
-        if (vstatus === "FAILED" || vstatus === "EXPIRED" || vstatus === "CANCELLED") {
+        if (!verified) {
+          console.error("FAPSHI webhook: verification unavailable, will retry", { transId, reference });
+          return NextResponse.json({ error: "Verification unavailable" }, { status: 502 });
+        }
+        const vstatus = String(verified.status || "").toUpperCase();
+        if (vstatus !== "SUCCESSFUL") {
           console.error("FAPSHI webhook rejected: Fapshi reports", vstatus, { transId, reference });
           return NextResponse.json({ error: "Not successful" }, { status: 400 });
+        }
+        if (typeof verified.amount === "number" && verified.amount < payment.amount) {
+          console.error("FAPSHI webhook rejected: amount mismatch", { transId, reference, expected: payment.amount, got: verified.amount });
+          return NextResponse.json({ error: "Amount mismatch" }, { status: 400 });
         }
       }
 

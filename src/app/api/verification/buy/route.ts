@@ -25,18 +25,24 @@ export async function POST() {
       );
     }
 
-    await prisma.$transaction([
-      prisma.user.update({
-        where: { id: auth.userId },
+    // Débit conditionnel (solde suffisant ET pas déjà vérifié) dans la
+    // transaction : pas de double achat ni de solde négatif en cas de requêtes
+    // simultanées.
+    const bought = await prisma.$transaction(async (tx) => {
+      const debited = await tx.user.updateMany({
+        where: { id: auth.userId, isVerified: false, balance: { gte: BADGE_PRICE } },
         data: { balance: { decrement: BADGE_PRICE }, isVerified: true },
-      }),
-      prisma.transaction.create({
+      });
+      if (debited.count === 0) return false;
+      await tx.transaction.create({
         data: { userId: auth.userId, type: "VERIFICATION", amount: -BADGE_PRICE, description: "Badge de vérification", status: "SUCCESS" },
-      }),
-      prisma.notification.create({
+      });
+      await tx.notification.create({
         data: { userId: auth.userId, title: "Compte vérifié ✅", message: "Félicitations ! Votre badge de vérification est actif : retraits prioritaires, support prioritaire, +5% de parrainage et +10% de gains journaliers.", type: "success" },
-      }),
-    ]);
+      });
+      return true;
+    });
+    if (!bought) return NextResponse.json({ error: "Solde insuffisant ou déjà vérifié" }, { status: 400 });
 
     return NextResponse.json({ success: true });
   } catch (err) {

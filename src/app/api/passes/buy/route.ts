@@ -35,36 +35,45 @@ const GENIUSPAY_METHOD_MAP: Record<string, GeniusPayMethod> = {
 export async function POST(req: NextRequest) {
   try {
     const auth = await getAuthUser();
-    if (!auth) return NextResponse.json({ error: "Non authentifiÃ©" }, { status: 401 });
+    if (!auth) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
 
     const body = await req.json();
     const data = schema.parse(body);
 
     const pass = await prisma.pass.findUnique({ where: { id: data.passId } });
     if (!pass) return NextResponse.json({ error: "Pass introuvable" }, { status: 404 });
+    if (!pass.isActive) return NextResponse.json({ error: "Ce pass n'est plus disponible" }, { status: 400 });
 
     // Paiement direct depuis le solde du portefeuille, si suffisant.
     if (data.paymentMethod === "BALANCE") {
-      const u = await prisma.user.findUnique({ where: { id: auth.userId }, select: { balance: true } });
-      const bal = u?.balance ?? 0;
-      if (bal < pass.price) {
-        return NextResponse.json(
-          { error: "Solde insuffisant", needTopUp: true, shortfall: pass.price - bal },
-          { status: 400 }
-        );
-      }
       const reference = `BAL-${nanoid(12).toUpperCase()}`;
       const startDate = new Date();
       const endDate = new Date(startDate);
       endDate.setDate(endDate.getDate() + pass.duration);
 
-      await prisma.$transaction([
-        prisma.user.update({ where: { id: auth.userId }, data: { balance: { decrement: pass.price }, totalInvested: { increment: pass.price } } }),
-        prisma.payment.create({ data: { userId: auth.userId, passId: data.passId, amount: pass.price, provider: "BALANCE", reference, status: "SUCCESS" } }),
-        prisma.userPass.create({ data: { userId: auth.userId, passId: data.passId, status: "ACTIVE", startDate, endDate, amountPaid: pass.price, paymentRef: reference } }),
-        prisma.transaction.create({ data: { userId: auth.userId, type: "PASS_PURCHASE", amount: -pass.price, description: `Achat Pass ${pass.name} (solde)`, status: "SUCCESS", reference } }),
-        prisma.notification.create({ data: { userId: auth.userId, title: "Pass activé !", message: `Votre pass ${pass.name} est actif. Revenus journaliers dès aujourd'hui.`, type: "success" } }),
-      ]);
+      // Débit conditionnel (balance >= prix) DANS la transaction : deux achats
+      // simultanés ne peuvent pas tous les deux passer un pré-contrôle et
+      // rendre le solde négatif.
+      const paid = await prisma.$transaction(async (tx) => {
+        const debited = await tx.user.updateMany({
+          where: { id: auth.userId, balance: { gte: pass.price } },
+          data: { balance: { decrement: pass.price }, totalInvested: { increment: pass.price } },
+        });
+        if (debited.count === 0) return false;
+        await tx.payment.create({ data: { userId: auth.userId, passId: data.passId, amount: pass.price, provider: "BALANCE", reference, status: "SUCCESS" } });
+        await tx.userPass.create({ data: { userId: auth.userId, passId: data.passId, status: "ACTIVE", startDate, endDate, amountPaid: pass.price, paymentRef: reference } });
+        await tx.transaction.create({ data: { userId: auth.userId, type: "PASS_PURCHASE", amount: -pass.price, description: `Achat Pass ${pass.name} (solde)`, status: "SUCCESS", reference } });
+        await tx.notification.create({ data: { userId: auth.userId, title: "Pass activé !", message: `Votre pass ${pass.name} est actif. Revenus journaliers dès aujourd'hui.`, type: "success" } });
+        return true;
+      });
+      if (!paid) {
+        const u = await prisma.user.findUnique({ where: { id: auth.userId }, select: { balance: true } });
+        const bal = u?.balance ?? 0;
+        return NextResponse.json(
+          { error: "Solde insuffisant", needTopUp: true, shortfall: Math.max(0, pass.price - bal) },
+          { status: 400 }
+        );
+      }
       await payReferralCommission(auth.userId, pass.price);
 
       return NextResponse.json({ success: true, reference, paidWithBalance: true });
@@ -143,7 +152,7 @@ export async function POST(req: NextRequest) {
             email: auth.email,
             redirectUrl: `${baseUrl}/dashboard?payment=${reference}`,
             externalId: reference,
-            message: `Achat Pass ${pass.name} â€” Aurevia Invest`,
+            message: `Achat Pass ${pass.name} — Aurevia Invest`,
           }),
         });
         const fapshiData = await fapshiRes.json();
@@ -171,7 +180,7 @@ export async function POST(req: NextRequest) {
         try {
           const gpData = await createGeniusPayPayment({
             amount: pass.price,
-            description: `Achat Pass ${pass.name} â€” Aurevia Invest`,
+            description: `Achat Pass ${pass.name} — Aurevia Invest`,
             reference,
             successUrl: `${baseUrl}/dashboard?payment=${reference}&status=success`,
             errorUrl: `${baseUrl}/passes?payment=${reference}&status=error`,

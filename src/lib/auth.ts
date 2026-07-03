@@ -47,11 +47,13 @@ export async function getAuthUser(): Promise<JWTPayload | null> {
   try {
     const user = await prisma.user.findUnique({
       where: { id: payload.userId },
-      select: { isActive: true, isSuspended: true },
+      select: { isActive: true, isSuspended: true, role: true },
     });
     if (!user || !user.isActive || user.isSuspended) return null;
+    // Use the CURRENT role from the DB, not the one baked into the 7-day
+    // token: a demoted admin must lose admin access immediately.
+    return { ...payload, role: user.role };
   } catch {
     return null;
   }
-  return payload;
 }

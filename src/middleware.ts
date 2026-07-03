@@ -13,14 +13,25 @@ const JWT_SECRET = new TextEncoder().encode(
 );
 
 export async function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
+  const { pathname, search } = req.nextUrl;
   const token = req.cookies.get("auth-token")?.value;
 
+  // Landing page publique — la page décide elle-même de rediriger les
+  // utilisateurs connectés. Sans cette exception, les visiteurs (et les liens
+  // de parrainage /?ref=CODE) étaient renvoyés vers /login.
+  if (pathname === "/") return NextResponse.next();
+  if (pathname.startsWith("/gift/")) return NextResponse.next();
   if (PUBLIC_PATHS.some((p) => pathname.startsWith(p))) return NextResponse.next();
   if (pathname.startsWith("/api/auth")) return NextResponse.next();
   if (pathname.startsWith("/payment")) return NextResponse.next();
   if (pathname.startsWith("/api/events")) return NextResponse.next();
   if (pathname.startsWith("/api/leaderboard")) return NextResponse.next();
+  if (pathname.startsWith("/api/settings/public")) return NextResponse.next();
+  if (pathname.startsWith("/api/purchases/recent")) return NextResponse.next();
+  if (pathname.startsWith("/api/brand-logo")) return NextResponse.next();
+  // Le cron Vercel appelle cette route avec son propre header Authorization
+  // (vérifié dans la route), sans cookie de session.
+  if (pathname.startsWith("/api/cron/")) return NextResponse.next();
   // Payment provider webhooks must stay public — they arrive without an auth
   // cookie, so they must never be redirected to /login.
   if (
@@ -31,7 +42,9 @@ export async function middleware(req: NextRequest) {
 
   if (!token) {
     const loginUrl = new URL("/login", req.url);
-    loginUrl.searchParams.set("redirect", pathname);
+    // Conserve le chemin ET la query (ex: /passes?promo=x) pour revenir au bon
+    // endroit après connexion.
+    loginUrl.searchParams.set("redirect", pathname + search);
     return NextResponse.redirect(loginUrl);
   }
 

@@ -2,6 +2,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/admin";
 import { Resend } from "resend";
 import crypto from "node:crypto";
 
@@ -15,6 +16,11 @@ function getResend() {
 
 export async function POST(req: NextRequest) {
   try {
+    // Limite le spam d'emails de réinitialisation (bombardement d'une boîte
+    // mail ou épuisement du quota Resend).
+    const limited = rateLimit(req, "forgot-password", 5, 60_000);
+    if (limited) return limited;
+
     const { email } = await req.json();
     if (!email || typeof email !== "string") {
       return NextResponse.json({ error: "Email requis" }, { status: 400 });
@@ -22,15 +28,15 @@ export async function POST(req: NextRequest) {
 
     const user = await prisma.user.findUnique({ where: { email: email.toLowerCase().trim() } });
 
-    // On rÃ©pond toujours success pour ne pas rÃ©vÃ©ler si l'email existe
+    // On répond toujours success pour ne pas révéler si l'email existe
     if (!user) {
       return NextResponse.json({ success: true });
     }
 
-    // Supprimer les anciens tokens non expirÃ©s
+    // Supprimer les anciens tokens non expirés
     await prisma.passwordResetToken.deleteMany({ where: { userId: user.id } });
 
-    // GÃ©nÃ©rer un token sÃ©curisÃ©
+    // Générer un token sécurisé
     const rawToken = crypto.randomBytes(32).toString("hex");
     const tokenHash = crypto.createHash("sha256").update(rawToken).digest("hex");
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 heure
@@ -47,7 +53,7 @@ export async function POST(req: NextRequest) {
       await resend.emails.send({
         from: process.env.EMAIL_FROM || "noreply@aurevia-invest.com",
         to: user.email,
-        subject: "RÃ©initialisation de votre mot de passe â€” Aurevia Invest",
+        subject: "Réinitialisation de votre mot de passe — Aurevia Invest",
         html: `
 <!DOCTYPE html>
 <html lang="fr">
@@ -58,17 +64,17 @@ export async function POST(req: NextRequest) {
       <div style="display:inline-block;background:rgba(255,255,255,0.15);border-radius:12px;padding:10px 20px;margin-bottom:12px;">
         <span style="color:#fff;font-weight:700;font-size:20px;letter-spacing:0.5px;">Aurevia Invest</span>
       </div>
-      <h1 style="color:#fff;margin:0;font-size:22px;font-weight:700;">RÃ©initialisation du mot de passe</h1>
+      <h1 style="color:#fff;margin:0;font-size:22px;font-weight:700;">Réinitialisation du mot de passe</h1>
     </div>
     <div style="padding:32px;">
       <p style="color:#cdd6f0;font-size:15px;margin:0 0 8px;">Bonjour <strong style="color:#fff;">${user.name}</strong>,</p>
       <p style="color:#8892aa;font-size:14px;margin:0 0 28px;line-height:1.6;">
-        Nous avons reÃ§u une demande de rÃ©initialisation de mot de passe pour votre compte Aurevia Invest.<br>
+        Nous avons reçu une demande de réinitialisation de mot de passe pour votre compte Aurevia Invest.<br>
         Ce lien est valable pendant <strong style="color:#cdd6f0;">1 heure</strong>.
       </p>
       <div style="text-align:center;margin:0 0 28px;">
         <a href="${resetUrl}" style="display:inline-block;background:linear-gradient(135deg,#3b6fd4,#2d5bcc);color:#fff;text-decoration:none;padding:14px 32px;border-radius:12px;font-weight:700;font-size:15px;">
-          RÃ©initialiser mon mot de passe
+          Réinitialiser mon mot de passe
         </a>
       </div>
       <p style="color:#8892aa;font-size:12px;margin:0 0 8px;line-height:1.6;">
@@ -76,18 +82,18 @@ export async function POST(req: NextRequest) {
       </p>
       <p style="color:#3b6fd4;font-size:12px;word-break:break-all;margin:0 0 28px;">${resetUrl}</p>
       <p style="color:#8892aa;font-size:12px;margin:0;line-height:1.6;">
-        Si vous n'avez pas demandÃ© cette rÃ©initialisation, ignorez cet email. Votre mot de passe ne sera pas modifiÃ©.
+        Si vous n'avez pas demandé cette réinitialisation, ignorez cet email. Votre mot de passe ne sera pas modifié.
       </p>
     </div>
     <div style="background:rgba(255,255,255,0.03);padding:16px 32px;text-align:center;border-top:1px solid rgba(255,255,255,0.06);">
-      <p style="color:#8892aa;font-size:12px;margin:0;">Â© ${new Date().getFullYear()} Aurevia Invest. Tous droits rÃ©servÃ©s.</p>
+      <p style="color:#8892aa;font-size:12px;margin:0;">© ${new Date().getFullYear()} Aurevia Invest. Tous droits réservés.</p>
     </div>
   </div>
 </body>
 </html>`,
       });
     } else {
-      // Dev mode â€” log dans la console
+      // Dev mode — log dans la console
       console.log("\n[DEV] Reset password link:", resetUrl, "\n");
     }
 

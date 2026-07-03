@@ -6,7 +6,7 @@ import { getAuthUser } from "@/lib/auth";
 
 export async function GET() {
   const auth = await getAuthUser();
-  if (!auth) return NextResponse.json({ error: "Non authentifiÃ©" }, { status: 401 });
+  if (!auth) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
 
   const [missions, userMissions] = await Promise.all([
     prisma.mission.findMany({ where: { isActive: true }, orderBy: { createdAt: "desc" } }),

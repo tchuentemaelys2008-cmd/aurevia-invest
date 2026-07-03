@@ -30,7 +30,7 @@ export default function ForgotPasswordPage() {
         return;
       }
       setSent(true);
-      toast.success("Email envoyÃ© !");
+      toast.success("Email envoyé !");
     } finally {
       setLoading(false);
     }

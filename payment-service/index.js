@@ -1,5 +1,6 @@
 import express from "express";
 import axios from "axios";
+import crypto from "node:crypto";
 
 // ───────────────────────────────────────────────────────────────────────────
 // Aurevia — Micro-service relais GeniusPay
@@ -39,10 +40,12 @@ app.get("/health", (_req, res) => {
 });
 
 app.post("/create-payment", async (req, res) => {
-  // 1) Authentification par jeton partage.
+  // 1) Authentification par jeton partage (comparaison en temps constant).
   const auth = req.headers.authorization || "";
   const token = auth.startsWith("Bearer ") ? auth.slice(7) : "";
-  if (!SERVICE_TOKEN || token !== SERVICE_TOKEN) {
+  const tokenHash = crypto.createHash("sha256").update(token).digest();
+  const expectedHash = crypto.createHash("sha256").update(SERVICE_TOKEN).digest();
+  if (!SERVICE_TOKEN || !crypto.timingSafeEqual(tokenHash, expectedHash)) {
     return res.status(401).json({ success: false, error: "Non autorise" });
   }
 

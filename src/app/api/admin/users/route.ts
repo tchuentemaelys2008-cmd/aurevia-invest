@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
     const limited = rateLimit(req, "admin-users", 120);
     if (limited) return limited;
     const auth = await requireAdmin();
-    if (!auth) return NextResponse.json({ error: "AccÃ¨s refusÃ©" }, { status: 403 });
+    if (!auth) return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
 
     const { searchParams } = new URL(req.url);
     const page = parseInt(searchParams.get("page") || "1");
@@ -56,7 +56,7 @@ export async function PATCH(req: NextRequest) {
     const limited = rateLimit(req, "admin-users-write", 40);
     if (limited) return limited;
     const auth = await requireAdmin();
-    if (!auth) return NextResponse.json({ error: "AccÃ¨s refusÃ©" }, { status: 403 });
+    if (!auth) return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
 
     const body = await req.json();
 
@@ -100,6 +100,13 @@ export async function PATCH(req: NextRequest) {
     }
 
     if (typeof body.balance === "number" && body.userId) {
+      // L'ajustement de solde est réservé aux administrateurs complets.
+      if (!["ADMIN", "SUPER_ADMIN"].includes(auth.role)) {
+        return NextResponse.json({ error: "Réservé aux administrateurs" }, { status: 403 });
+      }
+      if (!Number.isFinite(body.balance) || body.balance < 0 || body.balance > 1_000_000_000) {
+        return NextResponse.json({ error: "Solde invalide" }, { status: 400 });
+      }
       const prev = await prisma.user.findUnique({ where: { id: body.userId }, select: { balance: true } });
       const diff = body.balance - (prev?.balance ?? 0);
       await prisma.user.update({ where: { id: body.userId }, data: { balance: body.balance } });
@@ -118,7 +125,7 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ success: true });
     }
 
-    return NextResponse.json({ error: "ParamÃ¨tres invalides" }, { status: 400 });
+    return NextResponse.json({ error: "Paramètres invalides" }, { status: 400 });
   } catch {
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }

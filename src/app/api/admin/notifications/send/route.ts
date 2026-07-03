@@ -6,7 +6,7 @@ import { getAuthUser } from "@/lib/auth";
 
 async function requireAdmin() {
   const auth = await getAuthUser();
-  if (!auth || auth.role !== "ADMIN") return null;
+  if (!auth || !["ADMIN", "SUPER_ADMIN"].includes(auth.role)) return null;
   return auth;
 }
 
