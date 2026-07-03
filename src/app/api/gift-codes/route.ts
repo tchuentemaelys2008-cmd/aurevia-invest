@@ -26,27 +26,43 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "gift_full" }, { status: 400 });
   }
 
-  await prisma.$transaction([
-    prisma.giftClaim.create({ data: { codeId: giftCode.id, userId: auth.userId } }),
-    prisma.user.update({ where: { id: auth.userId }, data: { balance: { increment: giftCode.value } } }),
-    prisma.transaction.create({
-      data: {
-        userId: auth.userId,
-        type: "REFERRAL_BONUS",
-        amount: giftCode.value,
-        description: `Cadeau Aurevia — Code ${giftCode.code}`,
-        status: "SUCCESS",
-      },
-    }),
-    prisma.notification.create({
-      data: {
-        userId: auth.userId,
-        title: "Cadeau reçu !",
-        message: `Vous avez reçu ${giftCode.value} FCFA via le code cadeau ${giftCode.code}.`,
-        type: "success",
-      },
-    }),
-  ]);
+  // Le quota maxWinners est re-vérifié DANS la transaction, après création du
+  // claim : des réclamations simultanées ne peuvent pas dépasser le quota
+  // (la transaction en trop est annulée). L'unicité (codeId, userId) bloque
+  // déjà le double claim d'un même utilisateur.
+  try {
+    await prisma.$transaction(async (tx) => {
+      await tx.giftClaim.create({ data: { codeId: giftCode.id, userId: auth.userId } });
+      const claimCount = await tx.giftClaim.count({ where: { codeId: giftCode.id } });
+      if (claimCount > giftCode.maxWinners) throw new Error("gift_full");
+      await tx.user.update({ where: { id: auth.userId }, data: { balance: { increment: giftCode.value } } });
+      await tx.transaction.create({
+        data: {
+          userId: auth.userId,
+          type: "REFERRAL_BONUS",
+          amount: giftCode.value,
+          description: `Cadeau Aurevia — Code ${giftCode.code}`,
+          status: "SUCCESS",
+        },
+      });
+      await tx.notification.create({
+        data: {
+          userId: auth.userId,
+          title: "Cadeau reçu !",
+          message: `Vous avez reçu ${giftCode.value} FCFA via le code cadeau ${giftCode.code}.`,
+          type: "success",
+        },
+      });
+    });
+  } catch (e) {
+    if (e && typeof e === "object" && "code" in e && (e as { code?: string }).code === "P2002") {
+      return NextResponse.json({ error: "gift_already" }, { status: 400 });
+    }
+    if (e instanceof Error && e.message === "gift_full") {
+      return NextResponse.json({ error: "gift_full" }, { status: 400 });
+    }
+    throw e;
+  }
 
   return NextResponse.json({ success: true, value: giftCode.value });
 }

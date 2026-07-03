@@ -8,10 +8,10 @@ import { nanoid } from "nanoid";
 export async function POST(req: NextRequest) {
   try {
     const auth = await getAuthUser();
-    if (!auth) return NextResponse.json({ error: "Non authentifiÃ©" }, { status: 401 });
+    if (!auth) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
 
     const { passId, proofBase64, proofName } = await req.json();
-    if (!passId || !proofBase64) return NextResponse.json({ error: "DonnÃ©es manquantes" }, { status: 400 });
+    if (!passId || !proofBase64) return NextResponse.json({ error: "Données manquantes" }, { status: 400 });
 
     // Cap proof size server-side (~2 MB binary ≈ 2.8 MB base64) so a forged
     // request can't bloat the DB or exhaust memory. The client also limits this.

@@ -20,7 +20,7 @@ export default function ResetPasswordPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password.length < 8) {
-      toast.error("Le mot de passe doit contenir au moins 8 caractÃ¨res");
+      toast.error("Le mot de passe doit contenir au moins 8 caractères");
       return;
     }
     if (password !== confirm) {
@@ -36,7 +36,7 @@ export default function ResetPasswordPage() {
       });
       const data = await res.json();
       if (!res.ok) {
-        toast.error(data.error || "Erreur lors de la rÃ©initialisation");
+        toast.error(data.error || "Erreur lors de la réinitialisation");
         return;
       }
       setDone(true);
@@ -53,7 +53,7 @@ export default function ResetPasswordPage() {
           <img src="/photo_2026-05-25_14-14-19.jpg" alt="Aurevia Invest" className="w-full h-full object-cover" />
         </div>
         <h1 className="text-2xl font-display font-bold text-white">Nouveau mot de passe</h1>
-        <p className="text-white/40 text-sm mt-1">Choisissez un mot de passe sÃ©curisÃ©</p>
+        <p className="text-white/40 text-sm mt-1">Choisissez un mot de passe sécurisé</p>
       </div>
 
       <div className="glass-card rounded-2xl p-6">
@@ -62,22 +62,22 @@ export default function ResetPasswordPage() {
             <div className="w-16 h-16 bg-emerald-400/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <CheckCircle size={28} className="text-emerald-400" />
             </div>
-            <h2 className="text-lg font-display font-bold text-white mb-2">Mot de passe mis Ã  jour !</h2>
-            <p className="text-white/50 text-sm mb-6">Vous allez Ãªtre redirigÃ© vers la connexionâ€¦</p>
+            <h2 className="text-lg font-display font-bold text-white mb-2">Mot de passe mis à jour !</h2>
+            <p className="text-white/50 text-sm mb-6">Vous allez être redirigé vers la connexion…</p>
             <Link href="/login" className="flex items-center justify-center gap-2 text-sm text-[#3b6fd4] hover:text-blue-300 transition-colors">
               <ArrowLeft size={14} /> Se connecter maintenant
             </Link>
           </div>
         ) : (
           <>
-            <h2 className="text-xl font-display font-bold text-white mb-1">RÃ©initialiser le mot de passe</h2>
+            <h2 className="text-xl font-display font-bold text-white mb-1">Réinitialiser le mot de passe</h2>
             <p className="text-white/40 text-sm mb-6">Entrez et confirmez votre nouveau mot de passe.</p>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="relative">
                 <Input
                   label="Nouveau mot de passe"
                   type={showPwd ? "text" : "password"}
-                  placeholder="Minimum 8 caractÃ¨res"
+                  placeholder="Minimum 8 caractères"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   icon={<Lock size={15} />}
@@ -94,14 +94,14 @@ export default function ResetPasswordPage() {
               <Input
                 label="Confirmer le mot de passe"
                 type={showPwd ? "text" : "password"}
-                placeholder="RÃ©pÃ©tez le mot de passe"
+                placeholder="Répétez le mot de passe"
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}
                 icon={<Lock size={15} />}
                 required
               />
               <Button type="submit" variant="primary" size="lg" className="w-full" loading={loading}>
-                Mettre Ã  jour le mot de passe
+                Mettre à jour le mot de passe
               </Button>
             </form>
           </>
@@ -110,7 +110,7 @@ export default function ResetPasswordPage() {
 
       <p className="text-center text-white/40 text-sm mt-5">
         <Link href="/login" className="flex items-center justify-center gap-1.5 text-[#3b6fd4] hover:text-blue-300 transition-colors">
-          <ArrowLeft size={14} /> Retour Ã  la connexion
+          <ArrowLeft size={14} /> Retour à la connexion
         </Link>
       </p>
     </motion.div>

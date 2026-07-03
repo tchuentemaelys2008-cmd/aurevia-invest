@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
-import { requireAdmin, logAdminAction } from "@/lib/admin";
+import { requireFullAdmin, logAdminAction } from "@/lib/admin";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { nanoid } from "nanoid";
@@ -9,7 +9,7 @@ import { nanoid } from "nanoid";
 const schema = z.object({ userId: z.string().min(1), passId: z.string().min(1) });
 
 export async function POST(req: NextRequest) {
-  const admin = await requireAdmin();
+  const admin = await requireFullAdmin();
   if (!admin) return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
 
   try {

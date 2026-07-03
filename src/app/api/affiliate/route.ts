@@ -7,7 +7,7 @@ import { prisma } from "@/lib/prisma";
 export async function GET() {
   try {
     const auth = await getAuthUser();
-    if (!auth) return NextResponse.json({ error: "Non authentifiÃ©" }, { status: 401 });
+    if (!auth) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
 
     const user = await prisma.user.findUnique({
       where: { id: auth.userId },

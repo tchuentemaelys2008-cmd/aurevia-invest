@@ -7,7 +7,7 @@ import { rateLimit } from "@/lib/admin";
 import { z } from "zod";
 
 const schema = z.object({
-  email: z.string().email(),
+  email: z.string().email().transform((v) => v.trim().toLowerCase()),
   password: z.string().min(1),
 });
 
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     if (!user || !(await comparePassword(data.password, user.password))) {
       return NextResponse.json({ error: "Email ou mot de passe incorrect" }, { status: 401 });
     }
-    if (!user.isActive || user.isSuspended) return NextResponse.json({ error: "Compte dÃ©sactivÃ© ou suspendu" }, { status: 403 });
+    if (!user.isActive || user.isSuspended) return NextResponse.json({ error: "Compte désactivé ou suspendu" }, { status: 403 });
 
     const token = signToken({ userId: user.id, email: user.email, role: user.role });
     const response = NextResponse.json({ success: true, user: { id: user.id, name: user.name, email: user.email, role: user.role } });

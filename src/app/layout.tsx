@@ -1,14 +1,26 @@
 import type { Metadata, Viewport } from "next";
-import { Montserrat } from "next/font/google";
+import { Montserrat, Space_Mono } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { LanguageProvider } from "@/lib/i18n";
 import { ThemeProvider } from "@/lib/theme";
 import "./globals.css";
 
+// Toute la gamme de graisses : sans elle, le navigateur synthétise les
+// font-medium/bold/extrabold à partir de la seule graisse 600, ce qui donne
+// une typographie plate et floue. Chargée via next/font (auto-hébergée,
+// zéro requête externe bloquante).
 const montserrat = Montserrat({
   subsets: ["latin"],
-  weight: ["600"],
+  weight: ["400", "500", "600", "700", "800"],
   variable: "--font-montserrat",
+  display: "swap",
+});
+
+const spaceMono = Space_Mono({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-space-mono",
+  display: "swap",
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_URL || "https://aurevia-invest.online";
@@ -142,7 +154,7 @@ const websiteJsonLd = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr" suppressHydrationWarning>
-      <body className={`${montserrat.variable} font-sans`}>
+      <body className={`${montserrat.variable} ${spaceMono.variable} font-sans`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
@@ -156,12 +168,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </ThemeProvider>
         <Toaster
           position="top-center"
+          gutter={10}
           toastOptions={{
+            duration: 3500,
             style: {
-              background: "#0c1428",
+              background: "rgba(12,20,40,0.94)",
               color: "#fff",
-              border: "1px solid rgba(255,255,255,0.1)",
+              border: "1px solid rgba(59,111,212,0.25)",
+              borderRadius: "14px",
+              padding: "12px 16px",
+              fontSize: "14px",
+              fontWeight: 600,
+              boxShadow: "0 12px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.06)",
+              backdropFilter: "blur(12px)",
             },
+            success: { iconTheme: { primary: "#10b981", secondary: "#04070f" } },
+            error: { iconTheme: { primary: "#ef4444", secondary: "#04070f" } },
           }}
         />
       </body>

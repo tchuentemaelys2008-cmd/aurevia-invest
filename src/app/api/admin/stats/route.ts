@@ -7,7 +7,7 @@ import { requireAdmin } from "@/lib/admin";
 export async function GET() {
   try {
     const auth = await requireAdmin();
-    if (!auth) return NextResponse.json({ error: "AccÃ¨s refusÃ©" }, { status: 403 });
+    if (!auth) return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
 
     const [totalUsers, activeUsers, totalRevenue, totalDeposits, totalWithdrawals, activePasses, pendingWithdrawals, recentUsers, convertedUsers] = await Promise.all([
       prisma.user.count({ where: { role: "USER" } }),

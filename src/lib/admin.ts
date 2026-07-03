@@ -16,6 +16,14 @@ export async function requireAdmin() {
   return auth;
 }
 
+// Money-sensitive operations (withdrawals, settings, payments, balance
+// adjustments…) are reserved to full admins — moderators are excluded.
+export async function requireFullAdmin() {
+  const auth = await getAuthUser();
+  if (!auth || !["ADMIN", "SUPER_ADMIN"].includes(auth.role)) return null;
+  return auth;
+}
+
 export async function logAdminAction(
   admin: JWTPayload,
   action: string,

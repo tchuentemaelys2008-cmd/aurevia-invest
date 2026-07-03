@@ -8,11 +8,11 @@ import { z } from "zod";
 import { nanoid } from "nanoid";
 
 const schema = z.object({
-  name: z.string().min(2, "Nom trop court"),
-  email: z.string().email("Email invalide"),
-  phone: z.string().optional(),
-  password: z.string().min(8, "Mot de passe trop court"),
-  referralCode: z.string().optional(),
+  name: z.string().min(2, "Nom trop court").max(80, "Nom trop long"),
+  email: z.string().email("Email invalide").transform((v) => v.trim().toLowerCase()),
+  phone: z.string().max(30).optional(),
+  password: z.string().min(8, "Mot de passe trop court").max(128),
+  referralCode: z.string().max(20).optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     const existing = await prisma.user.findFirst({
       where: { OR: [{ email: data.email }, ...(data.phone ? [{ phone: data.phone }] : [])] },
     });
-    if (existing) return NextResponse.json({ error: "Email ou tÃ©lÃ©phone dÃ©jÃ  utilisÃ©" }, { status: 400 });
+    if (existing) return NextResponse.json({ error: "Email ou téléphone déjà utilisé" }, { status: 400 });
 
     let referredById: string | undefined;
     if (data.referralCode) {
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // La commission parrainage sera versÃ©e au moment de l'achat du pass
+    // La commission parrainage sera versée au moment de l'achat du pass
 
     // Message de bienvenue (notification persistante, visible dans la cloche).
     await prisma.notification.create({
