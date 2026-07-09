@@ -38,7 +38,7 @@ export async function POST() {
         data: { userId: auth.userId, type: "VERIFICATION", amount: -BADGE_PRICE, description: "Badge de vérification", status: "SUCCESS" },
       });
       await tx.notification.create({
-        data: { userId: auth.userId, title: "Compte vérifié ✅", message: "Félicitations ! Votre badge de vérification est actif : retraits prioritaires, support prioritaire, +5% de parrainage et +10% de gains journaliers.", type: "success" },
+        data: { userId: auth.userId, title: "Compte vérifié ✅", message: "Félicitations ! Votre badge de vérification est actif : retraits prioritaires, support prioritaire et +5% de parrainage.", type: "success" },
       });
       return true;
     });

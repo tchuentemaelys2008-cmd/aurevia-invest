@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { requireFullAdmin, logAdminAction } from "@/lib/admin";
 import { prisma } from "@/lib/prisma";
+import { xpFromAmount, syncUserLevel } from "@/lib/xp";
 import { z } from "zod";
 import { nanoid } from "nanoid";
 
@@ -33,11 +34,12 @@ export async function POST(req: NextRequest) {
     await prisma.$transaction([
       prisma.payment.create({ data: { userId, passId, amount: pass.price, provider: "ADMIN", reference, status: "SUCCESS" } }),
       prisma.userPass.create({ data: { userId, passId, status: "ACTIVE", startDate, endDate, amountPaid: pass.price, paymentRef: reference } }),
-      prisma.user.update({ where: { id: userId }, data: { totalInvested: { increment: pass.price } } }),
+      prisma.user.update({ where: { id: userId }, data: { totalInvested: { increment: pass.price }, xp: { increment: xpFromAmount(pass.price) } } }),
       prisma.transaction.create({ data: { userId, type: "PASS_PURCHASE", amount: -pass.price, description: `Activation Pass ${pass.name} (admin)`, status: "SUCCESS", reference } }),
       prisma.notification.create({ data: { userId, title: "Pass activé 🎉", message: `Un administrateur a activé votre pass ${pass.name}. Vos revenus journaliers démarrent aujourd'hui.`, type: "success" } }),
     ]);
 
+    await syncUserLevel(userId);
     await logAdminAction(admin, "ACTIVATE_PASS", userId, { passId, passName: pass.name, price: pass.price }, req);
 
     return NextResponse.json({ success: true });

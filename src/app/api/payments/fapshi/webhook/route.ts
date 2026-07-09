@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { applyDepositSuccess, payReferralCommission } from "@/lib/payments-helpers";
+import { xpFromAmount, syncUserLevel } from "@/lib/xp";
 
 // Re-check of a transaction straight from Fapshi. Returns null when it can't
 // be checked (missing creds/transId, network or shape issue).
@@ -93,7 +94,7 @@ export async function POST(req: NextRequest) {
         });
         await prisma.user.update({
           where: { id: payment.userId },
-          data: { totalInvested: { increment: payment.amount } },
+          data: { totalInvested: { increment: payment.amount }, xp: { increment: xpFromAmount(payment.amount) } },
         });
         await prisma.transaction.create({
           data: { userId: payment.userId, type: "PASS_PURCHASE", amount: -payment.amount, description: "Achat Pass FAPSHI - " + reference, status: "SUCCESS", reference },
@@ -102,6 +103,7 @@ export async function POST(req: NextRequest) {
           data: { userId: payment.userId, title: "Paiement confirmé !", message: `Votre pass a été activé via FAPSHI.`, type: "success" },
         });
 
+        await syncUserLevel(payment.userId);
         await payReferralCommission(payment.userId, payment.amount);
       }
     } else if (status === "FAILED" || status === "CANCELLED") {

@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { verifyGeniusPayWebhook } from "@/lib/geniuspay";
 import { applyDepositSuccess, payReferralCommission } from "@/lib/payments-helpers";
+import { xpFromAmount, syncUserLevel } from "@/lib/xp";
 
 export async function POST(req: NextRequest) {
   try {
@@ -73,7 +74,7 @@ export async function POST(req: NextRequest) {
 
         await prisma.user.update({
           where: { id: payment.userId },
-          data: { totalInvested: { increment: payment.amount } },
+          data: { totalInvested: { increment: payment.amount }, xp: { increment: xpFromAmount(payment.amount) } },
         });
 
         await prisma.transaction.create({
@@ -96,6 +97,7 @@ export async function POST(req: NextRequest) {
           },
         });
 
+        await syncUserLevel(payment.userId);
         await payReferralCommission(payment.userId, payment.amount);
       }
     } else if (

@@ -191,7 +191,7 @@ export default function DashboardPage() {
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-white text-sm">{lang === "fr" ? "Devenez vérifié" : "Get verified"}</p>
                 <p className="text-xs text-white/55">
-                  {lang === "fr" ? "Retraits + rapides · +5% parrainage · +10% gains · 1000 FCFA" : "Faster withdrawals · +5% referral · +10% earnings · 1000 FCFA"}
+                  {lang === "fr" ? "Retraits + rapides · +5% parrainage · 1000 FCFA" : "Faster withdrawals · +5% referral · 1000 FCFA"}
                 </p>
               </div>
               <span className="text-[#3b6fd4] flex-shrink-0">›</span>

@@ -3,6 +3,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { xpFromAmount, syncUserLevel } from "@/lib/xp";
 
 export async function GET() {
   try {
@@ -49,7 +50,7 @@ export async function PATCH(req: NextRequest) {
       const userPass = await prisma.userPass.findFirst({ where: { paymentRef: reference, status: "PENDING" } });
       if (userPass) {
         await prisma.userPass.update({ where: { id: userPass.id }, data: { status: "ACTIVE" } });
-        await prisma.user.update({ where: { id: payment.userId }, data: { totalInvested: { increment: payment.amount } } });
+        await prisma.user.update({ where: { id: payment.userId }, data: { totalInvested: { increment: payment.amount }, xp: { increment: xpFromAmount(payment.amount) } } });
         await prisma.transaction.create({
           data: { userId: payment.userId, type: "PASS_PURCHASE", amount: -payment.amount, description: "Achat Pass — virement bancaire confirmé", status: "SUCCESS", reference },
         });
@@ -63,6 +64,7 @@ export async function PATCH(req: NextRequest) {
           await prisma.user.update({ where: { id: buyer.referredById }, data: { balance: { increment: commission }, totalEarnings: { increment: commission } } });
           await prisma.transaction.create({ data: { userId: buyer.referredById, type: "REFERRAL_BONUS", amount: commission, description: "Commission parrainage 10% — virement bancaire", status: "SUCCESS" } });
         }
+        await syncUserLevel(payment.userId);
       }
     } else if (action === "reject") {
       await prisma.payment.update({ where: { reference }, data: { status: "FAILED" } });

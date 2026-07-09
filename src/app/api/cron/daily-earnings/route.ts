@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { xpFromAmount, syncUserLevel } from "@/lib/xp";
 import crypto from "node:crypto";
 
 // Compare secrets in constant time. Hash both sides first so the comparison
@@ -31,18 +32,20 @@ async function runDailyEarnings() {
     where: { status: "ACTIVE", endDate: { gte: now } },
     include: {
       pass: true,
-      user: { select: { isVerified: true, isActive: true, isSuspended: true } },
+      user: { select: { isActive: true, isSuspended: true } },
     },
   });
 
   let processed = 0;
   let skipped = 0;
+  const creditedUsers = new Set<string>();
   for (const up of activePasses) {
     if (!up.user.isActive || up.user.isSuspended) { skipped++; continue; }
 
-    // Verified users get a +10% bonus on daily pass earnings (verification perk).
-    const base = (up.pass.price * up.pass.dailyReturn) / 100;
-    const earning = parseFloat((base * (up.user.isVerified ? 1.1 : 1)).toFixed(2));
+    // Le crédit journalier est exactement price * dailyReturn / 100 — un pass
+    // de 10 000 à 10% crédite 1 000, ni plus ni moins (l'ancien bonus +10%
+    // "compte vérifié" créditait 1 100 et a été retiré).
+    const earning = parseFloat(((up.pass.price * up.pass.dailyReturn) / 100).toFixed(2));
     const reference = `EARN-${up.id}-${dayKey}`;
 
     try {
@@ -59,7 +62,11 @@ async function runDailyEarnings() {
         }),
         prisma.user.update({
           where: { id: up.userId },
-          data: { balance: { increment: earning }, totalEarnings: { increment: earning } },
+          data: {
+            balance: { increment: earning },
+            totalEarnings: { increment: earning },
+            xp: { increment: xpFromAmount(earning) },
+          },
         }),
         prisma.userPass.update({
           where: { id: up.id },
@@ -67,6 +74,7 @@ async function runDailyEarnings() {
         }),
       ]);
       processed++;
+      creditedUsers.add(up.userId);
     } catch (e) {
       // P2002 = unique constraint on reference → already credited today.
       if (e && typeof e === "object" && "code" in e && (e as { code?: string }).code === "P2002") {
@@ -75,6 +83,10 @@ async function runDailyEarnings() {
       }
       throw e;
     }
+  }
+
+  for (const userId of Array.from(creditedUsers)) {
+    await syncUserLevel(userId);
   }
 
   const expired = await prisma.userPass.updateMany({

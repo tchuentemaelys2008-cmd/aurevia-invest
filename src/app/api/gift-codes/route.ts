@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthUser } from "@/lib/auth";
+import { xpFromAmount, syncUserLevel } from "@/lib/xp";
 
 export async function POST(req: NextRequest) {
   const auth = await getAuthUser();
@@ -35,7 +36,7 @@ export async function POST(req: NextRequest) {
       await tx.giftClaim.create({ data: { codeId: giftCode.id, userId: auth.userId } });
       const claimCount = await tx.giftClaim.count({ where: { codeId: giftCode.id } });
       if (claimCount > giftCode.maxWinners) throw new Error("gift_full");
-      await tx.user.update({ where: { id: auth.userId }, data: { balance: { increment: giftCode.value } } });
+      await tx.user.update({ where: { id: auth.userId }, data: { balance: { increment: giftCode.value }, xp: { increment: xpFromAmount(giftCode.value) } } });
       await tx.transaction.create({
         data: {
           userId: auth.userId,
@@ -63,6 +64,8 @@ export async function POST(req: NextRequest) {
     }
     throw e;
   }
+
+  await syncUserLevel(auth.userId);
 
   return NextResponse.json({ success: true, value: giftCode.value });
 }
