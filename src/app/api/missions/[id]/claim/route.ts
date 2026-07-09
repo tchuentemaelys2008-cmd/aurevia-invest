@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthUser } from "@/lib/auth";
+import { xpFromAmount, syncUserLevel } from "@/lib/xp";
 
 export async function POST(_req: NextRequest, { params }: { params: { id: string } }) {
   const auth = await getAuthUser();
@@ -45,7 +46,7 @@ export async function POST(_req: NextRequest, { params }: { params: { id: string
     }
     await tx.user.update({
       where: { id: auth.userId },
-      data: { balance: { increment: mission.reward }, totalEarnings: { increment: mission.reward }, xp: { increment: mission.reward * 0.1 } },
+      data: { balance: { increment: mission.reward }, totalEarnings: { increment: mission.reward }, xp: { increment: xpFromAmount(mission.reward) } },
     });
     await tx.transaction.create({
       data: { userId: auth.userId, type: "TASK_REWARD", amount: mission.reward, description: `Mission: ${mission.title}`, status: "SUCCESS" },
@@ -57,6 +58,8 @@ export async function POST(_req: NextRequest, { params }: { params: { id: string
   });
 
   if (!claimed) return NextResponse.json({ error: "Déjà réclamé" }, { status: 400 });
+
+  await syncUserLevel(auth.userId);
 
   return NextResponse.json({ success: true, reward: mission.reward });
 }

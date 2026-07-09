@@ -5,6 +5,7 @@ import { getAuthUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { createGeniusPayPayment, type GeniusPayMethod } from "@/lib/geniuspay";
 import { payReferralCommission } from "@/lib/payments-helpers";
+import { xpFromAmount, syncUserLevel } from "@/lib/xp";
 import { z } from "zod";
 import { nanoid } from "nanoid";
 
@@ -57,7 +58,7 @@ export async function POST(req: NextRequest) {
       const paid = await prisma.$transaction(async (tx) => {
         const debited = await tx.user.updateMany({
           where: { id: auth.userId, balance: { gte: pass.price } },
-          data: { balance: { decrement: pass.price }, totalInvested: { increment: pass.price } },
+          data: { balance: { decrement: pass.price }, totalInvested: { increment: pass.price }, xp: { increment: xpFromAmount(pass.price) } },
         });
         if (debited.count === 0) return false;
         await tx.payment.create({ data: { userId: auth.userId, passId: data.passId, amount: pass.price, provider: "BALANCE", reference, status: "SUCCESS" } });
@@ -74,6 +75,7 @@ export async function POST(req: NextRequest) {
           { status: 400 }
         );
       }
+      await syncUserLevel(auth.userId);
       await payReferralCommission(auth.userId, pass.price);
 
       return NextResponse.json({ success: true, reference, paidWithBalance: true });

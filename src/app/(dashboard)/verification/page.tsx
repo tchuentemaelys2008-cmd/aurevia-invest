@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { BadgeCheck, Zap, Headphones, Users, TrendingUp, Check, Wallet } from "lucide-react";
+import { BadgeCheck, Zap, Headphones, Users, Check, Wallet } from "lucide-react";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import { useLanguage } from "@/lib/i18n";
@@ -37,7 +37,6 @@ export default function VerificationPage() {
     { icon: Zap, title: fr ? "Retraits prioritaires" : "Priority withdrawals", desc: fr ? "Vos demandes de retrait sont traitées en priorité." : "Your withdrawal requests are processed first." },
     { icon: Headphones, title: fr ? "Support prioritaire" : "Priority support", desc: fr ? "Vos tickets passent en tête de file chez les admins." : "Your tickets jump to the top of the admin queue." },
     { icon: Users, title: fr ? "+5% de parrainage" : "+5% referral", desc: fr ? "Touchez 15% au lieu de 10% sur les investissements de vos filleuls." : "Earn 15% instead of 10% on your referrals' investments." },
-    { icon: TrendingUp, title: fr ? "+10% de gains" : "+10% earnings", desc: fr ? "Un bonus de 10% sur tous vos revenus journaliers de pass." : "A 10% bonus on all your daily pass earnings." },
   ];
 
   const buy = async () => {

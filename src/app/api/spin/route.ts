@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthUser } from "@/lib/auth";
+import { xpFromAmount, syncUserLevel } from "@/lib/xp";
 import { Prisma } from "@prisma/client";
 
 const DEFAULT_SEGMENTS = [
@@ -69,12 +70,16 @@ export async function POST() {
   ];
 
   if (result.type === "money" && result.value > 0) {
-    ops.push(prisma.user.update({ where: { id: auth.userId }, data: { balance: { increment: result.value }, totalEarnings: { increment: result.value } } }));
+    ops.push(prisma.user.update({ where: { id: auth.userId }, data: { balance: { increment: result.value }, totalEarnings: { increment: result.value }, xp: { increment: xpFromAmount(result.value) } } }));
     ops.push(prisma.transaction.create({ data: { userId: auth.userId, type: "TASK_REWARD", amount: result.value, description: "Spin quotidien", status: "SUCCESS" } }));
     ops.push(prisma.notification.create({ data: { userId: auth.userId, title: "Spin !", message: `Vous avez gagné ${result.value} FCFA avec le spin !`, type: "success" } }));
   }
 
   await prisma.$transaction(ops);
+
+  if (result.type === "money" && result.value > 0) {
+    await syncUserLevel(auth.userId);
+  }
 
   return NextResponse.json({ result });
 }

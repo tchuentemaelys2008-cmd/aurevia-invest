@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { applyDepositSuccess, payReferralCommission } from "@/lib/payments-helpers";
+import { xpFromAmount, syncUserLevel } from "@/lib/xp";
 
 export async function POST(req: NextRequest) {
   try {
@@ -32,7 +33,7 @@ export async function POST(req: NextRequest) {
     const userPass = await prisma.userPass.findFirst({ where: { paymentRef: reference } });
     if (userPass) {
       await prisma.userPass.update({ where: { id: userPass.id }, data: { status: "ACTIVE" } });
-      await prisma.user.update({ where: { id: payment.userId }, data: { totalInvested: { increment: payment.amount } } });
+      await prisma.user.update({ where: { id: payment.userId }, data: { totalInvested: { increment: payment.amount }, xp: { increment: xpFromAmount(payment.amount) } } });
       await prisma.transaction.create({
         data: { userId: payment.userId, type: "PASS_PURCHASE", amount: -payment.amount, description: "Achat Pass - Ref: " + reference, status: "SUCCESS", reference },
       });
@@ -40,6 +41,7 @@ export async function POST(req: NextRequest) {
         data: { userId: payment.userId, title: "Pass activé !", message: "Votre pass est maintenant actif. Vos revenus journaliers démarrent aujourd'hui.", type: "success" },
       });
 
+      await syncUserLevel(payment.userId);
       await payReferralCommission(payment.userId, payment.amount);
     }
     return NextResponse.json({ success: true });
